@@ -131,7 +131,7 @@
   .track{display:grid;grid-template-columns:2.6rem 1fr auto auto;gap:1rem;align-items:center;
     padding:1.1rem .2rem;border-bottom:1px solid var(--line-l);}
   .track .t-num{font-family:"Fraunces",serif;font-style:italic;color:var(--cream-soft);}
-  .track .t-name{font-family:"Fraunces",serif;font-size:1.35rem;font-weight:500;min-width:0;}
+  .track .t-name{font-family:"Fraunces",serif;font-size:1.35rem;font-weight:500;line-height:1.18;min-width:0;}
   .track .t-tag{color:var(--cream-soft);}
   .track .t-play{font-family:"Archivo",sans-serif;font-weight:700;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;
     border:1px solid var(--line-l);padding:.5rem .9rem;border-radius:999px;transition:background .2s,color .2s;}
@@ -208,6 +208,13 @@
   .portrait img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;}
   .card-visual.bare,.card-visual.framed{background:transparent;border:none;border-radius:0;overflow:visible;}
   .card-visual.framed video{border:1px solid var(--line-d);border-radius:6px;box-shadow:0 12px 30px rgba(0,0,0,.14);}
+  @media(max-width:600px){
+    .track{grid-template-columns:1.7rem 1fr auto;column-gap:.85rem;row-gap:.25rem;align-items:start;padding:1rem .1rem;}
+    .track .t-num{grid-row:1/3;align-self:center;}
+    .track .t-name{grid-column:2;grid-row:1;font-size:1.08rem;}
+    .track .t-tag{grid-column:2;grid-row:2;}
+    .track .t-play{grid-column:3;grid-row:1/3;align-self:center;}
+  }
 </style>
 </head>
 <body>
@@ -277,7 +284,7 @@
       </div>
       <div class="tracks">
         <div class="track"><span class="t-num serif">I</span><span class="t-name">Didn&rsquo;t See It Coming</span><span class="t-tag data">2018 &#183; 9M+ plays</span><a class="t-play" href="https://open.spotify.com/track/7GnXKlzSWy0oeKZwV8RiPE" target="_blank" rel="noopener noreferrer">Play</a></div>
-        <div class="track"><span class="t-num serif">II</span><span class="t-name">Granted</span><span class="t-tag data">Sync &#183; Virgin River S5:E4</span><a class="t-play" href="https://open.spotify.com/track/41lMoEUdX687bDyfwxGTxF" target="_blank" rel="noopener noreferrer">Play</a></div>
+        <div class="track"><span class="t-num serif">II</span><span class="t-name">Granted</span><span class="t-tag data">Virgin River S5:E4</span><a class="t-play" href="https://open.spotify.com/track/41lMoEUdX687bDyfwxGTxF" target="_blank" rel="noopener noreferrer">Play</a></div>
         <div class="track"><span class="t-num serif">III</span><span class="t-name">Always Be Loving You &ndash; La Felix Remix</span><span class="t-tag data">Remix</span><a class="t-play" href="https://open.spotify.com/track/08pjLAiLoNja93DtELW5YS" target="_blank" rel="noopener noreferrer">Play</a></div>
         <div class="track"><span class="t-num serif">IV</span><span class="t-name">At Least For Now</span><span class="t-tag data">2023</span><a class="t-play" href="https://open.spotify.com/track/0VvnhXw5y2yG4qgLIOGyBJ" target="_blank" rel="noopener noreferrer">Play</a></div>
       </div>
