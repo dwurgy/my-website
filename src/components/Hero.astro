@@ -80,4 +80,39 @@ import coast from '../../assets/photos/coast-dusk.jpg';
     padding-top: 14px;
     border-top: 1px solid rgb(255 255 255 / 0.3);
   }
+
+  /* The photo settles from a slight blur and scale; the words fade up once.
+     Only runs when motion is welcome, so reduced motion shows the final state. */
+  @media (prefers-reduced-motion: no-preference) {
+    .photo {
+      /* A gentler curve than --ease-out, so the settle reads as slow. */
+      animation: settle 2600ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+
+    .hero-body {
+      animation: rise 1100ms var(--ease-out) 500ms both;
+    }
+  }
+
+  @keyframes settle {
+    from {
+      transform: scale(1.06);
+      filter: blur(10px);
+    }
+    to {
+      transform: none;
+      filter: none;
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 </style>
