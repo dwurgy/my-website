@@ -60,7 +60,7 @@
 
   /* Materials */
   --grain: url('/grain.png');
-  --grain-photo-opacity: 0.45;
+  --grain-photo-opacity: 0.38;
   --grain-paper-opacity: 0.35;
 
   /* Motion: slow ease-out, nothing springy. */
@@ -151,7 +151,11 @@ a {
   opacity: var(--grain-photo-opacity);
 }
 
+/* On paper the tile is screened onto a warm grey first, so multiplying it
+   adds warm fibres without dimming the paper itself. */
 .grain--paper {
+  background-color: rgb(176 164 150);
+  background-blend-mode: screen;
   mix-blend-mode: multiply;
   opacity: var(--grain-paper-opacity);
 }

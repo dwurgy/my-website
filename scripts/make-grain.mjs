@@ -24,7 +24,7 @@ for (let y = 0; y < SIZE; y++) {
     const v = at(x, y) * 0.6 + (at(x + 1, y) + at(x, y + 1) + at(x - 1, y) + at(x, y - 1)) * 0.1;
     // Stretch the contrast around mid-grey; overlay and multiply blending
     // then darken and lighten the photo underneath evenly.
-    const value = Math.min(255, Math.max(0, Math.round(128 + (v - 0.5) * 2.2 * 255)));
+    const value = Math.min(255, Math.max(0, Math.round(128 + (v - 0.5) * 0.5 * 255)));
     row[1 + x] = value;
   }
   rows.push(row);
