@@ -4,8 +4,14 @@ Work through these phases in order, on the `redesign` branch. Tick the boxes as 
 
 ## Phase 0: Before any code (David)
 
-- [ ] Confirm how the site deploys today. Either Cloudflare builds from GitHub automatically on each push, or David runs `wrangler deploy` by hand. Look in the Cloudflare dashboard under Workers & Pages → my-website → Settings → Build.
-- [ ] Decide whether pushes to `redesign` should make a preview link. If Cloudflare builds from GitHub, turn on builds for non-production branches.
+How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker named `my-website`, built from GitHub by Workers Builds.
+
+- Production branch: `main`. Every push to `main` goes live.
+- Builds for non-production branches: on. Pushes to `redesign` upload a new version, but they don't go live.
+- Build command: none. Deploy command: `npx wrangler deploy`. Version command: `npx wrangler versions upload`. Root directory: `/`.
+
+- [x] Confirm how the site deploys.
+- [ ] Turn on Worker Previews (the "Set up" banner on the Builds page), so each push to `redesign` gets its own preview link to check on a phone.
 
 ## Phase 1: Foundation
 
@@ -13,7 +19,8 @@ Work through these phases in order, on the `redesign` branch. Tick the boxes as 
 - [ ] Self-host Archivo (variable, width and weight), Cormorant Garamond Italic, and JetBrains Mono, subset to Latin.
 - [ ] Define the colour and type tokens from CLAUDE.md as CSS custom properties in one global stylesheet.
 - [ ] Generate one tileable noise image for the grain.
-- [ ] Update `wrangler.jsonc` so `assets.directory` points at Astro's output (`./dist`). Tell David exactly what build command and output folder to set in Cloudflare, if it builds from GitHub.
+- [ ] Update `wrangler.jsonc` so `assets.directory` points at Astro's output (`./dist`).
+- [ ] Once `package.json` is on the branch, have David set the Build command to `npm run build` in Cloudflare. Leave the deploy and version commands as they are. That setting applies to every branch, so `main` must not get another push before launch: the old site has no `package.json` and its build would fail.
 - [ ] Add a `.gitignore` for `node_modules`, `dist`, and `.astro`.
 
 **Done test:** `npm run build` finishes with no warnings. The built page shows the night background, the grain, and the two glass pills in the right fonts. Nothing on the page makes a network request to any other domain (check the browser's network panel).
