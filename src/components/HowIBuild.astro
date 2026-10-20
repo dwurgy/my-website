@@ -1,0 +1,195 @@
+---
+// The paper section: three numbers, then how I build.
+const numbers = [
+  { label: 'Month-end sales tax', from: '3 days', to: '1 report' },
+  { label: 'ERP kickoff to go-live', value: '10 weeks' },
+  { label: 'Warehouse trips gone, per year', value: '500+' },
+];
+
+const rules = [
+  'Work in small, testable steps.',
+  'No new dependencies without asking.',
+  'Never weaken a security default.',
+  'Each phase ends with a done test.',
+];
+---
+
+<section id="how" class="paper" aria-labelledby="how-title">
+  <div class="grain grain--paper" aria-hidden="true"></div>
+
+  <div class="stack">
+    <dl class="numbers">
+      {
+        numbers.map((number) => (
+          <div class="number">
+            <dt class="label">{number.label}</dt>
+            <dd class="figure">
+              {number.value ?? (
+                <>
+                  {number.from}
+                  {/* Archivo has no arrow, so it is drawn to match the type. */}
+                  <svg class="arrow" viewBox="0 0 24 16" aria-hidden="true">
+                    <path d="M1 8h20M14 1.5 21 8l-7 6.5" />
+                  </svg>
+                  <span class="visually-hidden">to</span>
+                  {number.to}
+                </>
+              )}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <h2 id="how-title" class="headline statement">
+      <span>I don't write most of the code.</span>
+      <span class="statement-end">I write the <span class="emphasis">brief.</span></span>
+    </h2>
+
+    <div class="method">
+      <p class="method-text">
+        Every project starts with a document: who it's for, the rules the agent can't break, and a
+        done test for each step. Then I direct Claude Code through it in pieces small enough to
+        check. Same as the warehouse: decide what good looks like, then make it hard to get wrong.
+      </p>
+      <figure class="rules">
+        <figcaption class="label rules-source">From firn / CLAUDE.md</figcaption>
+        <ul class="rules-list">
+          {rules.map((rule) => <li>{rule}</li>)}
+        </ul>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .paper {
+    position: relative;
+    overflow: hidden;
+    padding: 104px var(--gutter) 120px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .stack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 120px;
+  }
+
+  .numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px 24px;
+    margin: 0;
+    padding-top: 18px;
+    border-top: 1.5px solid var(--ink);
+  }
+
+  .number {
+    flex: 1 1 280px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .number .label {
+    color: var(--ink-muted);
+  }
+
+  .figure {
+    margin: 0;
+    font-size: clamp(40px, 4.45vw, 64px);
+    line-height: 1;
+    font-weight: var(--headline-weight);
+    letter-spacing: var(--headline-tracking);
+  }
+
+  .arrow {
+    display: inline-block;
+    width: 0.9em;
+    height: 0.6em;
+    margin: 0 0.16em;
+    vertical-align: 0.08em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: square;
+  }
+
+  .statement {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    font-size: clamp(44px, 6.4vw, 100px);
+    line-height: 0.95;
+    text-wrap: wrap;
+  }
+
+  .statement > span:first-child {
+    max-width: 900px;
+  }
+
+  .statement-end {
+    align-self: flex-end;
+    text-align: right;
+  }
+
+  .method {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px 64px;
+  }
+
+  .method-text {
+    flex: 1 1 360px;
+    min-width: 0;
+    max-width: 520px;
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.55;
+    color: #2b2622;
+  }
+
+  .rules {
+    flex: 0 1 420px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding-top: 4px;
+  }
+
+  .rules-source {
+    padding-bottom: 6px;
+    color: var(--ink-muted);
+  }
+
+  .rules-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 720px) {
+    .paper {
+      padding-block: 72px 88px;
+    }
+
+    .stack {
+      gap: 80px;
+    }
+
+    .method-text {
+      font-size: 17px;
+    }
+  }
+</style>
