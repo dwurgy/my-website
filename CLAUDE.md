@@ -116,10 +116,35 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 ## Rules for working in this repo
 
 - Work only on the `redesign` branch. Never push to or merge into `main` unless David says to in so many words.
-- Follow `docs/PLAN.md` one phase at a time. At the end of each phase, show David screenshots at 1440px and 390px wide, state the done test result honestly, and wait for his go-ahead.
+- Follow `docs/PLAN.md` one phase at a time, and one checkbox at a time inside a phase. After each step, tell David what to look at and wait for his OK. At the end of each phase, show David screenshots at 1440px and 390px wide, state the done test result honestly, and wait for his go-ahead.
 - Make small commits with plain messages.
 - Ask before adding any dependency beyond Astro, its official integrations, and Fontsource.
 - Keep the repo public-safe. No customer names, prices, emails, order data, home addresses, or photo metadata, in code or in screenshots. Blur sensitive parts of any screenshot of company software before adding it.
 - No analytics, trackers, cookies, embeds, or third-party scripts.
 - Accessibility is part of done: real links and buttons, a visible focus state, alt text on every meaningful image, readable contrast over photos, and a full keyboard path.
 - If something in this brief conflicts with what David asks in the moment, do what David asks and update this file.
+
+## Where we are
+
+- **Phase 1: done** (2026-10-20). Astro, self-hosted fonts, tokens, grain, and Cloudflare pointed at `dist`. David set the Cloudflare build command to `npm run build`.
+- **Phase 2: done** (2026-10-20). The homepage, still, matching the mockup. Lighthouse mobile: 99 performance, 100 accessibility, 100 best practices.
+- **Phase 3: next.** Motion, one checkbox at a time.
+- **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
+
+Details and reasoning live in `docs/HISTORY.md`, not here.
+
+## How to work with David (instructions for Claude)
+
+David is not a programmer. He directs the work and judges how it looks and feels.
+
+- **Plain English.** No jargon without a one-line explanation. Say what changed and what he'll see, not how the code does it.
+- **One small step at a time.** Before a step, say in a sentence or two what you're about to do. After it, say what changed and exactly what to look at. Then stop and wait for his OK.
+- **Pick the model before starting.** In one line, say which model the step needs: Sonnet only for wording, copy, and simple questions; Opus for anything visual, motion, layout, performance, or accessibility. If the current model is wrong for the step, say so and wait.
+- **Spend his usage carefully.** Read only the files and parts you need, and don't re-read files already read in this conversation. Keep replies short. Never skip testing or the brief's rules to save effort.
+- **Checkpoints.** When a step works and is committed, update "Where we are" in a line, put any reasoning worth keeping in `docs/HISTORY.md`, and recommend `/clear`. Recommend `/compact` instead only if something important lives only in the conversation.
+- **Stuck rule.** After two failed tries at the same fix, stop and say what's known and what's been ruled out.
+- **How David checks the site.**
+  - On this Mac: `npm run build && npm run preview` (or the `preview` entry in `.claude/launch.json`), then http://localhost:4321 in the Browser pane or in Arc. The mockup opens straight from Finder: `design/mockup-v3.html`.
+  - On his phone: push `redesign` and use the Cloudflare preview link (once Worker Previews are on).
+- **Pushing.** Claude's shell has no GitHub sign-in, so pushes fail from here. David pushes from GitHub Desktop: choose the my-website repository and the `redesign` branch, then click "Push origin". Tell him when there's something to push.
+- **Lighthouse** needs a Chromium browser. Chrome isn't installed, so run it with `CHROME_PATH=/Applications/Arc.app/Contents/MacOS/Arc` and `--chrome-flags="--headless=new"`.
