@@ -27,10 +27,10 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 ## Phase 2: Homepage, still
 
-- [ ] Build the homepage section by section to match `design/mockup-v3.html`: hero, work, paper (numbers and how I build), off the clock, and contact.
-- [ ] Use Astro's image components for every photo, with sizes set so phones get small files.
-- [ ] Make it work at 1440px, 1024px, 768px, and 390px. On phones, type scales down, the nav becomes the wordmark plus a menu pill, and the work list stacks with each card under its name.
-- [ ] Add the copy button for the email address.
+- [x] Build the homepage section by section to match `design/mockup-v3.html`: hero, work, paper (numbers and how I build), off the clock, and contact.
+- [x] Use Astro's image components for every photo, with sizes set so phones get small files.
+- [x] Make it work at 1440px, 1024px, 768px, and 390px. On phones, type scales down, the nav becomes the wordmark plus a menu pill, and the work list stacks with each card under its name.
+- [x] Add the copy button for the email address.
 
 **Done test:** Screenshots at 1440px side by side with the mockup show no meaningful differences in layout, type size, or spacing. The page also works at 390px with no sideways scrolling. Lighthouse on mobile scores 95 or higher for performance, accessibility, and best practices.
 

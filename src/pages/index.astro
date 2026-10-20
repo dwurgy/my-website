@@ -1,58 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import Work from '../components/Work.astro';
+import HowIBuild from '../components/HowIBuild.astro';
+import OffTheClock from '../components/OffTheClock.astro';
+import Contact from '../components/Contact.astro';
 ---
 
 <Base
   title="David Wurgler: business systems and AI tools"
   description="David Wurgler builds the business systems and AI tools small teams actually use."
 >
-  <section class="hero">
-    <div class="grain" aria-hidden="true"></div>
-    <SiteHeader />
-    <div class="hero-body">
-      <h1 class="headline">I build the tools small teams <span class="emphasis">actually</span> use.</h1>
-      <div class="hero-labels">
-        <span class="label">David Wurgler</span>
-        <span class="label">Business systems &amp; AI</span>
-        <span class="label">Salem, Oregon</span>
-      </div>
-    </div>
-  </section>
+  <SiteHeader />
+  <main id="main">
+    <Hero />
+    <Work />
+    <HowIBuild />
+    <OffTheClock />
+  </main>
+  <Contact />
 </Base>
-
-<style>
-  /* Phase 1 placeholder: night ground, grain, and the header. The coast photo
-     and the rest of the homepage arrive in phase 2. */
-  .hero {
-    position: relative;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden;
-  }
-
-  .hero-body {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 36px;
-    padding: 0 var(--gutter) var(--gutter);
-  }
-
-  .headline {
-    max-width: 1200px;
-    font-size: clamp(52px, 8.4vw, 132px);
-    color: var(--bone-bright);
-  }
-
-  .hero-labels {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 10px 24px;
-    padding-top: 14px;
-    border-top: 1px solid rgb(255 255 255 / 0.3);
-  }
-</style>
