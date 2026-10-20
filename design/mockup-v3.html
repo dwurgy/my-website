@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>David Wurgler: homepage mockup v3 (reference only)</title>
+<!--
+  REFERENCE ONLY. This is the approved static mockup for the homepage, exported
+  from the design canvas. It is not production code: styles are inline, there is
+  no motion, and it is laid out for a 1440px desktop. Match its look (type sizes,
+  spacing, colours, grain, glass) and rebuild it properly. See CLAUDE.md.
+  Open it locally to view; image paths are relative to this folder.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&amp;family=Cormorant+Garamond:ital,wght@1,400;1,500&amp;family=JetBrains+Mono:wght@400&amp;display=swap">
+<style>
+body{margin:0;background:#151311}
+a{color:#f3eee7}a:hover{color:#ffffff}
+.grot{font-family:Archivo, "Helvetica Neue", Arial, sans-serif}
+.wide{font-family:Archivo, "Helvetica Neue", Arial, sans-serif;font-stretch:125%}
+.ital{font-family:"Cormorant Garamond", Georgia, serif;font-style:italic;font-weight:400}
+.mono{font-family:"JetBrains Mono", ui-monospace, Menlo, monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.grain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:overlay;opacity:0.55}
+.pill{display:inline-flex;align-items:center;gap:14px;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.12) 55%, rgba(255,255,255,0.20) 100%);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);border:1px solid rgba(255,255,255,0.55);box-shadow:inset 0 1px 1px rgba(255,255,255,0.7), inset 0 -2px 6px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.18);color:#fff;text-decoration:none}
+.pill:hover{background:linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.2) 55%, rgba(255,255,255,0.28) 100%);color:#fff}
+.glass{background:rgba(255,255,255,0.10);-webkit-backdrop-filter:blur(22px) saturate(1.25);backdrop-filter:blur(22px) saturate(1.25);border:1px solid rgba(255,255,255,0.28);box-shadow:inset 0 1px 0 rgba(255,255,255,0.35), 0 24px 60px rgba(0,0,0,0.30)}
+.row{display:flex;align-items:baseline;justify-content:space-between;gap:24px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.16);text-decoration:none}
+a:focus-visible{outline:2px solid #f3eee7;outline-offset:4px;border-radius:999px}
+</style>
+</head>
+<body>
+<div style="position: relative; width: 100%; background: #151311; color: #f3eee7; font-family: Archivo, 'Helvetica Neue', Arial, sans-serif; overflow: hidden;">
+
+  <!-- ============ HERO: the coast at dusk ============ -->
+  <section style="position: relative; min-height: 900px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;">
+    <img class="bg" src="../assets/photos/coast-dusk.jpg" alt="" style="filter: blur(2px) saturate(0.92); transform: scale(1.04);">
+    <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,16,14,0.10) 0%, rgba(20,16,14,0.0) 35%, rgba(20,16,14,0.55) 100%);"></div>
+    <svg class="grain" aria-hidden="true"><filter id="g1"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#g1)"></rect></svg>
+
+    <header style="position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 24px 28px 0;">
+      <a class="pill wide" href="#top" style="padding: 12px 30px; font-size: 22px; font-weight: 800; letter-spacing: 0.2em;">WURGLER</a>
+      <nav aria-label="Main" class="pill" style="padding: 6px 8px;">
+        <a href="#work" style="padding: 10px 14px; font-size: 14px; text-decoration: none;">Work</a>
+        <a href="#how" style="padding: 10px 14px; font-size: 14px; text-decoration: none;">How I build</a>
+        <a href="#offclock" style="padding: 10px 14px; font-size: 14px; text-decoration: none;">Off the clock</a>
+        <a href="#hello" style="padding: 10px 18px; font-size: 14px; text-decoration: none; background: #f3eee7; color: #1b1815; border-radius: 999px;">Say hi</a>
+      </nav>
+    </header>
+
+    <div style="position: relative; display: flex; flex-direction: column; gap: 36px; padding: 0 28px 28px;">
+      <h1 class="grot" style="margin: 0; max-width: 1200px; font-size: clamp(52px, 8.4vw, 132px); line-height: 0.92; font-weight: 640; letter-spacing: -0.035em; color: #fbf7f1; text-wrap: balance;">I build the tools small teams <span class="ital" style="font-size: 1.12em; letter-spacing: -0.01em;">actually</span> use.</h1>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.3);">
+        <span class="mono">David Wurgler</span>
+        <span class="mono">Business systems &amp; AI</span>
+        <span class="mono">Salem, Oregon</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORK: the dusk field, blurred ============ -->
+  <section id="work" style="position: relative; overflow: hidden; padding: 120px 28px 120px;">
+    <img class="bg" src="../assets/photos/lake-dusk-reeds.jpg" alt="" style="filter: blur(46px) saturate(1.15) brightness(0.72); transform: scale(1.25);">
+    <svg class="grain" aria-hidden="true"><filter id="g2"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#g2)"></rect></svg>
+
+    <div style="position: relative; display: flex; flex-wrap: wrap; gap: 56px 64px; align-items: center;">
+      <div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column;">
+        <span class="mono" style="padding-bottom: 18px; color: rgba(243,238,231,0.75);">Selected work · 2025–2026</span>
+
+        <a class="row" href="#firn" style="color: #fbf7f1;">
+          <span class="grot" style="font-size: clamp(48px, 6.6vw, 104px); line-height: 0.95; font-weight: 640; letter-spacing: -0.035em;">Firn</span>
+          <span class="mono" style="color: rgba(243,238,231,0.85);">Shipped · Oct 2026</span>
+        </a>
+        <a class="row" href="#alfred" style="color: rgba(251,247,241,0.38);">
+          <span class="grot" style="font-size: clamp(48px, 6.6vw, 104px); line-height: 0.95; font-weight: 640; letter-spacing: -0.035em;">Alfred</span>
+          <span class="mono">In daily use</span>
+        </a>
+        <a class="row" href="#copywriter" style="color: rgba(251,247,241,0.38);">
+          <span class="grot" style="font-size: clamp(48px, 6.6vw, 104px); line-height: 0.95; font-weight: 640; letter-spacing: -0.035em;">Copywriter Lab</span>
+          <span class="mono">3 days</span>
+        </a>
+        <a class="row" href="#backoffice" style="color: rgba(251,247,241,0.38); border-bottom: 1px solid rgba(255,255,255,0.16);">
+          <span class="grot" style="font-size: clamp(48px, 6.6vw, 104px); line-height: 0.95; font-weight: 640; letter-spacing: -0.035em;">Back office</span>
+          <span class="mono">10 weeks</span>
+        </a>
+      </div>
+
+      <!-- active project: the real thing, in focus -->
+      <article id="firn" class="glass" style="flex: 1 1 480px; min-width: 0; max-width: 620px; border-radius: 26px; padding: 14px 14px 22px; display: flex; flex-direction: column; gap: 18px;">
+        <img src="../assets/work/firn-placeholder.jpg" alt="Firn on a Mac: a sidebar of tabs and spaces beside a website with a leafy tree against a blue sky." style="width: 100%; aspect-ratio: 578 / 365; object-fit: cover; border-radius: 14px; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.35);">
+        <div style="padding: 0 8px; display: flex; flex-direction: column; gap: 12px;">
+          <p style="margin: 0; font-size: 18px; line-height: 1.5; color: #fbf7f1;">A calm desktop browser for people who don't want to learn a new browser. I wrote the brief and directed Claude Code through every phase.</p>
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+            <span class="mono" style="color: rgba(243,238,231,0.8);">macOS · Windows · Open source</span>
+            <a class="pill" href="https://firnbrowser.com" style="padding: 10px 18px; font-size: 14px;">firnbrowser.com</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ PAPER: numbers + how I build ============ -->
+  <section id="how" style="position: relative; overflow: hidden; background: #ece6dc; color: #1b1815; padding: 104px 28px 120px;">
+    <svg aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: multiply; opacity: 0.35;"><filter id="g3"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"></feTurbulence><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.30  0 0 0 0.6 0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#g3)"></rect></svg>
+
+    <div style="position: relative; display: flex; flex-direction: column; gap: 120px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 40px 24px; border-top: 1.5px solid #1b1815; padding-top: 18px;">
+        <div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+          <span class="mono" style="color: #5b534a;">Month-end sales tax</span>
+          <span class="grot" style="font-size: 64px; line-height: 1; font-weight: 640; letter-spacing: -0.035em;">3 days → 1 report</span>
+        </div>
+        <div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+          <span class="mono" style="color: #5b534a;">ERP kickoff to go-live</span>
+          <span class="grot" style="font-size: 64px; line-height: 1; font-weight: 640; letter-spacing: -0.035em;">10 weeks</span>
+        </div>
+        <div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+          <span class="mono" style="color: #5b534a;">Warehouse trips gone, per year</span>
+          <span class="grot" style="font-size: 64px; line-height: 1; font-weight: 640; letter-spacing: -0.035em;">500+</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <h2 class="grot" style="margin: 0; font-size: clamp(44px, 6.4vw, 100px); line-height: 0.95; font-weight: 640; letter-spacing: -0.035em; max-width: 900px;">I don't write most of the code.</h2>
+        <h2 class="grot" style="margin: 0; align-self: flex-end; text-align: right; font-size: clamp(44px, 6.4vw, 100px); line-height: 0.95; font-weight: 640; letter-spacing: -0.035em;">I write the <span class="ital" style="font-size: 1.12em;">brief.</span></h2>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 32px 64px; justify-content: space-between; align-items: flex-start;">
+        <p style="flex: 1 1 360px; min-width: 0; margin: 0; max-width: 520px; font-size: 19px; line-height: 1.55; color: #2b2622;">Every project starts with a document: who it's for, the rules the agent can't break, and a done test for each step. Then I direct Claude Code through it in pieces small enough to check. Same as the warehouse: decide what good looks like, then make it hard to get wrong.</p>
+        <div style="flex: 0 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px;">
+          <span class="mono" style="color: #5b534a; padding-bottom: 6px;">From firn / CLAUDE.md</span>
+          <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; line-height: 1.7;">Work in small, testable steps.<br>No new dependencies without asking.<br>Never weaken a security default.<br>Each phase ends with a done test.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OFF THE CLOCK: photos shown as they are ============ -->
+  <section id="offclock" style="position: relative;">
+    <div style="position: relative; height: 860px; overflow: hidden;">
+      <img class="bg" src="../assets/photos/lodge-dusk.jpg" alt="A glass-fronted lodge under tall pines at dusk.">
+      <svg class="grain" aria-hidden="true" style="opacity: 0.35;"><filter id="g4"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#g4)"></rect></svg>
+      <div style="position: absolute; left: 28px; right: 28px; top: 28px; display: flex; justify-content: space-between; gap: 16px;">
+        <span class="mono">Off the clock</span>
+        <span class="mono">Photographs, music</span>
+      </div>
+      <div class="glass" style="position: absolute; left: 28px; bottom: 28px; right: 28px; max-width: 560px; border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;">
+        <span class="mono" style="color: rgba(243,238,231,0.85);">My Brothers And I</span>
+        <p style="margin: 0; font-size: 18px; line-height: 1.5; color: #fbf7f1;">I sing, write, and produce. Songs placed on Virgin River, Pretty Little Liars, Queen Sugar, and others through Secret Road.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px;">
+          <a class="pill" href="#spotify" style="padding: 9px 16px; font-size: 13.5px;">Spotify</a>
+          <a class="pill" href="#apple-music" style="padding: 9px 16px; font-size: 13.5px;">Apple Music</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 4px; background: #151311; padding-top: 4px;">
+      <img src="../assets/photos/pavilion-peak.jpg" alt="A timber pavilion framing a mountain peak beyond a pool." style="flex: 1 1 300px; min-width: 0; height: 420px; object-fit: cover; display: block;">
+      <img src="../assets/photos/firs-house.jpg" alt="Two old firs in front of a house and a dark car." style="flex: 1 1 300px; min-width: 0; height: 420px; object-fit: cover; display: block;">
+      <img src="../assets/photos/lake-dusk-moon.jpg" alt="Mountains at dusk over still water, a sliver of moon above." style="flex: 1 1 300px; min-width: 0; height: 420px; object-fit: cover; display: block;">
+    </div>
+    <div style="display: flex; justify-content: space-between; gap: 16px; padding: 14px 28px 0; background: #151311;">
+      <span class="mono" style="color: rgba(243,238,231,0.6);">[Place, year]</span>
+      <span class="mono" style="color: rgba(243,238,231,0.6);">[Place, year]</span>
+      <span class="mono" style="color: rgba(243,238,231,0.6);">[Place, year]</span>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="hello" style="position: relative; overflow: hidden; margin-top: 64px; min-height: 760px; display: flex; flex-direction: column; justify-content: flex-end;">
+    <img class="bg" src="../assets/photos/lake-dusk-reeds.jpg" alt="" style="filter: saturate(0.95);">
+    <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,16,14,0.15) 0%, rgba(20,16,14,0.0) 40%, rgba(20,16,14,0.6) 100%);"></div>
+    <svg class="grain" aria-hidden="true"><filter id="g5"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#g5)"></rect></svg>
+
+    <div style="position: relative; display: flex; flex-direction: column; gap: 32px; padding: 0 28px 28px;">
+      <h2 class="grot" style="margin: 0; font-size: clamp(56px, 9vw, 150px); line-height: 0.9; font-weight: 640; letter-spacing: -0.04em; color: #fbf7f1;">Say <span class="ital" style="font-size: 1.12em;">hi.</span></h2>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px;">
+        <span class="pill" style="padding: 14px 24px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 15px; user-select: all;">davidjoelwurgler@gmail.com</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <a class="pill" href="https://linkedin.com/in/david-joel-wurgler" style="padding: 11px 18px; font-size: 14px;">LinkedIn</a>
+          <a class="pill" href="https://github.com/dwurgy" style="padding: 11px 18px; font-size: 14px;">GitHub</a>
+          <a class="pill" href="#resume" style="padding: 11px 18px; font-size: 14px;">Résumé</a>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.3);">
+        <span class="mono">Photographed and built by David Wurgler</span>
+        <span class="mono">Built with Claude Code</span>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
