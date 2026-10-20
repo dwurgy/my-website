@@ -15,13 +15,13 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 ## Phase 1: Foundation
 
-- [ ] Set up Astro (static output) with TypeScript, at the repo root. Keep `assets/`, `design/`, and `docs/` where they are.
-- [ ] Self-host Archivo (variable, width and weight), Cormorant Garamond Italic, and JetBrains Mono, subset to Latin.
-- [ ] Define the colour and type tokens from CLAUDE.md as CSS custom properties in one global stylesheet.
-- [ ] Generate one tileable noise image for the grain.
-- [ ] Update `wrangler.jsonc` so `assets.directory` points at Astro's output (`./dist`).
+- [x] Set up Astro (static output) with TypeScript, at the repo root. Keep `assets/`, `design/`, and `docs/` where they are.
+- [x] Self-host Archivo (variable, width and weight), Cormorant Garamond Italic, and JetBrains Mono, subset to Latin.
+- [x] Define the colour and type tokens from CLAUDE.md as CSS custom properties in one global stylesheet.
+- [x] Generate one tileable noise image for the grain.
+- [x] Update `wrangler.jsonc` so `assets.directory` points at Astro's output (`./dist`).
 - [ ] Once `package.json` is on the branch, have David set the Build command to `npm run build` in Cloudflare. Leave the deploy and version commands as they are. That setting applies to every branch, so `main` must not get another push before launch: the old site has no `package.json` and its build would fail.
-- [ ] Add a `.gitignore` for `node_modules`, `dist`, and `.astro`.
+- [x] Add a `.gitignore` for `node_modules`, `dist`, and `.astro`.
 
 **Done test:** `npm run build` finishes with no warnings. The built page shows the night background, the grain, and the two glass pills in the right fonts. Nothing on the page makes a network request to any other domain (check the browser's network panel).
 
