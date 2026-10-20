@@ -1,0 +1,180 @@
+---
+import { Picture } from 'astro:assets';
+import reeds from '../../assets/photos/lake-dusk-reeds.jpg';
+
+const email = 'davidjoelwurgler@gmail.com';
+const links = [
+  { href: 'https://www.linkedin.com/in/david-joel-wurgler', label: 'LinkedIn' },
+  { href: 'https://github.com/dwurgy', label: 'GitHub' },
+];
+---
+
+<footer id="hello" class="contact" aria-labelledby="hello-title">
+  <Picture
+    class="photo"
+    src={reeds}
+    alt=""
+    formats={['avif', 'webp']}
+    widths={[640, 960, 1280, 1920, 2560]}
+    sizes="100vw"
+  />
+  <div class="scrim" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="body">
+    <h2 id="hello-title" class="headline title">Say <span class="emphasis">hi.</span></h2>
+
+    <div class="reach">
+      <div class="pill email">
+        <span class="address">{email}</span>
+        <button class="copy" type="button" data-copy={email}>Copy</button>
+        <span class="visually-hidden" role="status" data-copy-status></span>
+      </div>
+      <div class="links">
+        {links.map((link) => <a class="pill" href={link.href}>{link.label}</a>)}
+      </div>
+    </div>
+
+    <div class="credits">
+      <span class="label">Photographed and built by David Wurgler</span>
+      <span class="label">Built with Claude Code</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+    const status = button.parentElement?.querySelector('[data-copy-status]');
+    let reset: number | undefined;
+
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+        button.textContent = 'Copied';
+        if (status) status.textContent = 'Email address copied.';
+      } catch {
+        // No clipboard access: select the address so it can be copied by hand.
+        const address = button.parentElement?.querySelector('.address');
+        if (address) window.getSelection()?.selectAllChildren(address);
+        if (status) status.textContent = 'Email address selected.';
+      }
+      clearTimeout(reset);
+      reset = window.setTimeout(() => {
+        button.textContent = 'Copy';
+        if (status) status.textContent = '';
+      }, 2400);
+    });
+  }
+</script>
+
+<style>
+  .contact {
+    position: relative;
+    overflow: hidden;
+    margin-top: 64px;
+    min-height: 760px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.95);
+  }
+
+  .scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgb(20 16 14 / 0.15) 0%,
+      rgb(20 16 14 / 0) 40%,
+      rgb(20 16 14 / 0.6) 100%
+    );
+  }
+
+  .body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 0 var(--gutter) var(--gutter);
+  }
+
+  .title {
+    font-size: clamp(56px, 9vw, 150px);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--bone-bright);
+  }
+
+  .reach {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .email {
+    gap: 6px;
+    max-width: 100%;
+    padding: 6px 6px 6px 24px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+  }
+
+  .address {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    user-select: all;
+  }
+
+  .copy {
+    flex: none;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--bone);
+    color: var(--ink);
+    font-family: var(--font-grot);
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .links .pill {
+    padding: 11px 18px;
+    font-size: 14px;
+  }
+
+  .credits {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px 24px;
+    padding-top: 14px;
+    border-top: 1px solid rgb(255 255 255 / 0.3);
+  }
+
+  @media (max-width: 720px) {
+    .contact {
+      min-height: 640px;
+    }
+
+    .email {
+      padding-left: 18px;
+      font-size: 13px;
+    }
+  }
+</style>
