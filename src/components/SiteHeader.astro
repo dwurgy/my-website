@@ -1,0 +1,54 @@
+---
+// The wordmark pill and the nav pill. Both are glass and sit over the hero photo.
+const links = [
+  { href: '#work', label: 'Work' },
+  { href: '#how', label: 'How I build' },
+  { href: '#offclock', label: 'Off the clock' },
+];
+---
+
+<header class="site-header">
+  <a class="pill wordmark" href="/" aria-label="David Wurgler, home">WURGLER</a>
+  <nav class="pill nav" aria-label="Main">
+    {links.map((link) => <a href={link.href}>{link.label}</a>)}
+    <a class="nav-cta" href="#hello">Say hi</a>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 24px var(--gutter) 0;
+  }
+
+  .wordmark {
+    padding: 12px 30px;
+    font-size: 22px;
+    font-weight: 800;
+    font-stretch: 125%;
+    letter-spacing: 0.2em;
+  }
+
+  .nav {
+    gap: 0;
+    padding: 6px 8px;
+  }
+
+  .nav a {
+    padding: 10px 14px;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: var(--radius-pill);
+  }
+
+  .nav .nav-cta {
+    padding: 10px 18px;
+    background: var(--bone);
+    color: var(--ink);
+  }
+</style>
