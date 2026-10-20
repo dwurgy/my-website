@@ -1,0 +1,247 @@
+---
+import { Image } from 'astro:assets';
+import reeds from '../../assets/photos/lake-dusk-reeds.jpg';
+import { projects } from '../data/projects';
+
+// Firn is in focus until phase 3 adds the scroll-driven focus change.
+const activeSlug = 'firn';
+---
+
+<section id="work" class="work" aria-labelledby="work-title">
+  <!-- A small image, blurred into a field of colour. -->
+  <Image class="field" src={reeds} alt="" widths={[480]} sizes="480px" format="webp" />
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="layout">
+    <h2 id="work-title" class="label heading">Selected work · 2025–2026</h2>
+
+    <ol class="list" role="list">
+      {
+        projects.map((project, index) => {
+          return (
+            <li
+              class="project"
+              role="listitem"
+              data-active={project.slug === activeSlug ? '' : undefined}
+              style={`--row: ${index + 3}`}
+            >
+              <a class="row" href={`/work/${project.slug}`}>
+                <span class="name">{project.name}</span>
+                <span class="label status">{project.status}</span>
+              </a>
+
+              <article class="card glass" aria-label={project.name}>
+                {project.shot && (
+                  <Image
+                    class="shot"
+                    src={project.shot.src}
+                    alt={project.shot.alt}
+                    widths={[400, 600, 800, project.shot.src.width].filter((w) => w <= project.shot!.src.width)}
+                    sizes="(min-width: 1100px) 620px, calc(100vw - 2 * var(--gutter) - 28px)"
+                    style={project.shot.position ? `object-position: ${project.shot.position}` : undefined}
+                  />
+                )}
+                <div class="card-body">
+                  <p class="line">{project.line}</p>
+                  <div class="card-foot">
+                    <span class="label meta">{project.meta}</span>
+                    <a class="pill card-link" href={project.link.href}>
+                      {project.link.label}
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </li>
+          );
+        })
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .work {
+    position: relative;
+    overflow: hidden;
+    padding: 120px var(--gutter);
+  }
+
+  .field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(46px) saturate(1.15) brightness(0.72);
+    transform: scale(1.25);
+  }
+
+  .layout {
+    position: relative;
+  }
+
+  .heading {
+    margin: 0;
+    padding-bottom: 18px;
+    font-weight: 400;
+    color: rgb(243 238 231 / 0.75);
+  }
+
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 10px 0;
+    border-top: 1px solid rgb(255 255 255 / 0.16);
+    color: rgb(251 247 241 / 0.4);
+    text-decoration: none;
+    transition: color 600ms var(--ease-out);
+  }
+
+  .row:hover,
+  [data-active] .row {
+    color: var(--bone-bright);
+  }
+
+  .row:focus-visible {
+    border-radius: 4px;
+  }
+
+  .name {
+    font-size: clamp(44px, 6.6vw, 104px);
+    line-height: 0.95;
+    font-weight: var(--headline-weight);
+    letter-spacing: var(--headline-tracking);
+  }
+
+  .status {
+    flex: none;
+    color: rgb(243 238 231 / 0.75);
+  }
+
+  [data-active] .status {
+    color: rgb(243 238 231 / 0.85);
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 650px;
+    padding: 14px 14px 22px;
+    border-radius: var(--radius-card);
+  }
+
+  .shot {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 578 / 365;
+    object-fit: cover;
+    border-radius: var(--radius-shot);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 8px;
+  }
+
+  .line {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--bone-bright);
+  }
+
+  .card-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .meta {
+    color: rgb(243 238 231 / 0.8);
+  }
+
+  .card-link {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+
+  /* Narrow: each project's card sits under its name. */
+  @media (max-width: 1099px) {
+    .work {
+      padding-block: 88px;
+    }
+
+    .row {
+      color: var(--bone-bright);
+    }
+
+    .card {
+      margin: 8px 0 40px;
+    }
+
+    .project:last-child .card {
+      margin-bottom: 0;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .line {
+      font-size: 16px;
+    }
+  }
+
+  /* Wide: names on the left, the card in focus on the right. All cards share
+     one grid cell so the focused one can cross-fade in place. */
+  @media (min-width: 1100px) {
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 650px);
+      grid-template-rows: 1fr repeat(5, auto) 1fr;
+      column-gap: 64px;
+    }
+
+    .heading {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .list,
+    .project {
+      display: contents;
+    }
+
+    .row {
+      grid-column: 1;
+      grid-row: var(--row);
+    }
+
+    .project:last-child .row {
+      border-bottom: 1px solid rgb(255 255 255 / 0.16);
+    }
+
+    .card {
+      grid-column: 2;
+      grid-row: 1 / -1;
+      align-self: center;
+    }
+
+    .project:not([data-active]) .card {
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+</style>

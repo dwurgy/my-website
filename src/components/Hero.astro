@@ -1,0 +1,83 @@
+---
+import { Picture } from 'astro:assets';
+import coast from '../../assets/photos/coast-dusk.jpg';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <Picture
+    class="photo"
+    src={coast}
+    alt=""
+    formats={['avif', 'webp']}
+    widths={[640, 960, 1280, 1920, 2560]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+  />
+  <div class="scrim" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="hero-body">
+    <h1 id="hero-title" class="headline">
+      I build the tools small teams <span class="emphasis">actually</span> use.
+    </h1>
+    <div class="hero-labels">
+      <span class="label">David Wurgler</span>
+      <span class="label">Business systems &amp; AI</span>
+      <span class="label">Salem, Oregon</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: max(640px, 100svh);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+
+  .photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgb(20 16 14 / 0.1) 0%,
+      rgb(20 16 14 / 0) 35%,
+      rgb(20 16 14 / 0.55) 100%
+    );
+  }
+
+  .hero-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    padding: 0 var(--gutter) var(--gutter);
+  }
+
+  .headline {
+    max-width: 1200px;
+    font-size: clamp(52px, 8.4vw, 132px);
+    color: var(--bone-bright);
+  }
+
+  .hero-labels {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px 24px;
+    padding-top: 14px;
+    border-top: 1px solid rgb(255 255 255 / 0.3);
+  }
+</style>
