@@ -38,7 +38,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 - [x] Hero settle on load.
 - [x] Work list: names brighten in turn and the card cross-fades to each project as you scroll.
-- [ ] Photo sections: slow parallax or blur-to-sharp on entry.
+- [x] Photo sections: slow parallax or blur-to-sharp on entry.
 - [ ] Reduced-motion mode: everything still and complete.
 
 **Done test:** A Chrome Performance recording while scrolling the whole page shows no long frames or layout shifts. With reduced motion turned on, nothing moves and nothing is hidden. Show David a screen recording.
