@@ -36,7 +36,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 ## Phase 3: Motion
 
-- [ ] Hero settle on load.
+- [x] Hero settle on load.
 - [ ] Work list: names brighten in turn and the card cross-fades to each project as you scroll.
 - [ ] Photo sections: slow parallax or blur-to-sharp on entry.
 - [ ] Reduced-motion mode: everything still and complete.
