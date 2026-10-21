@@ -61,7 +61,8 @@ const row = [
   .feature {
     position: relative;
     height: clamp(560px, 60vw, 860px);
-    overflow: hidden;
+    /* clip, not hidden: hidden would make this the parallax's scroller. */
+    overflow: clip;
   }
 
   .photo {
@@ -83,6 +84,22 @@ const row = [
       rgb(20 16 14 / 0) 60%,
       rgb(20 16 14 / 0.35) 100%
     );
+  }
+
+  /* Slow parallax where the browser can tie it to scrolling; still otherwise. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .photo {
+        inset: -10% 0;
+        height: 120%;
+        /* Longhands, because the minifier folds a shorthand plus timeline
+           into one declaration that browsers reject. */
+        animation-name: parallax;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+      }
+    }
   }
 
   .feature .grain {
@@ -154,6 +171,42 @@ const row = [
     min-width: 0;
     height: 420px;
     object-fit: cover;
+  }
+
+  /* The row drifts up into place as it enters, each photo a little further
+     than the last, so they overlap on the way in. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .row-photo {
+        animation-name: surface;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 45%;
+      }
+    }
+  }
+
+  /* The stagger only reads when the three sit side by side. */
+  @media (min-width: 960px) {
+    .row-photo:nth-child(2) {
+      --surface-from: 72px;
+    }
+
+    .row-photo:nth-child(3) {
+      --surface-from: 104px;
+    }
+  }
+
+  @keyframes surface {
+    from {
+      opacity: 0.2;
+      transform: translateY(var(--surface-from, 40px));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   @media (max-width: 720px) {

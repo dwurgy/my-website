@@ -221,6 +221,17 @@ a.pill:hover {
   border: 0;
 }
 
+/* Photo sections: the photo moves a little slower than the page as it passes.
+   Used by photos that are 120% of their frame, so there is room to move. */
+@keyframes parallax {
+  from {
+    transform: translateY(-7%);
+  }
+  to {
+    transform: translateY(7%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
