@@ -128,7 +128,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 
 - **Phase 1: done** (2026-10-20). Astro, self-hosted fonts, tokens, grain, and Cloudflare pointed at `dist`. David set the Cloudflare build command to `npm run build`.
 - **Phase 2: done** (2026-10-20). The homepage, still, matching the mockup. Lighthouse mobile: 99 performance, 100 accessibility, 100 best practices.
-- **Phase 3: in progress.** Motion, one checkbox at a time. All four motion steps done (2026-10-20); the phase done test is next.
+- **Phase 3: in progress.** Motion, one checkbox at a time. All four motion steps done and the done test passed (2026-10-20). Waiting on David's go-ahead to close the phase.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
