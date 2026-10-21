@@ -4,7 +4,7 @@ The personal site of David Wurgler: business systems and AI tools, plus the phot
 
 ## What the site is for
 
-One job: someone landing here should understand in about 30 seconds that David builds real systems and AI tools that small teams actually use, and that he has taste. Then they should be able to see the work and get in touch.
+One job: someone landing here should understand in about 30 seconds that David builds real systems and AI tools that people actually use, and that he has taste. Then they should be able to see the work and get in touch.
 
 The site itself is part of the proof. It should feel crafted, calm, and quick, and it should be obvious it was made with care. The footer says it was built with Claude Code, so the code has to hold up if someone opens the repo.
 
@@ -98,7 +98,7 @@ These are the only claims and numbers allowed. Never invent or round up a number
 
 ### Voice
 
-Write plainly and directly, like a person talking. Use short sentences, no hype, and no buzzwords. Always use the serial comma. The copy in the mockup is the approved draft; keep it unless David changes it.
+Write plainly and directly, like a person talking. Use short sentences, no hype, and no buzzwords. Always use the serial comma. The copy in the mockup is the approved draft; keep it unless David changes it. David has changed the hero headline to "I build tools people actually use."
 
 ### Assets
 
