@@ -88,7 +88,7 @@ These are the only claims and numbers allowed. Never invent or round up a number
 
 ### Links
 
-- Email: davidjoelwurgler@gmail.com, shown as selectable text with a copy button.
+- Email: hello@davidwurgler.com (forwards to David), shown as selectable text with a copy button.
 - LinkedIn: https://www.linkedin.com/in/david-joel-wurgler
 - GitHub: https://github.com/dwurgy
 - Spotify: https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb
@@ -128,7 +128,8 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 
 - **Phase 1: done** (2026-10-20). Astro, self-hosted fonts, tokens, grain, and Cloudflare pointed at `dist`. David set the Cloudflare build command to `npm run build`.
 - **Phase 2: done** (2026-10-20). The homepage, still, matching the mockup. Lighthouse mobile: 99 performance, 100 accessibility, 100 best practices.
-- **Phase 3: in progress.** Motion, one checkbox at a time. All four motion steps done and the done test passed (2026-10-20). Waiting on David's go-ahead to close the phase.
+- **Phase 3: done** (2026-10-20). Motion: hero settle, pinned work list, photo parallax, and reduced motion. Done test passed at 60fps with no layout shifts.
+- **Phase 4: next.** Project pages.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
