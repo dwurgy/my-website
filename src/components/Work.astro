@@ -146,14 +146,8 @@ const activeSlug = projects[0].slug;
     gap: 24px;
     padding: 10px 0;
     border-top: 1px solid rgb(255 255 255 / 0.16);
-    color: rgb(251 247 241 / 0.4);
-    text-decoration: none;
-    transition: color 600ms var(--ease-out);
-  }
-
-  .row:hover,
-  [data-active] .row {
     color: var(--bone-bright);
+    text-decoration: none;
   }
 
   .row:focus-visible {
@@ -165,6 +159,15 @@ const activeSlug = projects[0].slug;
     line-height: 0.95;
     font-weight: var(--headline-weight);
     letter-spacing: var(--headline-tracking);
+    /* Dim the whole word, not its colour: with tight tracking, letters overlap,
+       and a see-through colour shows the overlaps as brighter seams. */
+    opacity: 0.4;
+    transition: opacity 600ms var(--ease-out);
+  }
+
+  .row:hover .name,
+  [data-active] .name {
+    opacity: 1;
   }
 
   .status {
@@ -232,8 +235,8 @@ const activeSlug = projects[0].slug;
       padding-block: 88px;
     }
 
-    .row {
-      color: var(--bone-bright);
+    .name {
+      opacity: 1;
     }
 
     .card {
