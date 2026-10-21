@@ -103,14 +103,16 @@ const links = [
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       .photo {
-        inset: -10% 0;
-        height: 120%;
+        inset: -15% 0;
+        height: 130%;
         /* Longhands, because the minifier folds a shorthand plus timeline
            into one declaration that browsers reject. */
         animation-name: parallax;
         animation-timing-function: linear;
         animation-fill-mode: both;
         animation-timeline: view();
+        /* The footer never scrolls away, so the drift happens as it arrives. */
+        animation-range: entry 0% entry 100%;
       }
     }
   }
