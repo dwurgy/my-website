@@ -20,3 +20,9 @@ Details and reasoning that don't belong in CLAUDE.md.
 - **Hero photo is shown sharp.** The mockup's slight blur is the start of the phase 3 settle.
 - **Lighthouse.** The stylesheet is inlined (it's about 4 KB) and the favicon is stubbed with `data:` until phase 5. Mobile: 99, 100, 100, 100. Desktop: 100 across the board.
 - **Copy button.** Uses the clipboard; if that's blocked, it selects the address instead. Only the fallback has been seen working (the preview pane blocks the clipboard).
+
+## Phase 3: Motion
+
+- **Hero settle.** The photo goes from a 10px blur and 1.06 scale to sharp over 2.6s, on a gentler curve than `--ease-out` (that one front-loads, so the blur was gone in half a second). The words fade up after 0.5s. Both live inside `prefers-reduced-motion: no-preference`, so reduced motion shows the final state with no delay.
+- **Headline.** David changed it to "I build tools people actually use." ("small teams" felt too exclusive).
+- **Work list.** On wide screens with motion allowed, the section is 100svh plus 70svh per extra project, and the stage inside it is sticky. One invisible step per project sits under the stage; an IntersectionObserver marks whichever step crosses the middle of the screen. CSS transitions do all the motion (name colour, card cross-fade, field drift). JS is used instead of CSS scroll-driven animations because the change is a discrete "which project" state, not a scrubbed value, and it works in every browser. Focusing a project with the keyboard also brings it forward. Narrow screens and reduced motion get the stacked list with every card visible.

@@ -3,64 +3,110 @@ import { Image } from 'astro:assets';
 import reeds from '../../assets/photos/lake-dusk-reeds.jpg';
 import { projects } from '../data/projects';
 
-// Firn is in focus until phase 3 adds the scroll-driven focus change.
-const activeSlug = 'firn';
+// The first project is in focus until scrolling picks another.
+const activeSlug = projects[0].slug;
 ---
 
-<section id="work" class="work" aria-labelledby="work-title">
-  <!-- A small image, blurred into a field of colour. -->
-  <Image class="field" src={reeds} alt="" widths={[480]} sizes="480px" format="webp" />
-  <div class="grain" aria-hidden="true"></div>
+<section
+  id="work"
+  class="work"
+  aria-labelledby="work-title"
+  style={`--count: ${projects.length}`}
+>
+  <!-- One invisible step per project. Scrolling past a step focuses that project. -->
+  <div class="steps" aria-hidden="true">
+    {projects.map(() => <div class="step" />)}
+  </div>
 
-  <div class="layout">
-    <h2 id="work-title" class="label heading">Selected work · 2025–2026</h2>
+  <div class="stage">
+    <!-- A small image, blurred into a field of colour. -->
+    <Image class="field" src={reeds} alt="" widths={[480]} sizes="480px" format="webp" />
+    <div class="grain" aria-hidden="true"></div>
 
-    <ol class="list" role="list">
-      {
-        projects.map((project, index) => {
-          return (
-            <li
-              class="project"
-              role="listitem"
-              data-active={project.slug === activeSlug ? '' : undefined}
-              style={`--row: ${index + 3}`}
-            >
-              <a class="row" href={`/work/${project.slug}`}>
-                <span class="name">{project.name}</span>
-                <span class="label status">{project.status}</span>
-              </a>
+    <div class="layout">
+      <h2 id="work-title" class="label heading">Selected work · 2025–2026</h2>
 
-              <article class="card glass" aria-label={project.name}>
-                {project.shot && (
-                  <Image
-                    class="shot"
-                    src={project.shot.src}
-                    alt={project.shot.alt}
-                    widths={[400, 600, 800, project.shot.src.width].filter((w) => w <= project.shot!.src.width)}
-                    sizes="(min-width: 1100px) 620px, calc(100vw - 2 * var(--gutter) - 28px)"
-                    style={project.shot.position ? `object-position: ${project.shot.position}` : undefined}
-                  />
-                )}
-                <div class="card-body">
-                  <p class="line">{project.line}</p>
-                  <div class="card-foot">
-                    <span class="label meta">{project.meta}</span>
-                    <a class="pill card-link" href={project.link.href}>
-                      {project.link.label}
-                    </a>
+      <ol class="list" role="list">
+        {
+          projects.map((project, index) => {
+            return (
+              <li
+                class="project"
+                role="listitem"
+                data-active={project.slug === activeSlug ? '' : undefined}
+                style={`--row: ${index + 3}`}
+              >
+                <a class="row" href={`/work/${project.slug}`}>
+                  <span class="name">{project.name}</span>
+                  <span class="label status">{project.status}</span>
+                </a>
+
+                <article class="card glass" aria-label={project.name}>
+                  {project.shot && (
+                    <Image
+                      class="shot"
+                      src={project.shot.src}
+                      alt={project.shot.alt}
+                      widths={[400, 600, 800, project.shot.src.width].filter((w) => w <= project.shot!.src.width)}
+                      sizes="(min-width: 1100px) 620px, calc(100vw - 2 * var(--gutter) - 28px)"
+                      style={project.shot.position ? `object-position: ${project.shot.position}` : undefined}
+                    />
+                  )}
+                  <div class="card-body">
+                    <p class="line">{project.line}</p>
+                    <div class="card-foot">
+                      <span class="label meta">{project.meta}</span>
+                      <a class="pill card-link" href={project.link.href}>
+                        {project.link.label}
+                      </a>
+                    </div>
                   </div>
-                </div>
-              </article>
-            </li>
-          );
-        })
-      }
-    </ol>
+                </article>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
   </div>
 </section>
 
+<script>
+  // CSS does the motion; this only decides which project is in focus.
+  const work = document.querySelector<HTMLElement>('.work')!;
+  const projects = [...work.querySelectorAll<HTMLElement>('.project')];
+  const steps = [...work.querySelectorAll<HTMLElement>('.step')];
+
+  function focusProject(index: number) {
+    projects.forEach((project, i) => project.toggleAttribute('data-active', i === index));
+    work.style.setProperty('--step', String(index));
+  }
+
+  // A step counts once it crosses the middle of the screen.
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) focusProject(steps.indexOf(entry.target as HTMLElement));
+      }
+    },
+    { rootMargin: '-50% 0px -49% 0px' },
+  );
+  steps.forEach((step) => observer.observe(step));
+
+  // Tabbing to a project brings its card forward, so its link can be reached next.
+  projects.forEach((project, i) => project.addEventListener('focusin', () => focusProject(i)));
+</script>
+
 <style>
   .work {
+    position: relative;
+  }
+
+  .steps {
+    display: none;
+  }
+
+  .stage {
     position: relative;
     overflow: hidden;
     padding: 120px var(--gutter);
@@ -179,9 +225,10 @@ const activeSlug = 'firn';
     font-size: 14px;
   }
 
-  /* Narrow: each project's card sits under its name. */
-  @media (max-width: 1099px) {
-    .work {
+  /* Narrow, or reduced motion: each project's card sits under its name,
+     so nothing depends on scrolling. */
+  @media (max-width: 1099px), (prefers-reduced-motion: reduce) {
+    .stage {
       padding-block: 88px;
     }
 
@@ -204,10 +251,39 @@ const activeSlug = 'firn';
     }
   }
 
-  /* Wide: names on the left, the card in focus on the right. All cards share
-     one grid cell so the focused one can cross-fade in place. */
-  @media (min-width: 1100px) {
+  /* Wide: the section pins while you scroll through one step per project.
+     Names on the left, the card in focus on the right. All cards share one
+     grid cell so the focused one can cross-fade in place. */
+  @media (min-width: 1100px) and (prefers-reduced-motion: no-preference) {
+    .work {
+      height: calc(100svh + (var(--count) - 1) * 70svh);
+    }
+
+    .steps {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: repeat(var(--count), 1fr);
+      pointer-events: none;
+    }
+
+    .stage {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      padding-block: 96px;
+    }
+
+    .field {
+      /* Drifts a little with each project. */
+      transform: scale(1.25)
+        translate3d(calc(var(--step, 0) * -2%), calc(var(--step, 0) * 1%), 0);
+      transition: transform 1200ms var(--ease-out);
+      will-change: transform;
+    }
+
     .layout {
+      height: 100%;
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 650px);
       grid-template-rows: 1fr repeat(5, auto) 1fr;
@@ -237,11 +313,18 @@ const activeSlug = 'firn';
       grid-column: 2;
       grid-row: 1 / -1;
       align-self: center;
+      transition:
+        opacity 800ms var(--ease-out),
+        transform 800ms var(--ease-out),
+        visibility 0s;
     }
 
+    /* Hidden cards fade out first, then leave the tab order. */
     .project:not([data-active]) .card {
       visibility: hidden;
       opacity: 0;
+      transform: translateY(12px);
+      transition-delay: 0s, 0s, 800ms;
     }
   }
 </style>
