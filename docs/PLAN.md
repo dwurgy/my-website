@@ -23,7 +23,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 - [ ] Once `package.json` is on the branch, have David set the Build command to `npm run build` in Cloudflare. Leave the deploy and version commands as they are. That setting applies to every branch, so `main` must not get another push before launch: the old site has no `package.json` and its build would fail.
 - [x] Add a `.gitignore` for `node_modules`, `dist`, and `.astro`.
 
-**Done test:** `npm run build` finishes with no warnings. The built page shows the night background, the grain, and the two glass pills in the right fonts. Nothing on the page makes a network request to any other domain (check the browser's network panel).
+**Done test:** `npm run build` finishes with no warnings. The built page shows the night background, the grain, and the two glass pills in the right fonts. Nothing on the page makes a network request to any other domain except Cloudflare Web Analytics (check the browser's network panel).
 
 ## Phase 2: Homepage, still
 

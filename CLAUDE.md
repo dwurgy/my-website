@@ -13,7 +13,7 @@ The site itself is part of the proof. It should feel crafted, calm, and quick, a
 1. **Real over decorative.** Texture and mood come from David's own photographs and real screenshots of real work, never from effects that imitate film.
 2. **Calm.** Lots of space, few elements on screen at once, slow and smooth motion. Nothing bounces, flashes, or competes.
 3. **Tactile.** Grain, glass, paper. It should feel like a physical object, not a template.
-4. **Quick.** A fast, light, static site. No trackers, no cookies, and no third-party requests at all.
+4. **Quick.** A fast, light, static site. No cookies and no third-party requests, with one exception: Cloudflare Web Analytics.
 
 ## The design
 
@@ -120,7 +120,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - Make small commits with plain messages.
 - Ask before adding any dependency beyond Astro, its official integrations, and Fontsource.
 - Keep the repo public-safe. No customer names, prices, emails, order data, home addresses, or photo metadata, in code or in screenshots. Blur sensitive parts of any screenshot of company software before adding it.
-- No analytics, trackers, cookies, embeds, or third-party scripts.
+- No trackers, cookies, embeds, or third-party scripts. The one exception is Cloudflare Web Analytics, which is cookieless and already enabled for the domain in Cloudflare. Keep it working, and add nothing else.
 - Accessibility is part of done: real links and buttons, a visible focus state, alt text on every meaningful image, readable contrast over photos, and a full keyboard path.
 - If something in this brief conflicts with what David asks in the moment, do what David asks and update this file.
 
