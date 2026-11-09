@@ -1,62 +1,58 @@
 import type { ImageMetadata } from 'astro';
 import firnShot from '../../assets/work/firn-placeholder.jpg';
 import copywriterShot from '../../assets/work/copywriter-lab-poster.jpg';
+import serialShot from '../../assets/work/serial-lookup.png';
 
 export interface Project {
   slug: string;
   name: string;
-  /** The short mono label on the right of the work list. */
-  status: string;
-  /** One or two plain sentences for the card. Facts from CLAUDE.md only. */
-  line: string;
-  /** Small mono metadata under the line. */
+  /** The short mono label on the right of the work index. */
   meta: string;
-  shot?: { src: ImageMetadata; alt: string; position?: string };
-  link: { href: string; label: string };
+  /** One plain sentence beside the name. Facts from CLAUDE.md only. */
+  line: string;
+  /** The preview that follows the cursor, and the image under the name on touch screens. */
+  shot?: { src: ImageMetadata; alt: string };
+  /** Shown in the preview while a project has no screenshot yet. */
+  placeholder?: string;
 }
 
-// Alfred and the back office have no screenshot yet (David is supplying
-// blurred ones), so their cards show the line without an image for now.
 export const projects: Project[] = [
   {
     slug: 'firn',
     name: 'Firn',
-    status: 'Shipped · Oct 2026',
-    line: "A calm desktop browser for people who don't want to learn a new browser. I wrote the brief and directed Claude Code through every phase.",
-    meta: 'macOS · Windows · Open source',
+    meta: 'Oct 2026',
+    line: 'A calm desktop browser. Open source, on macOS and Windows.',
     shot: {
       src: firnShot,
-      alt: 'Firn on a Mac: a sidebar of tabs and spaces beside a website with a leafy tree against a blue sky.',
+      alt: 'Firn on a Mac: a sidebar of tabs and spaces beside a website.',
     },
-    link: { href: 'https://firnbrowser.com', label: 'firnbrowser.com' },
   },
   {
     slug: 'alfred',
     name: 'Alfred',
-    status: 'In daily use',
-    line: "Two AI assistants inside the company's Odoo 19 ERP. Alfred answers questions from live data. The SOP Assistant answers how-to questions from the team's own process docs.",
-    meta: 'Odoo 19 · Gemini API',
-    link: { href: '/work/alfred', label: 'How it works' },
+    meta: 'In use',
+    line: 'Two AI assistants inside an Odoo ERP. One question instead of a warehouse walk.',
+    // David is supplying a blurred screenshot.
+    placeholder: 'Alfred screenshot',
   },
   {
     slug: 'copywriter-lab',
     name: 'Copywriter Lab',
-    status: '3 days',
-    line: 'Type a part number and get product copy, a quote summary, and a spec sheet. Three days from idea to production.',
-    meta: 'AI Studio · Claude · Cloudflare',
+    meta: '3 days',
+    line: 'A part number in. An eBay title that doubles as a quote line, a product description, and weight and dimensions out.',
     shot: {
       src: copywriterShot,
-      alt: 'NW Copywriter Lab: a part number field on the left, and empty panels for product copy, a quote summary, and a spec sheet on the right.',
-      position: 'top',
+      alt: 'NW Copywriter Lab: a finished listing for a network switch, with its eBay title, product description, and weight and dimensions each marked done.',
     },
-    link: { href: '/work/copywriter-lab', label: 'See the demo' },
   },
   {
     slug: 'back-office',
     name: 'Back office',
-    status: '10 weeks',
-    line: 'Off QuickBooks Desktop and onto Odoo 19 in ten weeks, with zero downtime and every order shipped on launch day.',
-    meta: 'Odoo 19 · Sole internal owner',
-    link: { href: '/work/back-office', label: 'The rebuild' },
+    meta: '10 weeks',
+    line: 'Off QuickBooks Desktop and onto one ERP, with zero downtime.',
+    shot: {
+      src: serialShot,
+      alt: 'A serial number record in Odoo with its quality check passed and the test print below it.',
+    },
   },
 ];

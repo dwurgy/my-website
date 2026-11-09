@@ -66,3 +66,11 @@ Details and reasoning that don't belong in CLAUDE.md.
 - Reduced motion: the hero is one screen tall instead of 230vh, so there's no still stretch to scroll through. A small departure from the mockup, which keeps the full height.
 - The hero headline turns off the site-wide `text-wrap: balance`, so it breaks as in the mockup ("people actually / use.").
 - Checked at 1440 and 390, both themes, against the mockup: matches. No layout shift while scrolling the hero.
+
+## 2026-11-09: Work index (Phase 3b, box 5)
+
+- Rebuilt the work section as the v5 ink index: hovering a row quiets the others to 0.32 and nudges the name 12px; a 360 × 236 preview follows the cursor with a slight lag inside the shared scroll loop. Keyboard focus (focus-visible only) shows the preview beside the row. Touch screens show each image under its name instead.
+- Rows are real links to `/work/<slug>`. Those pages arrive in Phase 4, so they 404 until then. The preview-to-main-image morph also waits for Phase 4.
+- The preview renders only once the section is near, so its images don't load with the top of the page.
+- Copywriter Lab uses the wording David confirmed on 2026-11-09, not the mockup's older line. Back office now shows `serial-lookup.png`; Alfred keeps a marked placeholder.
+- This also removed the v3 pinned work list and its cross-fading card.

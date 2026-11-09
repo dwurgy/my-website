@@ -1,121 +1,194 @@
 ---
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects';
-
-// The first project is in focus until scrolling picks another.
-const activeSlug = projects[0].slug;
 ---
 
-<section
-  id="work"
-  class="work"
-  aria-labelledby="work-title"
-  style={`--count: ${projects.length}`}
->
-  <!-- One invisible step per project. Scrolling past a step focuses that project. -->
-  <div class="steps" aria-hidden="true">
-    {projects.map(() => <div class="step" />)}
+<section id="work" class="work" aria-labelledby="work-title">
+  <div class="wrap">
+    <div class="head">
+      <h2 id="work-title" class="label">Selected work</h2>
+      <span class="label years">2025–2026</span>
+    </div>
+
+    <ul class="list" role="list" data-work-list>
+      {
+        projects.map((project) => (
+          <li>
+            <a class="row" href={`/work/${project.slug}`} data-slug={project.slug}>
+              <span class="headline">
+                <span class="name">{project.name}</span>
+              </span>
+              <span class="line">{project.line}</span>
+              <span class="label meta">{project.meta}</span>
+            </a>
+            {project.shot && (
+              <Image
+                class="touch-shot"
+                src={project.shot.src}
+                alt={project.shot.alt}
+                widths={[390, 780, 1170].filter((w) => w <= project.shot!.src.width)}
+                sizes="(max-width: 760px) calc(100vw - 40px), min(100vw - 80px, 1360px)"
+              />
+            )}
+          </li>
+        ))
+      }
+    </ul>
   </div>
 
-  <div class="stage">
-    <div class="layout">
-      <h2 id="work-title" class="label heading">Selected work · 2025–2026</h2>
-
-      <ol class="list" role="list">
-        {
-          projects.map((project, index) => {
-            return (
-              <li
-                class="project"
-                role="listitem"
-                data-active={project.slug === activeSlug ? '' : undefined}
-                style={`--row: ${index + 3}`}
-              >
-                <a class="row" href={`/work/${project.slug}`}>
-                  <span class="name">{project.name}</span>
-                  <span class="label status">{project.status}</span>
-                </a>
-
-                <article class="card" aria-label={project.name}>
-                  {project.shot && (
-                    <Image
-                      class="shot"
-                      src={project.shot.src}
-                      alt={project.shot.alt}
-                      widths={[400, 600, 800, project.shot.src.width].filter((w) => w <= project.shot!.src.width)}
-                      sizes="(min-width: 1100px) 620px, calc(100vw - 2 * var(--gutter) - 28px)"
-                      style={project.shot.position ? `object-position: ${project.shot.position}` : undefined}
-                    />
-                  )}
-                  <div class="card-body">
-                    <p class="line">{project.line}</p>
-                    <div class="card-foot">
-                      <span class="label meta">{project.meta}</span>
-                      <a class="btn card-link" href={project.link.href}>
-                        {project.link.label}
-                      </a>
-                    </div>
-                  </div>
-                </article>
-              </li>
-            );
-          })
-        }
-      </ol>
-    </div>
+  <!-- The preview that follows the cursor. It repeats what the row says, so
+       it's hidden from screen readers. It stays unrendered until the section
+       is near, so its images don't load with the top of the page. -->
+  <div class="preview" aria-hidden="true" data-preview>
+    {
+      projects.map((project) =>
+        project.shot ? (
+          <Image
+            class="shot"
+            src={project.shot.src}
+            alt=""
+            widths={[360, 720]}
+            sizes="360px"
+            data-slug={project.slug}
+          />
+        ) : (
+          <div class="shot placeholder label" data-slug={project.slug}>
+            [{project.placeholder}]
+          </div>
+        ),
+      )
+    }
   </div>
 </section>
 
 <script>
-  // CSS does the motion; this only decides which project is in focus.
-  const work = document.querySelector<HTMLElement>('.work')!;
-  const projects = [...work.querySelectorAll<HTMLElement>('.project')];
-  const steps = [...work.querySelectorAll<HTMLElement>('.step')];
+  import { onFrame, requestFrame, reducedMotion } from '../scripts/scroll';
 
-  function focusProject(index: number) {
-    projects.forEach((project, i) => project.toggleAttribute('data-active', i === index));
-    work.style.setProperty('--step', String(index));
-  }
+  const work = document.querySelector<HTMLElement>('#work')!;
+  const list = work.querySelector<HTMLElement>('[data-work-list]')!;
+  const preview = work.querySelector<HTMLElement>('[data-preview]')!;
+  const rows = [...list.querySelectorAll<HTMLElement>('.row')];
+  const shots = [...preview.querySelectorAll<HTMLElement>('[data-slug]')];
 
-  // A step counts once it crosses the middle of the screen.
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) focusProject(steps.indexOf(entry.target as HTMLElement));
+  const WIDTH = 360;
+  const HALF_HEIGHT = 118;
+  const LAG = 0.22;
+
+  let active: HTMLElement | null = null;
+  let byKeyboard = false;
+  let mouseX = 0;
+  let mouseY = 0;
+  let x: number | null = null;
+  let y = 0;
+
+  // Render the preview (and so load its images) once the section is near.
+  new IntersectionObserver(
+    (entries, observer) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        preview.dataset.ready = '';
+        observer.disconnect();
       }
     },
-    { rootMargin: '-50% 0px -49% 0px' },
-  );
-  steps.forEach((step) => observer.observe(step));
+    { rootMargin: '800px 0px' },
+  ).observe(work);
 
-  // Tabbing to a project brings its card forward, so its link can be reached next.
-  projects.forEach((project, i) => project.addEventListener('focusin', () => focusProject(i)));
+  function show(row: HTMLElement | null, keyboard = false) {
+    if (row === active && keyboard === byKeyboard) return;
+    if (row !== active || !row) x = null;
+    active = row;
+    byKeyboard = keyboard;
+    list.toggleAttribute('data-hovering', !!row);
+    rows.forEach((r) => r.toggleAttribute('data-on', r === row));
+    shots.forEach((s) => s.toggleAttribute('data-on', !!row && s.dataset.slug === row.dataset.slug));
+    preview.toggleAttribute('data-on', !!row);
+    requestFrame();
+  }
+
+  for (const row of rows) {
+    row.addEventListener('pointerenter', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      show(row);
+    });
+    // Only keyboard focus shows the preview; a click is about to leave the page.
+    row.addEventListener('focus', () => {
+      if (row.matches(':focus-visible')) show(row, true);
+    });
+    row.addEventListener('blur', () => {
+      if (row === active && byKeyboard) show(null);
+    });
+  }
+
+  list.addEventListener('pointerleave', () => {
+    if (!byKeyboard) show(null);
+  });
+
+  addEventListener(
+    'pointermove',
+    (event) => {
+      if (event.pointerType !== 'mouse') return;
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      if (active && !byKeyboard) requestFrame();
+    },
+    { passive: true },
+  );
+
+  // The preview eases toward the cursor (or beside the focused row) with a
+  // slight lag, inside the page's one animation loop.
+  onFrame(() => {
+    if (!active) return;
+    let targetX: number;
+    let targetY: number;
+    if (byKeyboard) {
+      const box = active.getBoundingClientRect();
+      targetX = Math.max(16, box.right - WIDTH - 28);
+      targetY = box.top + box.height / 2 - HALF_HEIGHT;
+    } else {
+      targetX = mouseX + 32;
+      targetY = mouseY - HALF_HEIGHT;
+      if (targetX + WIDTH > innerWidth - 16) targetX = mouseX - WIDTH - 32;
+    }
+    if (x === null || reducedMotion.matches) {
+      x = targetX;
+      y = targetY;
+    }
+    x += (targetX - x) * LAG;
+    y += (targetY - y) * LAG;
+    const settled = Math.abs(targetX - x) < 0.5 && Math.abs(targetY - y) < 0.5;
+    const left = x;
+    const top = y;
+    return () => {
+      preview.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+      if (!settled) requestFrame();
+    };
+  });
 </script>
 
 <style>
   .work {
-    position: relative;
-    color: var(--fg);
+    padding: 180px 40px 200px;
   }
 
-  .steps {
-    display: none;
+  .wrap {
+    max-width: 1360px;
+    margin: 0 auto;
   }
 
-  .stage {
-    position: relative;
-    overflow: hidden;
-    padding: 120px var(--gutter);
+  .head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 20px;
   }
 
-  .layout {
-    position: relative;
-  }
-
-  .heading {
+  .head h2 {
     margin: 0;
-    padding-bottom: 18px;
     font-weight: 400;
+  }
+
+  .years {
     color: var(--fg-muted);
   }
 
@@ -123,17 +196,19 @@ const activeSlug = projects[0].slug;
     margin: 0;
     padding: 0;
     list-style: none;
+    border-bottom: 1px solid var(--rule);
   }
 
   .row {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 320px) 120px;
     align-items: baseline;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 10px 0;
+    gap: 32px;
+    padding: 18px 0 14px;
     border-top: 1px solid var(--rule);
     color: var(--fg);
     text-decoration: none;
+    transition: opacity 200ms ease;
   }
 
   .row:focus-visible {
@@ -141,159 +216,120 @@ const activeSlug = projects[0].slug;
   }
 
   .name {
+    display: inline-block;
     font-size: clamp(44px, 6.6vw, 104px);
-    line-height: 0.95;
-    font-weight: var(--headline-weight);
-    letter-spacing: var(--headline-tracking);
-    /* Dim the whole word, not its colour: with tight tracking, letters overlap,
-       and a see-through colour shows the overlaps as brighter seams. */
-    opacity: 0.4;
-    transition: opacity 600ms var(--ease-out);
-  }
-
-  .row:hover .name,
-  [data-active] .name {
-    opacity: 1;
-  }
-
-  .status {
-    flex: none;
-    color: var(--fg-muted);
-  }
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    max-width: 650px;
-  }
-
-  .shot {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 578 / 365;
-    object-fit: cover;
-    border-radius: var(--radius-print);
-    background: var(--night);
-  }
-
-  .card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    transition: transform 250ms var(--ease-out);
   }
 
   .line {
-    margin: 0;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 1.5;
-    color: var(--body);
-  }
-
-  .card-foot {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .meta {
     color: var(--fg-muted);
   }
 
-  /* Narrow, or reduced motion: each project's card sits under its name,
-     so nothing depends on scrolling. */
-  @media (max-width: 1099px), (prefers-reduced-motion: reduce) {
-    .stage {
-      padding-block: 88px;
-    }
-
-    .name {
-      opacity: 1;
-    }
-
-    .card {
-      margin: 8px 0 40px;
-    }
-
-    .project:last-child .card {
-      margin-bottom: 0;
-    }
+  .meta {
+    text-align: right;
+    white-space: nowrap;
   }
 
-  @media (max-width: 720px) {
-    .line {
-      font-size: 16px;
-    }
+  /* Hovering or focusing one row quiets the others. */
+  .list[data-hovering] .row {
+    opacity: 0.32;
   }
 
-  /* Wide: the section pins while you scroll through one step per project.
-     Names on the left, the card in focus on the right. All cards share one
-     grid cell so the focused one can cross-fade in place. */
-  @media (min-width: 1100px) and (prefers-reduced-motion: no-preference) {
+  .list[data-hovering] .row[data-on] {
+    opacity: 1;
+  }
+
+  .row[data-on] .name {
+    transform: translateX(12px);
+  }
+
+  .touch-shot {
+    display: none;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10.5;
+    object-fit: cover;
+    object-position: top;
+    border-radius: var(--radius-print);
+    background: var(--night);
+    margin: 4px 0 24px;
+  }
+
+  .preview {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 20;
+    width: 360px;
+    height: 236px;
+    overflow: hidden;
+    border-radius: var(--radius-print);
+    background: var(--night);
+    box-shadow: 0 24px 60px rgba(27, 24, 21, 0.28);
+    pointer-events: none;
+    opacity: 0;
+    scale: 0.94;
+    transition:
+      opacity 200ms ease,
+      scale 200ms var(--ease-out);
+  }
+
+  .preview[data-ready] {
+    display: block;
+  }
+
+  .preview[data-on] {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .shot {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    opacity: 0;
+  }
+
+  .shot[data-on] {
+    opacity: 1;
+  }
+
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bone);
+  }
+
+  @media (max-width: 760px) {
     .work {
-      height: calc(100svh + (var(--count) - 1) * 70svh);
-    }
-
-    .steps {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      grid-template-rows: repeat(var(--count), 1fr);
-      pointer-events: none;
-    }
-
-    .stage {
-      position: sticky;
-      top: 0;
-      height: 100svh;
-      padding-block: 96px;
-    }
-
-    .layout {
-      height: 100%;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 650px);
-      grid-template-rows: 1fr repeat(5, auto) 1fr;
-      column-gap: 64px;
-    }
-
-    .heading {
-      grid-column: 1;
-      grid-row: 2;
-    }
-
-    .list,
-    .project {
-      display: contents;
+      padding-inline: 20px;
     }
 
     .row {
-      grid-column: 1;
-      grid-row: var(--row);
+      grid-template-columns: minmax(0, 1fr) auto;
     }
 
-    .project:last-child .row {
-      border-bottom: 1px solid var(--rule);
+    .line {
+      display: none;
+    }
+  }
+
+  /* Touch screens: no cursor to follow, so each project's image sits under its name. */
+  @media (hover: none) {
+    .touch-shot {
+      display: block;
     }
 
-    .card {
-      grid-column: 2;
-      grid-row: 1 / -1;
-      align-self: center;
-      transition:
-        opacity 800ms var(--ease-out),
-        transform 800ms var(--ease-out),
-        visibility 0s;
-    }
-
-    /* Hidden cards fade out first, then leave the tab order. */
-    .project:not([data-active]) .card {
-      visibility: hidden;
-      opacity: 0;
-      transform: translateY(12px);
-      transition-delay: 0s, 0s, 800ms;
+    .preview,
+    .preview[data-ready] {
+      display: none;
     }
   }
 </style>
