@@ -43,11 +43,26 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 **Done test:** A Chrome Performance recording while scrolling the whole page shows no long frames or layout shifts. With reduced motion turned on, nothing moves and nothing is hidden. Show David a screen recording.
 
+## Phase 3b: The v5 direction
+
+- [x] Commit `design/mockup-v5.html` and `docs/v5-handoff.md`, and point the brief at the mockup.
+- [ ] Theme tokens and dark mode: every colour as a token, the no-flash head script, system-following by default, and the toggle in the control bar.
+- [ ] Ground and materials: paper everywhere, one fixed grain layer, and the single glass control bar with the current section shown. Remove the per-section grain, the photo overlays, the glass project card, and the glass band card.
+- [ ] Hero: the pinned full-bleed-to-print shrink, with the two-copy headline.
+- [ ] Work: the ink index, the cursor preview, keyboard focus, and the touch fallback.
+- [ ] Off the clock: the pinned sideways strip, plus its reduced-motion fallback.
+- [ ] Say hi: the pinned print-to-full-bleed grow, with the contact text on the photo.
+- [ ] Remove the v3 motion this replaces: the hero settle on load, the pinned work list with its cross-fading card, and the photo parallax.
+
+**Done test:** A Chrome Performance recording while scrolling the whole page shows no long frames or layout shifts. Nothing runs on a timer except the load fade, hovers, page changes, and the theme switch. With reduced motion on, nothing moves and every photo is reachable. Both themes pass contrast checks, and reloading in either theme shows no flash of the other. At 390px there is no sideways scrolling outside the Off the clock strip. Lighthouse on mobile stays at 95 or higher. Show David a screen recording at 1440px and on his phone.
+
 ## Phase 4: Project pages
 
 - [ ] A page for each project at `/work/firn`, `/work/alfred`, `/work/copywriter-lab`, and `/work/back-office`. Write each as a Markdown file in a content collection.
 - [ ] Each page covers the problem, what David built, the result, and a few images, using only facts from CLAUDE.md. Where a fact or image is missing, leave a clearly marked placeholder for David rather than inventing it.
 - [ ] Use the Copywriter Lab demo video on its page, with the poster image, muted, and with controls.
+- [ ] Project pages use the paper ground: a back button, the title, a short lede, the main image, a row of facts, one paragraph, links, and a large "Next project" row at the bottom.
+- [ ] Opening a page from the index morphs the cursor preview into the main image in about 300ms. Going back returns to the work index.
 
 **Done test:** Every link on the homepage reaches a real page. Each page reads well at 390px. No number or claim appears that isn't in CLAUDE.md.
 
@@ -69,7 +84,10 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 ## Waiting on David
 
 - A clean Firn screenshot with his own tabs.
-- Screenshots of Alfred, the SOP Assistant, and the first live P&L, with customer names and numbers blurred.
-- Captions for the photos (place and year), or a decision to leave them off.
+- Screenshots of the SOP Assistant, with customer names and numbers blurred.
+- Back-office image: done, serial lookup (`assets/work/serial-lookup.png`).
+- Alfred: a full-screen chat screenshot with clean formatting, plus an optional clip that David records and Claude in chat trims.
+- Photo captions: v5 shows none. Add them back only if David supplies a place and year for each photo.
+- Worker Previews: still needed, and now essential, because the preview link is the only way David sees the site.
 - His résumé as a PDF.
 - Whether to bring back the NWR brand identity work from the old site (nwr-brand-canvas.netlify.app). It isn't in v3.

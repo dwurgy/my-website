@@ -17,14 +17,14 @@ The site itself is part of the proof. It should feel crafted, calm, and quick, a
 
 ## The design
 
-`design/mockup-v3.html` is the approved homepage. Open it in a browser before building and match it: section order, type sizes, spacing, colours, grain, and glass. It is a static reference with inline styles, laid out for a 1440px desktop. Rebuild it properly; don't copy its markup.
+`design/mockup-v5.html` is the approved homepage. Look at it in a browser before building. `design/mockup-v3.html` stays for history only. Match v5: section order, type sizes, spacing, colours, and motion. It's laid out for a 1440px desktop and works down to 390px. It is one self-contained file that loads the real photos from `assets/`, so serve the repo root to view it. Use it for layout, sizes, colours, copy, and the motion math in its `tick()` function. Rebuild it properly in Astro; don't copy its markup. Its project page is a stand-in for real `/work/<slug>` routes. The full reasoning behind v5 is in `docs/v5-handoff.md`.
 
-What was liked about it, and the reference sites behind it (skylrk.com, bennettandclive.com, and shopify.com/editions/winter2026):
+What makes v5 work:
 
-- **David's photos are the atmosphere.** Full-bleed, sometimes sharp, sometimes blurred into a field of colour, always with grain on top.
-- **Big, confident type.** One grotesque does almost everything, set large and tight. There is one italic serif word per screen at most, for emphasis.
-- **The interface nearly disappears.** A glass pill for the wordmark, a glass pill for the nav, tiny mono labels at the edges, and nothing else.
-- **Motion is part of the experience.** Things come into focus, drift, and overlap as you scroll.
+- **Paper is the home.** The page is warm paper from top to bottom, with ink type. It never switches to a dark ground between sections.
+- **Photos are windows.** David's photos appear as prints on the paper. They go full-bleed only at the start and the end of the page.
+- **Big, confident type.** One grotesque does almost everything, set large and tight. There is at most one italic serif word per screen.
+- **Motion follows your hand.** Scroll and the cursor drive almost every movement. Nothing makes you wait.
 
 ### Type
 
@@ -39,29 +39,64 @@ Colour comes mostly from the photos. The page's own colours are:
 
 | Token | Value | Use |
 |---|---|---|
-| `night` | `#151311` | Dark ground between photo sections |
-| `paper` | `#ece6dc` | The paper section (numbers, how I build) |
-| `ink` | `#1b1815` | Text on paper |
-| `ink-muted` | `#5b534a` | Labels on paper |
-| `bone` | `#f3eee7` | Text on photos and on night |
-| `bone-bright` | `#fbf7f1` | Headlines on photos |
+| `paper` | `#ece6dc` | The ground for the whole page and the project pages |
+| `ink` | `#1b1815` | Text, rules, and outline buttons on paper |
+| `ink-muted` | `#5b534a` | Labels and secondary text |
+| `night` | `#151311` | Only behind screenshots and placeholders. No longer a section background |
+| `bone` | `#f3eee7` | Only for text that sits on a photo |
+| `bone-bright` | `#fbf7f1` | Only for headlines that sit on a photo |
 
-There is no accent colour. Text over photos must stay readable at 4.5:1: use soft dark gradients (scrims) behind it, as the mockup does.
+There is no accent colour. Text over photos still needs 4.5:1, using a scrim inside the photo.
+
+### Dark mode
+
+The site has a light theme (paper and ink) and a dark theme (warm night and bone). Photos, scrims, and text on photos are the same in both. Only the ground, text, rules, buttons, the control bar, and the grain change.
+
+| Token | Light | Dark |
+|---|---|---|
+| `bg` | `#ece6dc` | `#171512` |
+| `fg` | `#1b1815` | `#f0eae1` |
+| `fg-muted` | `#5b534a` | `#a39a8e` |
+| `body` (paragraphs) | `#2b2622` | `#d6cec2` |
+| `rule` | ink at 0.2 | bone at 0.16 |
+| `rule-strong` | ink at 0.35 | bone at 0.3 |
+| `bar-bg` | paper at 0.62 | night at 0.55 |
+| Grain | multiply at 0.32 | screen at 0.07 |
+
+- Write every colour on the page as one of these tokens, so a theme is just a change of token values.
+- By default the site follows the visitor's system setting, and it changes live if that setting changes.
+- A sun/moon button in the control bar, just before "Say hi," overrides the system setting. Its label says what it will do ("Switch to dark mode"). The choice is saved in `localStorage` (not a cookie) and wins over the system setting from then on.
+- Set the theme in a tiny inline script in `<head>`, before first paint, so the page never flashes the wrong theme.
+- Switching themes uses a short view transition (about 240ms).
+- Both themes must pass the brief's contrast rules on their own.
 
 ### Materials
 
-- **Grain:** every photo section and the paper section carries fine noise. On photos use overlay blending at about 0.35 to 0.55 opacity, and on paper use multiply at about 0.35. In production, use one small tiled noise image generated once, not an SVG filter per section, which is slow.
-- **Glass:** only for controls and small cards (the nav pills, link pills, the project card, the band card). Use a light gradient fill, a 1px white edge, an inner top highlight, and backdrop blur of about 18 to 22px. Never put `backdrop-filter` on a full-width or full-height element.
-- **Corners:** pills are fully round; cards are about 22 to 26px; screenshots inside cards are about 14px.
+- **Grain:** one fixed, tiled noise layer behind the content, blended with multiply at about 0.32, so it shows only on paper (screen at about 0.07 in dark mode). There is no grain overlay on photos. Their grain comes from the scans. Use the one small tiled noise image (`public/grain.png`), not an SVG filter, which is slow.
+- **Glass:** only on the control bar, and on buttons that sit on top of a photo (the contact links). There are no glass cards. Never put `backdrop-filter` on a full-width or full-height element.
+- **Control bar:** one glass bar, fixed and centred at the top. It holds the WURGLER wordmark, Work, How I build, Off the clock, the theme button, and an ink "Say hi" pill. The current section's link is at full opacity and the others are at 0.6. On phones the middle two links hide.
+- **Corners:** pills are fully round. Prints, screenshots, and the cursor preview are about 6px.
+- **Buttons on paper:** a 1px ink outline that fills with ink on hover.
 
 ### Motion
 
-- **Hero:** the coast photo very slowly settles from a slight blur and scale to sharp on load. The headline fades up once.
-- **Work list:** as you scroll, each project name brightens in turn while the others stay dim, and the glass card on the right cross-fades to that project's screenshot and line. The background field shifts subtly with it. On a phone, the list stacks with each project's card under its name.
-- **Photo sections:** slow parallax or slow blur-to-sharp as each section enters.
-- **Feel:** slow ease-out curves of about 600 to 1200ms for reveals, and nothing springy. Prefer CSS scroll-driven animations with a small amount of JavaScript as fallback. Ask before adding a smooth-scroll library.
-- **Reduced motion:** with `prefers-reduced-motion: reduce`, everything is still and complete.
-- **Smoothness:** scrolling must stay at 60fps on an ordinary laptop. Animate only transform, opacity, and filter on small elements.
+The rule: **motion follows your hand.** Anything that scroll or the cursor can drive, they drive. The only timed motion is:
+
+- the headline fading up once on load (about 700ms),
+- hovers (about 200ms),
+- page changes (about 300ms, using the View Transitions API),
+- the theme switch (about 240ms, see Dark mode).
+
+Nothing else runs on a timer.
+
+- **Hero (pinned, about 230vh):** the coast photo starts full-bleed and shrinks, matched to scroll, into a print on the right half of the paper: inset 20% top and bottom, 50% left, 40px right, with corners going from 0 to 6px. On phones it ends as a print across the top. The headline exists twice: an ink copy on the paper and a bone copy clipped to the photo's exact shape, so its colour changes right at the photo's edge. The photo also scales from 1.12 to 1.
+- **Work:** a large ink index with no background photo. Hovering a row fades the other rows to about 0.32 opacity, nudges the name 12px right, and shows a 360 × 236 preview of the project that follows the cursor with a slight lag. Keyboard focus shows the same preview beside the row. On touch screens there's no preview; each project's image shows under its name instead. Clicking a row opens its project page, and the preview morphs into the page's main image in about 300ms.
+- **How I build:** still, on paper.
+- **Off the clock (pinned, about 340vh):** the music text, then the lodge, pavilion, firs, and moon photos at mixed heights and offsets, drifting sideways exactly as fast as you scroll down.
+- **Say hi (pinned, about 210vh):** the lake starts as a centred print and grows to full-bleed by the bottom of the page. The contact text appears on the photo, using the same two-copy clip as the hero. Only the copy on the photo is interactive.
+- **Pinned lengths** are starting points. If a pinned section starts to feel like a chore, shorten it.
+- **Reduced motion:** the hero shows as a finished print and the lake as full-bleed. The Off the clock photos become a normal row the reader can scroll sideways, because a still track would hide them. Nothing is hidden.
+- **Smoothness:** animate only transform, opacity, and clip-path. Read scroll position in one `requestAnimationFrame` loop. Keep 60fps on an ordinary laptop. Ask before adding a smooth-scroll library.
 
 ### Never
 
@@ -71,6 +106,10 @@ These were tried and rejected:
 - Emoji, decorative gradients, neon, and drop-shadowed "cards everywhere."
 - Copying Firn's design system. Firn is one project on this site, not its look.
 - More than one italic serif word on a screen.
+- Timed animations that make the reader wait (long crossfades, slow reveals).
+- Switching the background between dark photo, blur, and paper from section to section.
+- Glass cards or panels. Glass is only for controls.
+- A full-page fixed photo layer behind the content.
 
 ## Content
 
@@ -80,7 +119,7 @@ These are the only claims and numbers allowed. Never invent or round up a number
 
 - **Firn:** a calm desktop browser with vertical tabs, spaces, and split view. It runs on macOS and Windows, with Linux coming. It is open source (github.com/dwurgy/firn), and its site is firnbrowser.com. David wrote the brief (its CLAUDE.md) and directed Claude Code through every phase. Released October 2026 and notarized by Apple.
 - **Alfred and the SOP Assistant:** two AI assistants inside the company's Odoo 19 ERP, both built on the Gemini API. Alfred answers questions from live data, such as which in-stock units meet a customer's license requirement. The SOP Assistant answers how-to questions from the company's own process docs. Both are in ongoing use across the team. A question that used to mean a walk to the warehouse is now one question.
-- **NW Copywriter Lab:** an internal tool that turns a part number into product copy, a quote summary, and a spec sheet. It was prototyped in Google AI Studio, rebuilt with Claude, and deployed on Cloudflare, three days from idea to production. A demo video is in `assets/work/`.
+- **NW Copywriter Lab:** an internal tool that turns a part number into an eBay title that doubles as a quote line, a product description, and weight and dimensions, and it saves the spec data for store filters. It was prototyped in Google AI Studio, rebuilt with Claude, and deployed on Cloudflare, three days from idea to production. A demo video is in `assets/work/`. (Confirmed by David on 2026-11-09. Use this wording in the work index and the project page.)
 - **The back-office rebuild:** a move off QuickBooks Desktop and an unsupported in-house database onto Odoo 19, with David as sole internal owner. It took ten weeks from kickoff to go-live, with zero downtime and every order shipped on launch day. It produced the company's first live P&L. Sales tax is automated across nine states, and month-end compliance went from three days to one report. Serial tracking with searchable test prints removed 500+ warehouse trips a year.
 - **How I build:** every project starts with a brief that says who it's for, the rules the agent can't break, and a done test for each step. The Firn rules quoted in the mockup are real.
 - **Music:** David sings, writes, and produces in My Brothers And I. The band has placements on Virgin River, Pretty Little Liars, Queen Sugar, and others through Secret Road.
@@ -104,12 +143,14 @@ Write plainly and directly, like a person talking. Use short sentences, no hype,
 
 - `assets/photos/`: David's photographs, with all metadata already stripped. Use these through Astro's image pipeline (AVIF or WebP, responsive sizes) and never serve the originals directly.
   - `coast-dusk.jpg`: the hero.
-  - `lake-dusk-reeds.jpg`: the work background (heavily blurred) and the contact section (sharp).
-  - `lodge-dusk.jpg`: the full-width "off the clock" image.
-  - `pavilion-peak.jpg`, `firs-house.jpg`, and `lake-dusk-moon.jpg`: the row of three under it.
+  - `lodge-dusk.jpg`, `pavilion-peak.jpg`, `firs-house.jpg`, and `lake-dusk-moon.jpg`: the Off the clock strip, in that order.
+  - `lake-dusk-reeds.jpg`: the Say hi photo, sharp. It's no longer used blurred.
 - `assets/work/`
-  - `copywriter-lab.mp4` and `copywriter-lab-poster.jpg`: the real demo.
+  - `copywriter-lab.mp4`: the real demo, 34 seconds, no audio. It loops from the empty screen back to it.
+  - `copywriter-lab-poster.jpg`: the finished listing. It is the video's poster and also the work index preview.
+  - `serial-lookup.png`: the back-office image, a serial record with its test print. The coworker's name and the costs are already blurred.
   - `firn-placeholder.jpg`: a low-resolution placeholder. David will supply a proper screenshot.
+  - The Alfred screenshot, and an optional short Alfred clip, are still to come.
 
 Any new photo must have its metadata (including GPS) stripped before it is committed. This repo is public.
 
@@ -129,7 +170,8 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **Phase 1: done** (2026-10-20). Astro, self-hosted fonts, tokens, grain, and Cloudflare pointed at `dist`. David set the Cloudflare build command to `npm run build`.
 - **Phase 2: done** (2026-10-20). The homepage, still, matching the mockup. Lighthouse mobile: 99 performance, 100 accessibility, 100 best practices.
 - **Phase 3: done** (2026-10-20). Motion: hero settle, pinned work list, photo parallax, and reduced motion. Done test passed at 60fps with no layout shifts.
-- **Phase 4: next.** Project pages.
+- **2026-11-04:** David approved the v5 direction ("paper with windows"). The homepage built in Phases 2 and 3 matches v3 and needs rework. See Phase 3b in `docs/PLAN.md`.
+- **Phase 3b: next.** The v5 direction. Then Phase 4, project pages.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
@@ -144,8 +186,8 @@ David is not a programmer. He directs the work and judges how it looks and feels
 - **Spend his usage carefully.** Read only the files and parts you need, and don't re-read files already read in this conversation. Keep replies short. Never skip testing or the brief's rules to save effort.
 - **Checkpoints.** When a step works and is committed, update "Where we are" in a line, put any reasoning worth keeping in `docs/HISTORY.md`, and recommend `/clear`. Recommend `/compact` instead only if something important lives only in the conversation.
 - **Stuck rule.** After two failed tries at the same fix, stop and say what's known and what's been ruled out.
-- **How David checks the site.**
-  - On this Mac: `npm run build && npm run preview` (or the `preview` entry in `.claude/launch.json`), then http://localhost:4321 in the Browser pane or in Arc. The mockup opens straight from Finder: `design/mockup-v3.html`.
-  - On his phone: push `redesign` and use the Cloudflare preview link (once Worker Previews are on).
-- **Pushing.** Claude's shell has no GitHub sign-in, so pushes fail from here. David pushes from GitHub Desktop: choose the my-website repository and the `redesign` branch, then click "Push origin". Tell him when there's something to push.
-- **Lighthouse** needs a Chromium browser. Chrome isn't installed, so run it with `CHROME_PATH=/Applications/Arc.app/Contents/MacOS/Arc` and `--chrome-flags="--headless=new"`.
+- **Where the work happens.** Building now happens in Claude Code in the cloud, not on David's Mac.
+- **Pushing.** Commit each finished step to `redesign` and push it yourself. Never push to or merge into `main`.
+- **How David checks the site.** Every push to `redesign` gets a Cloudflare preview link. After each push, give him the link and say exactly what to look at, on desktop and on his phone. If a preview link isn't available, say so.
+- **How you check the site.** Run `npm run build && npm run preview` and look at it with a headless browser (Playwright and Chromium) at 1440 × 900 and 390 × 844, in both themes. Do the same with `design/mockup-v5.html` (serve the repo root with a small static server so its `../assets/` paths work) and compare. If a headless browser can't be installed here, say so and rely on David's preview links.
+- **Lighthouse** uses the same headless Chromium.

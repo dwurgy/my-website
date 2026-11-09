@@ -34,3 +34,10 @@ Details and reasoning that don't belong in CLAUDE.md.
 - **Done test (2026-10-20).** Run in headless Arc over the DevTools protocol (no new dependencies), on the M2's real GPU (ANGLE Metal). Whole-page scroll at 1440×900 and 390×844, motion on and off. Final run: every frame at about 16.7ms (60fps), no frames over 33ms, no long animation frames, layout shift 0. With reduced motion emulated: no running animations, no photo moved, nothing hidden. The first full run had 10 slow frames (worst 433ms) and one probe had one 83ms frame where the lodge photo first loads; four repeat passes and the final run had none, so those were taken as Arc starting up and first-time image decoding. Worth re-checking on a real phone once Worker Previews are on.
 - **Email.** David set up forwarding, so the footer and the brief now use hello@davidwurgler.com instead of his Gmail address (also changed in the mockup).
 - **Phase 3 closed** by David (2026-10-20).
+
+## Phase 3b: The v5 direction
+
+- **Move to the cloud (2026-11-09).** Building moved from David's Mac to Claude Code in the cloud. Claude pushes `redesign` itself and checks pages with headless Chromium (Playwright) at 1440 × 900 and 390 × 844 in both themes. David checks on Cloudflare preview links.
+- **Brief updated for v5.** CLAUDE.md and PLAN.md were changed to match `docs/v5-handoff.md`. One addition beyond the handoff: the theme switch (about 240ms) is listed with the timed motion, because the handoff's own dark-mode section gives it a view transition.
+- **Mockup check.** `design/mockup-v5.html` served from the repo root ran cleanly at both sizes and in both themes: no script errors, no failed requests, no sideways scroll, and the hover preview and project page worked.
+- **Copywriter Lab wording** confirmed by David on 2026-11-09. "Three days from idea to production" stays.
