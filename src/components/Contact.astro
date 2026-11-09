@@ -2,6 +2,12 @@
 import { Picture } from 'astro:assets';
 import reeds from '../../assets/photos/lake-dusk-reeds.jpg';
 
+// The lake starts as a centred print on the paper and, matched to scroll,
+// grows to full-bleed by the bottom of the page. The contact text sits on
+// the photo and is clipped to the photo's exact shape, so it appears as the
+// photo grows. A second "Say hi." in ink waits on the paper below the print
+// and is covered as the photo reaches it. Only the copy on the photo is
+// read out and interactive.
 const email = 'hello@davidwurgler.com';
 const links = [
   { href: 'https://www.linkedin.com/in/david-joel-wurgler', label: 'LinkedIn' },
@@ -9,40 +15,64 @@ const links = [
 ];
 ---
 
-<footer id="hello" class="contact" aria-labelledby="hello-title">
-  <Picture
-    class="photo"
-    src={reeds}
-    alt=""
-    formats={['avif', 'webp']}
-    widths={[640, 960, 1280, 1920, 2560]}
-    sizes="100vw"
-  />
-  <div class="scrim" aria-hidden="true"></div>
+<footer id="hello" class="hello" aria-labelledby="hello-title">
+  <div class="stick">
+    <p class="headline title on-paper" aria-hidden="true">Say <span class="emphasis">hi.</span></p>
 
-  <div class="body">
-    <h2 id="hello-title" class="headline title">Say <span class="emphasis">hi.</span></h2>
-
-    <div class="reach">
-      <div class="pill email">
-        <span class="address">{email}</span>
-        <button class="copy" type="button" data-copy={email}>Copy</button>
-        <span class="visually-hidden" role="status" data-copy-status></span>
-      </div>
-      <div class="links">
-        {links.map((link) => <a class="pill" href={link.href}>{link.label}</a>)}
-      </div>
+    <div class="window">
+      <Picture
+        class="photo"
+        src={reeds}
+        alt="A lake at dusk through the reeds."
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1280, 1920, 2560]}
+        sizes="100vw"
+      />
+      <div class="scrim" aria-hidden="true"></div>
     </div>
 
-    <div class="credits">
-      <span class="label">Photographed and built by David Wurgler</span>
-      <span class="label">Built with Claude Code</span>
+    <div class="window contact" data-contact>
+      <div class="inner">
+        <h2 id="hello-title" class="headline title">Say <span class="emphasis">hi.</span></h2>
+        <div class="reach">
+          <div class="group">
+            <a class="pill email" href={`mailto:${email}`}>{email}</a>
+            <button class="pill" type="button" data-copy={email}>Copy</button>
+            <span class="visually-hidden" role="status" data-copy-status></span>
+          </div>
+          <div class="group">
+            {links.map((link) => <a class="pill" href={link.href}>{link.label}</a>)}
+          </div>
+        </div>
+        <div class="credits">
+          <span class="label">Photographed and built by David Wurgler</span>
+          <span class="label">Built with Claude Code</span>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
 
 <script>
-  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+  import { onFrame, progress, reducedMotion, smooth } from '../scripts/scroll';
+
+  const hello = document.querySelector<HTMLElement>('.hello')!;
+
+  // Scroll sets one number, --print, from 1 (a centred print) to 0
+  // (full-bleed). The CSS turns it into the photo's shape and zoom.
+  onFrame(() => {
+    if (reducedMotion.matches) return () => hello.style.removeProperty('--print');
+    const print = (1 - smooth(progress(hello))).toFixed(4);
+    return () => hello.style.setProperty('--print', print);
+  });
+
+  // The contact links only show once the photo is full-bleed, so tabbing
+  // into them jumps to the bottom of the page first.
+  hello.querySelector('[data-contact]')!.addEventListener('focusin', () => {
+    if (!reducedMotion.matches && progress(hello) < 1) hello.scrollIntoView();
+  });
+
+  for (const button of hello.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
     const status = button.parentElement?.querySelector('[data-copy-status]');
     let reset: number | undefined;
 
@@ -53,7 +83,7 @@ const links = [
         if (status) status.textContent = 'Email address copied.';
       } catch {
         // No clipboard access: select the address so it can be copied by hand.
-        const address = button.parentElement?.querySelector('.address');
+        const address = button.parentElement?.querySelector('.email');
         if (address) window.getSelection()?.selectAllChildren(address);
         if (status) status.textContent = 'Email address selected.';
       }
@@ -61,22 +91,39 @@ const links = [
       reset = window.setTimeout(() => {
         button.textContent = 'Copy';
         if (status) status.textContent = '';
-      }, 2400);
+      }, 2000);
     });
   }
 </script>
 
 <style>
-  .contact {
-    position: relative;
-    color: var(--bone);
-    /* clip, not hidden: hidden would make this the parallax's scroller. */
-    overflow: clip;
-    margin-top: 64px;
-    min-height: 760px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+  .hello {
+    --print: 1;
+    --inset-x: 30%;
+    --inset-y: 22%;
+    --edge: 40px;
+    height: 210vh;
+    /* Links to #hello land at the end of the pin, where the photo is
+       full-bleed and the contact links show. 210vh - 100vh of travel. */
+    scroll-margin-top: -110vh;
+  }
+
+  .stick {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .window {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    clip-path: inset(
+      calc(var(--print) * var(--inset-y)) calc(var(--print) * var(--inset-x))
+        round calc(var(--print) * var(--radius-print))
+    );
   }
 
   .photo {
@@ -85,51 +132,51 @@ const links = [
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: saturate(0.95);
+    transform: scale(calc(1 + 0.1 * var(--print)));
   }
 
   .scrim {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgb(20 16 14 / 0.15) 0%,
-      rgb(20 16 14 / 0) 40%,
-      rgb(20 16 14 / 0.6) 100%
-    );
-  }
-
-  /* Slow parallax where the browser can tie it to scrolling; still otherwise. */
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      .photo {
-        inset: -15% 0;
-        height: 130%;
-        /* Longhands, because the minifier folds a shorthand plus timeline
-           into one declaration that browsers reject. */
-        animation-name: parallax;
-        animation-timing-function: linear;
-        animation-fill-mode: both;
-        animation-timeline: view();
-        /* The footer never scrolls away, so the drift happens as it arrives. */
-        animation-range: entry 0% entry 100%;
-      }
-    }
-  }
-
-  .body {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    padding: 0 var(--gutter) var(--gutter);
+    inset: auto 0 0;
+    height: 65%;
+    background: linear-gradient(180deg, rgb(20 16 14 / 0) 0%, rgb(20 16 14 / 0.58) 100%);
   }
 
   .title {
-    font-size: clamp(56px, 9vw, 150px);
-    line-height: 0.9;
+    font-size: clamp(64px, 10vw, 160px);
     letter-spacing: -0.04em;
+    text-wrap: wrap;
+  }
+
+  .on-paper {
+    position: absolute;
+    left: var(--edge);
+    right: var(--edge);
+    bottom: var(--edge);
+    color: var(--fg);
+  }
+
+  /* Text on the photo is the same in both themes. */
+  .contact {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 var(--edge) var(--edge);
+    color: var(--bone);
+  }
+
+  .contact .title {
     color: var(--bone-bright);
+  }
+
+  .contact :focus-visible {
+    outline-color: var(--bone-bright);
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
   }
 
   .reach {
@@ -140,36 +187,18 @@ const links = [
     gap: 16px;
   }
 
-  .email {
-    gap: 6px;
-    max-width: 100%;
-    padding: 6px 6px 6px 24px;
-    font-family: var(--font-mono);
-    font-size: 15px;
-  }
-
-  .address {
-    min-width: 0;
-    overflow-wrap: anywhere;
-    user-select: all;
-  }
-
-  .copy {
-    flex: none;
-    padding: 8px 16px;
-    border: 0;
-    border-radius: var(--radius-pill);
-    background: var(--bone);
-    color: var(--ink);
-    font-family: var(--font-grot);
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  .links {
+  .group {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
+  }
+
+  .email {
+    padding: 0 24px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    user-select: all;
   }
 
   .credits {
@@ -177,18 +206,29 @@ const links = [
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 10px 24px;
-    padding-top: 14px;
+    padding-top: 16px;
     border-top: 1px solid rgb(255 255 255 / 0.3);
   }
 
-  @media (max-width: 720px) {
-    .contact {
-      min-height: 640px;
+  @media (max-width: 760px) {
+    .hello {
+      --inset-x: 8%;
+      --edge: 20px;
     }
 
     .email {
-      padding-left: 18px;
+      padding: 0 18px;
       font-size: 13px;
+    }
+  }
+
+  /* Reduced motion: the lake is already full-bleed, and the section is one
+     screen tall, so there is no still stretch to scroll through. */
+  @media (prefers-reduced-motion: reduce) {
+    .hello {
+      --print: 0;
+      height: auto;
+      scroll-margin-top: 0;
     }
   }
 </style>

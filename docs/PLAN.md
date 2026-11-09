@@ -51,7 +51,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 - [x] Hero: the pinned full-bleed-to-print shrink, with the two-copy headline.
 - [x] Work: the ink index, the cursor preview, keyboard focus, and the touch fallback.
 - [x] Off the clock: the pinned sideways strip, plus its reduced-motion fallback.
-- [ ] Say hi: the pinned print-to-full-bleed grow, with the contact text on the photo.
+- [x] Say hi: the pinned print-to-full-bleed grow, with the contact text on the photo.
 - [ ] Remove the v3 motion this replaces: the hero settle on load, the pinned work list with its cross-fading card, and the photo parallax.
 
 **Done test:** A Chrome Performance recording while scrolling the whole page shows no long frames or layout shifts. Nothing runs on a timer except the load fade, hovers, page changes, and the theme switch. With reduced motion on, nothing moves and every photo is reachable. Both themes pass contrast checks, and reloading in either theme shows no flash of the other. At 390px there is no sideways scrolling outside the Off the clock strip. Lighthouse on mobile stays at 95 or higher. Show David a screen recording at 1440px and on his phone.

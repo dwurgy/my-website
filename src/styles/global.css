@@ -252,7 +252,7 @@ body > footer {
   transition: background 200ms ease;
 }
 
-a.pill:hover {
+.pill:hover {
   background: rgb(236 230 220 / 0.32);
 }
 

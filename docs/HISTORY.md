@@ -74,3 +74,11 @@ Details and reasoning that don't belong in CLAUDE.md.
 - The preview renders only once the section is near, so its images don't load with the top of the page.
 - Copywriter Lab uses the wording David confirmed on 2026-11-09, not the mockup's older line. Back office now shows `serial-lookup.png`; Alfred keeps a marked placeholder.
 - This also removed the v3 pinned work list and its cross-fading card.
+
+## 2026-11-09: Say hi (Phase 3b, box 7)
+
+- The lake grows from a centred print (inset 22% top and bottom, 30% sides, 8% on phones) to full-bleed over a 210vh pin, using the mockup's math. One CSS number, `--print`, drives the clip and the zoom.
+- The contact text lives on the photo and is clipped to it. An ink "Say hi." waits on the paper below the print and is covered as the photo grows, as in v5. On a phone both can show at once early in the scroll; that is the mockup's behaviour.
+- Links to `#hello` use a negative `scroll-margin-top` (-110vh) so they land at the end of the pin, where the links are visible. Tabbing into the links jumps there too.
+- The Résumé link from the mockup is left out until David supplies the PDF (Phase 5), so there's no dead link.
+- Contrast over the photo, measured against the brightest 5% of pixels behind each piece of text: the lowest was 5.0:1 (the Copy button at 390px).
