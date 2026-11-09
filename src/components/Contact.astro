@@ -57,13 +57,38 @@ const links = [
   import { onFrame, progress, reducedMotion, smooth } from '../scripts/scroll';
 
   const hello = document.querySelector<HTMLElement>('.hello')!;
+  const stick = hello.querySelector<HTMLElement>('.stick')!;
+  const inkTitle = hello.querySelector<HTMLElement>('.on-paper')!;
 
-  // Scroll sets one number, --print, from 1 (a centred print) to 0
-  // (full-bleed). The CSS turns it into the photo's shape and zoom.
+
+  // Scroll sets --print, from 1 (a centred print) to 0 (full-bleed), which
+  // the CSS turns into the photo's shape and zoom. It also sets --title, so
+  // "Say hi." on the photo stays hidden until the photo has covered the ink
+  // "Say hi." below it, then fades in as the photo keeps growing. Only one
+  // is ever on screen.
   onFrame(() => {
-    if (reducedMotion.matches) return () => hello.style.removeProperty('--print');
-    const print = (1 - smooth(progress(hello))).toFixed(4);
-    return () => hello.style.setProperty('--print', print);
+    if (reducedMotion.matches) {
+      return () => {
+        hello.style.removeProperty('--print');
+        hello.style.removeProperty('--title');
+      };
+    }
+    const print = 1 - smooth(progress(hello));
+    // The print value at which the photo has grown past the ink title's
+    // bottom and left edges, so the ink title is fully covered. The insets
+    // are the fractions set in the CSS (--inset-y, --inset-x).
+    const css = getComputedStyle(hello);
+    const insetY = parseFloat(css.getPropertyValue('--inset-y')) / 100;
+    const insetX = parseFloat(css.getPropertyValue('--inset-x')) / 100;
+    const width = stick.clientWidth;
+    const height = stick.clientHeight;
+    const below = height - (inkTitle.offsetTop + inkTitle.offsetHeight);
+    const covered = Math.min(below / (insetY * height), inkTitle.offsetLeft / (insetX * width));
+    const title = Math.min(1, Math.max(0, (covered - print) / (0.5 * covered)));
+    return () => {
+      hello.style.setProperty('--print', print.toFixed(4));
+      hello.style.setProperty('--title', title.toFixed(3));
+    };
   });
 
   // The contact links only show once the photo is full-bleed, so tabbing
@@ -167,6 +192,7 @@ const links = [
 
   .contact .title {
     color: var(--bone-bright);
+    opacity: var(--title, 1);
   }
 
   .contact :focus-visible {
