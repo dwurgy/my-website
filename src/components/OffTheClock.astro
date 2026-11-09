@@ -5,207 +5,183 @@ import pavilion from '../../assets/photos/pavilion-peak.jpg';
 import firs from '../../assets/photos/firs-house.jpg';
 import moon from '../../assets/photos/lake-dusk-moon.jpg';
 
-const row = [
-  { src: pavilion, alt: 'A timber pavilion framing a mountain peak beyond a pool.' },
-  { src: firs, alt: 'Two old firs in front of a house and a dark car.' },
-  { src: moon, alt: 'Mountains at dusk over still water, a sliver of moon above.' },
+// Prints at mixed heights and offsets, in this order. `height` is in vh; the
+// width follows from each photo's shape, so `sizes` can be worked out exactly.
+const prints = [
+  { src: lodge, height: 66, place: 'middle', alt: 'A glass-fronted lodge under tall pines at dusk.' },
+  { src: pavilion, height: 44, place: 'high', alt: 'A timber pavilion framing a mountain peak beyond a pool.' },
+  { src: firs, height: 56, place: 'low', alt: 'Two old firs in front of a house and a dark car.' },
+  { src: moon, height: 48, place: 'middle', alt: 'Mountains at dusk over still water, a sliver of moon above.' },
 ];
 ---
 
 <section id="offclock" class="offclock" aria-labelledby="offclock-title">
-  <div class="feature">
-    <Image
-      class="photo"
-      src={lodge}
-      alt="A glass-fronted lodge under tall pines at dusk."
-      widths={[640, 960, 1280, 1920, 2560]}
-      sizes="100vw"
-    />
-    <div class="scrim" aria-hidden="true"></div>
-
-    <div class="edge-labels">
-      <h2 id="offclock-title" class="label">Off the clock</h2>
-      <span class="label">Photographs, music</span>
+  <div class="stick" data-strip-view>
+    <div class="track" data-track>
+      <div class="music">
+        <h2 id="offclock-title" class="label">Off the clock</h2>
+        <p class="headline music-line">I sing, write, and produce.</p>
+        <p class="music-body">
+          My Brothers And I has songs placed on Virgin River, Pretty Little Liars, Queen Sugar, and
+          others through Secret Road.
+        </p>
+        <div class="music-links">
+          <a class="btn" href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a>
+          <a class="btn" href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">
+            Apple Music
+          </a>
+        </div>
+      </div>
+      {
+        prints.map((print) => (
+          <Image
+            class:list={['print', print.place]}
+            style={`--h: ${print.height}`}
+            src={print.src}
+            alt={print.alt}
+            widths={[480, 720, 960, 1440, 1920]}
+            sizes={`${Math.round((print.height * print.src.width) / print.src.height)}vh`}
+          />
+        ))
+      }
     </div>
-  </div>
-
-  <div class="band">
-    <h3 class="label band-name">My Brothers And I</h3>
-    <p class="band-line">
-      I sing, write, and produce. Songs placed on Virgin River, Pretty Little Liars, Queen Sugar,
-      and others through Secret Road.
-    </p>
-    <div class="band-links">
-      <a class="btn" href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a>
-      <a class="btn" href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">Apple Music</a>
-    </div>
-  </div>
-
-  <div class="row">
-    {
-      row.map((photo) => (
-        <Image
-          class="row-photo"
-          src={photo.src}
-          alt={photo.alt}
-          widths={[480, 720, 960, 1440]}
-          sizes="(min-width: 1000px) 33vw, (min-width: 640px) 50vw, 100vw"
-        />
-      ))
-    }
   </div>
 </section>
 
+<script>
+  import { onFrame, progress, reducedMotion } from '../scripts/scroll';
+
+  // The strip slides sideways exactly as far as the section scrolls down:
+  // from its start at the top of the pin to its end at the bottom.
+  const section = document.querySelector<HTMLElement>('.offclock')!;
+  const view = section.querySelector<HTMLElement>('[data-strip-view]')!;
+  const track = section.querySelector<HTMLElement>('[data-track]')!;
+
+  onFrame(() => {
+    if (reducedMotion.matches) {
+      // Still: the row scrolls sideways by hand, so the keyboard must reach it.
+      return () => {
+        track.style.removeProperty('transform');
+        view.tabIndex = 0;
+        view.setAttribute('role', 'region');
+        view.setAttribute('aria-label', 'Off the clock photographs, scrolls sideways');
+      };
+    }
+    const travel = Math.max(0, track.scrollWidth - innerWidth);
+    const x = (-progress(section) * travel).toFixed(1);
+    return () => {
+      track.style.transform = `translate3d(${x}px, 0, 0)`;
+      view.removeAttribute('tabindex');
+      view.removeAttribute('role');
+      view.removeAttribute('aria-label');
+    };
+  });
+</script>
+
 <style>
   .offclock {
-    color: var(--fg);
+    --track-edge: 40px;
+    height: 340vh;
   }
 
-  .feature {
-    position: relative;
-    height: clamp(560px, 60vw, 860px);
-    /* clip, not hidden: hidden would make this the parallax's scroller. */
-    overflow: clip;
-  }
-
-  .photo {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Just enough shade to keep the edge labels and the card readable. */
-  .scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgb(20 16 14 / 0.3) 0%,
-      rgb(20 16 14 / 0) 18%,
-      rgb(20 16 14 / 0) 60%,
-      rgb(20 16 14 / 0.35) 100%
-    );
-  }
-
-  /* Slow parallax where the browser can tie it to scrolling; still otherwise. */
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      .photo {
-        inset: -15% 0;
-        height: 130%;
-        /* Longhands, because the minifier folds a shorthand plus timeline
-           into one declaration that browsers reject. */
-        animation-name: parallax;
-        animation-timing-function: linear;
-        animation-fill-mode: both;
-        animation-timeline: view();
-      }
-    }
-  }
-
-  .edge-labels {
-    color: var(--bone);
-    position: absolute;
-    top: var(--gutter);
-    left: var(--gutter);
-    right: var(--gutter);
+  .stick {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
     display: flex;
-    justify-content: space-between;
-    gap: 16px;
+    align-items: center;
   }
 
-  .edge-labels h2 {
-    margin: 0;
-    font-weight: 400;
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 56px;
+    padding: 0 var(--track-edge);
+    will-change: transform;
   }
 
-  .band {
+  .music {
+    flex: none;
+    width: min(420px, 78vw);
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    max-width: 610px;
-    padding: 56px var(--gutter) 64px;
+    gap: 18px;
   }
 
-  .band-name {
+  .music h2 {
     margin: 0;
     font-weight: 400;
     color: var(--fg-muted);
   }
 
-  .band-line {
+  .music-line {
+    font-size: clamp(40px, 4.6vw, 68px);
+    text-wrap: wrap;
+  }
+
+  .music-body {
     margin: 0;
-    font-size: 18px;
-    line-height: 1.5;
+    font-size: 17px;
+    line-height: 1.55;
     color: var(--body);
   }
 
-  .band-links {
+  .music-links {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding-top: 8px;
-  }
-
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
     padding-top: 4px;
   }
 
-  .row-photo {
-    flex: 1 1 300px;
-    min-width: 0;
-    height: 420px;
-    object-fit: cover;
+  .print {
+    display: block;
+    flex: none;
+    height: calc(var(--h) * 1vh);
+    width: auto;
+    border-radius: var(--radius-print);
   }
 
-  /* The row drifts up into place as it enters, each photo a little further
-     than the last, so they overlap on the way in. */
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      .row-photo {
-        animation-name: surface;
-        animation-timing-function: linear;
-        animation-fill-mode: both;
-        animation-timeline: view();
-        animation-range: entry 0% cover 45%;
-      }
-    }
+  .high {
+    align-self: flex-start;
+    margin-top: 14vh;
   }
 
-  /* The stagger only reads when the three sit side by side. */
-  @media (min-width: 960px) {
-    .row-photo:nth-child(2) {
-      --surface-from: 140px;
-    }
+  .low {
+    align-self: flex-end;
+    margin-bottom: 10vh;
+  }
 
-    .row-photo:nth-child(3) {
-      --surface-from: 200px;
+  @media (max-width: 760px) {
+    .offclock {
+      --track-edge: 20px;
     }
   }
 
-  @keyframes surface {
-    from {
-      opacity: 0.2;
-      transform: translateY(var(--surface-from, 80px));
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @media (max-width: 720px) {
-    .band-line {
-      font-size: 16px;
+  /* With reduced motion the strip can't move, so it becomes an ordinary row
+     the reader scrolls sideways. Nothing is hidden. */
+  @media (prefers-reduced-motion: reduce) {
+    .offclock {
+      height: auto;
     }
 
-    .row-photo {
-      height: 300px;
+    .stick {
+      position: relative;
+      height: auto;
+      overflow-x: auto;
+      padding: 120px 0;
+    }
+
+    .track {
+      transform: none !important;
+      will-change: auto;
+    }
+
+    .high,
+    .low {
+      align-self: center;
+      margin: 0;
     }
   }
 </style>

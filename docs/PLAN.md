@@ -50,7 +50,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 - [x] Ground and materials: paper everywhere, one fixed grain layer, and the single glass control bar with the current section shown. Remove the per-section grain, the photo overlays, the glass project card, and the glass band card.
 - [x] Hero: the pinned full-bleed-to-print shrink, with the two-copy headline.
 - [x] Work: the ink index, the cursor preview, keyboard focus, and the touch fallback.
-- [ ] Off the clock: the pinned sideways strip, plus its reduced-motion fallback.
+- [x] Off the clock: the pinned sideways strip, plus its reduced-motion fallback.
 - [ ] Say hi: the pinned print-to-full-bleed grow, with the contact text on the photo.
 - [ ] Remove the v3 motion this replaces: the hero settle on load, the pinned work list with its cross-fading card, and the photo parallax.
 
