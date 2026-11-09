@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>David Wurgler, homepage mockup v5 (approved 2026-11-04)</title>
+<!-- Static reference only. Fonts load from Google here for convenience; production self-hosts them. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=Cormorant+Garamond:ital,wght@1,400&family=JetBrains+Mono:wght@400&display=swap">
+<script>
+  // Set the theme before first paint: a saved choice wins, else follow the system.
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('theme'); } catch (e) {}
+    var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  })();
+</script>
+<style>
+/* Fixed tokens (same in both themes) */
+:root{--ease:cubic-bezier(.22,1,.36,1);--night:#151311;--bone:#f3eee7;--bone-bright:#fbf7f1}
+/* Theme tokens. Light is paper and ink; dark is warm night and bone. Photos never change. */
+:root,[data-theme="light"]{color-scheme:light;--bg:#ece6dc;--fg:#1b1815;--fg-muted:#5b534a;--body:#2b2622;--rule:rgba(27,24,21,0.2);--rule-strong:rgba(27,24,21,0.35);--btn-border:rgba(27,24,21,0.32);--bar-bg:rgba(236,230,220,0.62);--bar-border:rgba(27,24,21,0.10);--bar-hi:rgba(255,255,255,0.45);--grain-blend:multiply;--grain-op:0.32}
+[data-theme="dark"]{color-scheme:dark;--bg:#171512;--fg:#f0eae1;--fg-muted:#a39a8e;--body:#d6cec2;--rule:rgba(240,234,225,0.16);--rule-strong:rgba(240,234,225,0.3);--btn-border:rgba(240,234,225,0.3);--bar-bg:rgba(23,21,18,0.55);--bar-border:rgba(255,255,255,0.10);--bar-hi:rgba(255,255,255,0.06);--grain-blend:screen;--grain-op:0.07}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+a{color:var(--fg)}
+.hd{font-weight:640;letter-spacing:-0.035em;line-height:0.92}
+.it{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-0.01em;font-size:1.12em}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:11px;font-weight:400;letter-spacing:0.14em;text-transform:uppercase}
+.tnum{font-variant-numeric:tabular-nums}
+.wrap{width:100%;max-width:1360px;margin:0 auto}
+.fade-in{animation:fadein 700ms var(--ease) 150ms both}
+@keyframes fadein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.grain{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;mix-blend-mode:var(--grain-blend);opacity:var(--grain-op)}
+main{position:relative;z-index:1}
+
+/* the one glass object */
+.bar{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:30;width:min(700px,calc(100% - 24px));box-sizing:border-box;border-radius:999px;padding:6px 6px 6px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bar-bg);-webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3);border:1px solid var(--bar-border);box-shadow:inset 0 1px 0 var(--bar-hi)}
+.wm{font-stretch:125%;font-weight:800;letter-spacing:0.2em;font-size:15px;text-decoration:none;padding:10px 0}
+.bar nav{display:flex;align-items:center;gap:2px}
+.navl{display:inline-flex;align-items:center;min-height:40px;padding:0 13px;border-radius:999px;font-size:14px;text-decoration:none;opacity:0.6;transition:opacity 200ms ease}
+.navl:hover,.navl.cur{opacity:1}
+.navl.hi{background:var(--fg);color:var(--bg);padding:0 18px;margin-left:4px;opacity:1}
+
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 20px;box-sizing:border-box;border-radius:999px;border:1px solid var(--btn-border);background:transparent;color:var(--fg);text-decoration:none;font:inherit;font-size:14px;cursor:pointer;transition:background 200ms ease,color 200ms ease}
+.btn:hover{background:var(--fg);color:var(--bg)}
+.gl{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 20px;box-sizing:border-box;border-radius:999px;background:rgba(236,230,220,0.18);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.32);color:var(--bone-bright);text-decoration:none;font:inherit;font-size:14px;cursor:pointer;transition:background 200ms ease}
+.gl:hover{background:rgba(236,230,220,0.32)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--fg);outline-offset:4px;border-radius:8px}
+.onphoto a:focus-visible,.onphoto button:focus-visible{outline-color:var(--bone-bright)}
+
+/* pinned sections */
+.pin{position:relative}
+.stick{position:sticky;top:0;height:100vh;overflow:hidden}
+.fill{position:absolute;inset:0}
+.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.scrim{position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(180deg,rgba(20,16,14,0) 0%,rgba(20,16,14,0.58) 100%)}
+
+/* hero */
+#top{height:230vh}
+.hero-text{position:absolute;left:40px;right:40px;bottom:40px;max-width:min(46vw,760px);display:flex;flex-direction:column;gap:28px}
+.hero-h{margin:0;font-size:clamp(52px,6.4vw,112px)}
+.labels{display:flex;flex-wrap:wrap;gap:8px 28px;padding-top:14px;border-top:1px solid var(--rule-strong)}
+.on-photo-copy{color:var(--bone-bright)}
+.on-photo-copy .labels{border-top-color:rgba(255,255,255,0.4);color:var(--bone)}
+
+/* work index */
+#work{padding:180px 40px 200px}
+.list{border-bottom:1px solid var(--rule)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px) 120px;align-items:baseline;gap:32px;width:100%;padding:18px 0 14px;margin:0;border:0;border-top:1px solid var(--rule);background:none;font:inherit;color:var(--fg);text-align:left;cursor:pointer;transition:opacity 200ms ease}
+.row .nm{display:inline-block;font-size:clamp(44px,6.6vw,104px);transition:transform 250ms var(--ease)}
+.row .ld{font-size:15px;line-height:1.5;color:var(--fg-muted)}
+.row .mono{text-align:right;white-space:nowrap}
+.list.hovering .row{opacity:0.32}
+.list.hovering .row.on{opacity:1}
+.row.on .nm{transform:translateX(12px)}
+.touch-only{display:none;padding:4px 0 24px}
+.touch-only img{display:block;width:100%;aspect-ratio:16/10.5;object-fit:cover;object-position:top;border-radius:6px}
+.preview{position:fixed;left:0;top:0;width:360px;height:236px;z-index:20;pointer-events:none;border-radius:6px;overflow:hidden;background:#1f1c19;box-shadow:0 24px 60px rgba(27,24,21,0.28);opacity:0;scale:0.94;transition:opacity 200ms ease,scale 200ms var(--ease)}
+.preview.on{opacity:1;scale:1;view-transition-name:shot}
+.preview > *{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0}
+.preview > .on{opacity:1}
+.ph{display:flex;align-items:center;justify-content:center;color:rgba(243,238,231,0.75)}
+
+/* how I build */
+#how{padding:120px 40px 220px}
+.how{display:flex;flex-direction:column;gap:150px}
+.stats{display:flex;flex-wrap:wrap;gap:48px 32px;border-top:1.5px solid var(--fg);padding-top:20px}
+.stat{flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.stat .mono{color:var(--fg-muted)}
+.stat .v{font-size:clamp(48px,5vw,72px)}
+.how h2{margin:0;max-width:1160px;font-size:clamp(44px,6.6vw,108px);text-wrap:balance}
+.how-row{display:flex;flex-wrap:wrap;gap:40px 80px;justify-content:space-between;align-items:flex-start}
+.how-row p{flex:1 1 380px;min-width:0;max-width:540px;margin:0;font-size:20px;line-height:1.55;color:var(--body)}
+.rules{flex:0 1 420px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:6px}
+.rules .mono{color:var(--fg-muted)}
+.rules span:last-child{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px;line-height:1.8}
+
+/* off the clock */
+#offclock{height:340vh}
+#offclock .stick{display:flex;align-items:center}
+.track{display:flex;align-items:center;gap:56px;padding:0 40px;will-change:transform}
+.music{flex:none;width:min(420px,78vw);display:flex;flex-direction:column;gap:18px}
+.music h2{margin:0}
+.music .hd{margin:0;font-size:clamp(40px,4.6vw,68px)}
+.music p{margin:0;font-size:17px;line-height:1.55;color:var(--body)}
+.track img{display:block;flex:none;width:auto;border-radius:4px}
+
+/* say hi */
+#hello{height:210vh}
+.hello-h{margin:0;font-size:clamp(64px,10vw,160px);letter-spacing:-0.04em}
+.contact{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0 40px 40px;box-sizing:border-box;color:var(--bone)}
+.contact .inner{display:flex;flex-direction:column;gap:32px}
+.split{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+.group{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.3)}
+
+/* project page */
+#project{min-height:100vh;padding:132px 40px 64px;box-sizing:border-box}
+#project[hidden],#home[hidden]{display:none}
+.proj{display:flex;flex-direction:column;gap:56px}
+.proj-top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.proj-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:28px 64px}
+.proj-head h1{margin:0;font-size:clamp(64px,10vw,168px)}
+.proj-head p{margin:0;max-width:480px;font-size:20px;line-height:1.5;color:var(--body)}
+.proj-shot{position:relative;aspect-ratio:16/10.5;border-radius:6px;overflow:hidden;background:#1f1c19;view-transition-name:shot}
+.proj-shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.facts{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px}
+.facts div{border-top:1px solid var(--rule-strong);padding-top:16px;display:flex;flex-direction:column;gap:10px}
+.facts dt{color:var(--fg-muted)}
+.facts dd{margin:0;font-size:22px;line-height:1.3;font-weight:500;letter-spacing:-0.01em}
+.proj-body{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:32px 64px}
+.proj-body p{flex:1 1 480px;min-width:0;max-width:680px;margin:0;font-size:19px;line-height:1.6;color:var(--body)}
+.next{margin-top:96px;grid-template-columns:minmax(0,1fr) auto}
+.next .nm{color:var(--fg-muted)}
+
+.tgl{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;margin:0;padding:0;border:0;border-radius:999px;background:none;color:var(--fg);cursor:pointer;opacity:0.6;transition:opacity 200ms ease}
+.tgl:hover{opacity:1}
+.i-sun{display:none}
+[data-theme="dark"] .i-sun{display:block}
+[data-theme="dark"] .i-moon{display:none}
+::view-transition-group(*){animation-duration:320ms;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-old(root),::view-transition-new(root){animation-duration:240ms}
+
+@media (max-width:760px){
+  .nav-mid{display:none}
+  .row{grid-template-columns:minmax(0,1fr) auto}.row .ld{display:none}
+  #work,#how{padding-left:20px;padding-right:20px}
+  .hero-text{left:20px;right:20px;bottom:24px;max-width:none}
+}
+@media (hover:none){.touch-only{display:block}.preview{display:none}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  /* the strip must not hide photos when it can't move */
+  #offclock{height:auto}
+  #offclock .stick{position:relative;height:auto;overflow-x:auto;padding:120px 0}
+  .track{transform:none!important}
+}
+</style>
+</head>
+<body>
+
+<svg class="grain" aria-hidden="true"><filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.30  0 0 0 0.6 0"/></filter><rect width="100%" height="100%" filter="url(#paper)"/></svg>
+
+<header class="bar">
+  <a class="wm" href="#top" data-nav="top">WURGLER</a>
+  <nav aria-label="Main">
+    <a class="navl" href="#work" data-nav="work">Work</a>
+    <a class="navl nav-mid" href="#how" data-nav="how">How I build</a>
+    <a class="navl nav-mid" href="#offclock" data-nav="offclock">Off the clock</a>
+    <button type="button" class="tgl" id="theme" aria-label="Switch to dark mode">
+      <svg class="i-moon" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10.5A6.5 6.5 0 0 1 7.5 3a6.5 6.5 0 1 0 7.5 7.5z"/></svg>
+      <svg class="i-sun" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="9" cy="9" r="3.2"/><path d="M9 1.5v1.8M9 14.7v1.8M1.5 9h1.8M14.7 9h1.8M3.7 3.7l1.3 1.3M13 13l1.3 1.3M3.7 14.3L5 13M13 5l1.3-1.3"/></svg>
+    </button>
+    <a class="navl hi" href="#hello" data-nav="hello">Say hi</a>
+  </nav>
+</header>
+
+<div class="preview" id="preview" aria-hidden="true">
+  <img data-pv="firn" src="../assets/work/firn-placeholder.jpg" alt="">
+  <div data-pv="alfred" class="ph mono">[Alfred screenshot]</div>
+  <img data-pv="copywriter" src="../assets/work/copywriter-lab-poster.jpg" alt="">
+  <div data-pv="backoffice" class="ph mono">[Back-office screenshot]</div>
+</div>
+
+<!-- ================= HOME ================= -->
+<main id="home">
+
+  <!-- 1. Hero: full-bleed coast shrinks into a print as you scroll -->
+  <section id="top" class="pin" data-pin="hero">
+    <div class="stick">
+      <div class="hero-text fade-in">
+        <h1 class="hd hero-h">I build tools people <span class="it">actually</span> use.</h1>
+        <div class="labels"><span class="mono">David Wurgler</span><span class="mono">Business systems and AI</span><span class="mono">Salem, Oregon</span></div>
+      </div>
+      <div class="fill" data-clip="hero" style="overflow:hidden">
+        <img class="photo" data-zoom="hero" src="../assets/photos/coast-dusk.jpg" alt="The Oregon coast at dusk." style="transform:scale(1.12)">
+        <div class="scrim" aria-hidden="true"></div>
+      </div>
+      <div class="fill" data-clip="hero" aria-hidden="true" style="pointer-events:none">
+        <div class="hero-text on-photo-copy fade-in">
+          <p class="hd hero-h">I build tools people <span class="it">actually</span> use.</p>
+          <div class="labels"><span class="mono">David Wurgler</span><span class="mono">Business systems and AI</span><span class="mono">Salem, Oregon</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Work: ink index; the screenshot follows the cursor -->
+  <section id="work">
+    <div class="wrap">
+      <div style="display:flex;justify-content:space-between;gap:16px;padding-bottom:20px">
+        <h2 class="mono" style="margin:0">Selected work</h2>
+        <span class="mono" style="color:var(--fg-muted)">2025–2026</span>
+      </div>
+      <div class="list" id="list"></div>
+    </div>
+  </section>
+
+  <!-- 3. How I build -->
+  <section id="how">
+    <div class="wrap how">
+      <div class="stats">
+        <div class="stat"><span class="mono">Month-end sales tax</span><span class="hd tnum v">3 days → 1 report</span></div>
+        <div class="stat"><span class="mono">ERP kickoff to go-live</span><span class="hd tnum v">10 weeks</span></div>
+        <div class="stat"><span class="mono">Warehouse trips gone, per year</span><span class="hd tnum v">500+</span></div>
+      </div>
+      <h2 class="hd">I don't write most of the code. I write the <span class="it">brief.</span></h2>
+      <div class="how-row">
+        <p>Every project starts with a document: who it's for, the rules the agent can't break, and a done test for each step. Then I direct Claude Code through it in pieces small enough to check. Same as the warehouse: decide what good looks like, then make it hard to get wrong.</p>
+        <div class="rules"><span class="mono">From firn / CLAUDE.md</span><span>Work in small, testable steps.<br>No new dependencies without asking.<br>Never weaken a security default.<br>Each phase ends with a done test.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Off the clock: photos drift sideways as you scroll down -->
+  <section id="offclock" class="pin" data-pin="strip">
+    <div class="stick">
+      <div class="track" data-track>
+        <div class="music">
+          <h2 class="mono">Off the clock</h2>
+          <p class="hd">I sing, write, and produce.</p>
+          <p>My Brothers And I has songs placed on Virgin River, Pretty Little Liars, Queen Sugar, and others through Secret Road.</p>
+          <div class="group" style="padding-top:4px">
+            <a class="btn" href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a>
+            <a class="btn" href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">Apple Music</a>
+          </div>
+        </div>
+        <img src="../assets/photos/lodge-dusk.jpg" alt="A glass-fronted lodge under tall pines at dusk." style="height:66vh">
+        <img src="../assets/photos/pavilion-peak.jpg" alt="A timber pavilion framing a mountain peak beyond a pool." style="height:44vh;align-self:flex-start;margin-top:14vh">
+        <img src="../assets/photos/firs-house.jpg" alt="Two old firs in front of a house and a dark car." style="height:56vh;align-self:flex-end;margin-bottom:10vh">
+        <img src="../assets/photos/lake-dusk-moon.jpg" alt="Mountains at dusk over still water, a sliver of moon above." style="height:48vh">
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Say hi: the lake grows from a print back to full-bleed -->
+  <section id="hello" class="pin" data-pin="hello">
+    <div class="stick">
+      <div aria-hidden="true" style="position:absolute;left:40px;right:40px;bottom:40px;pointer-events:none">
+        <p class="hd hello-h">Say <span class="it">hi.</span></p>
+      </div>
+      <div class="fill" data-clip="hello" style="overflow:hidden">
+        <img class="photo" data-zoom="hello" src="../assets/photos/lake-dusk-reeds.jpg" alt="A lake at dusk through the reeds.">
+        <div class="scrim" aria-hidden="true" style="height:65%"></div>
+      </div>
+      <div class="contact onphoto" data-clip="hello">
+        <div class="inner">
+          <h2 class="hd hello-h" style="color:var(--bone-bright)">Say <span class="it">hi.</span></h2>
+          <div class="split">
+            <div class="group">
+              <a class="gl" href="mailto:hello@davidwurgler.com" style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:15px;user-select:all;padding:0 24px">hello@davidwurgler.com</a>
+              <button type="button" class="gl" id="copy" aria-live="polite">Copy</button>
+            </div>
+            <div class="group">
+              <a class="gl" href="https://www.linkedin.com/in/david-joel-wurgler">LinkedIn</a>
+              <a class="gl" href="https://github.com/dwurgy">GitHub</a>
+              <a class="gl" href="#resume">Résumé</a>
+            </div>
+          </div>
+          <div class="foot"><span class="mono">Photographed and built by David Wurgler</span><span class="mono">Built with Claude Code</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ================= PROJECT PAGE (filled from PROJECTS below) ================= -->
+<main id="project" hidden>
+  <article class="wrap proj">
+    <div class="proj-top">
+      <button type="button" class="btn" id="back"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8H3M7 4L3 8l4 4"/></svg>All work</button>
+      <span class="mono" id="p-index" style="color:var(--fg-muted)"></span>
+    </div>
+    <div class="proj-head"><h1 class="hd" id="p-name"></h1><p id="p-lede"></p></div>
+    <div class="proj-shot" id="p-shot"></div>
+    <dl class="facts" id="p-facts"></dl>
+    <div class="proj-body"><p id="p-body"></p><div class="group" id="p-links"></div></div>
+    <button type="button" class="row next" id="p-next"><span class="hd nm" id="p-next-name"></span><span class="mono">Next project</span></button>
+  </article>
+</main>
+
+<script>
+// Copy for every project. Facts come only from CLAUDE.md.
+const PROJECTS = [
+  { id:'firn', name:'Firn', meta:'Oct 2026',
+    img:'../assets/work/firn-placeholder.jpg', alt:'Firn on a Mac: a sidebar of tabs and spaces beside a website.',
+    short:'A calm desktop browser. Open source, on macOS and Windows.',
+    lede:"A calm desktop browser for people who don't want to learn a new browser. I wrote the brief and directed Claude Code through every phase.",
+    body:"Firn has vertical tabs, spaces, and split view. It runs on macOS and Windows, with Linux coming. I wrote its brief, the CLAUDE.md, and directed Claude Code through every phase. It was released in October 2026 and is notarized by Apple.",
+    facts:[['Released','October 2026'],['Runs on','macOS and Windows, Linux coming'],['Built','From a written brief, with Claude Code'],['Source','Open, on GitHub']],
+    links:[['firnbrowser.com','https://firnbrowser.com'],['Source on GitHub','https://github.com/dwurgy/firn']] },
+  { id:'alfred', name:'Alfred', meta:'In use', img:'', placeholder:'[Alfred screenshot, data blurred]',
+    short:'Two AI assistants inside an Odoo ERP. One question instead of a warehouse walk.',
+    lede:"Two AI assistants inside the company's Odoo 19 ERP. One answers from live data. The other answers from the company's own process docs.",
+    body:"Alfred answers questions from live data, such as which in-stock units meet a customer's license requirement. The SOP Assistant answers how-to questions from the company's own process docs. Both are built on the Gemini API and are in ongoing use across the team. A question that used to mean a walk to the warehouse is now one question.",
+    facts:[['Lives in','Odoo 19'],['Built on','Gemini API'],['Used by','The whole team, ongoing']], links:[] },
+  { id:'copywriter', name:'Copywriter Lab', meta:'3 days',
+    img:'../assets/work/copywriter-lab-poster.jpg', alt:'NW Copywriter Lab: a part number field beside panels for product copy, a quote summary, and a spec sheet.',
+    short:'A part number in. Product copy, a quote summary, and a spec sheet out.',
+    lede:'Paste a part number. Get product copy, a quote summary, and a spec sheet. Idea to production in three days.',
+    body:'NW Copywriter Lab is an internal tool that turns a part number into product copy, a quote summary, and a spec sheet. I prototyped it in Google AI Studio, rebuilt it with Claude, and deployed it on Cloudflare. It went from idea to production in three days.',
+    facts:[['Idea to production','3 days'],['Prototyped in','Google AI Studio'],['Rebuilt with','Claude'],['Runs on','Cloudflare']], links:[] },
+  { id:'backoffice', name:'Back office', meta:'10 weeks', img:'', placeholder:'[Back-office screenshot, data blurred]',
+    short:'Off QuickBooks Desktop and onto one ERP, with zero downtime.',
+    lede:'Off QuickBooks Desktop and an unsupported database, onto one ERP in ten weeks, with zero downtime.',
+    body:"I moved the company off QuickBooks Desktop and an unsupported in-house database onto Odoo 19, as the sole internal owner. It took ten weeks from kickoff to go-live, with zero downtime and every order shipped on launch day. It produced the company's first live P&L. Sales tax is automated across nine states, and month-end compliance went from three days to one report. Serial tracking with searchable test prints removed 500+ warehouse trips a year.",
+    facts:[['Kickoff to go-live','10 weeks'],['Downtime','Zero'],['Sales tax','Automated in 9 states'],['Warehouse trips removed','500+ a year']], links:[] }
+];
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp01 = v => Math.min(1, Math.max(0, v));
+const smooth = t => t * t * (3 - 2 * t);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+// ---- build the work index ----
+const list = $('#list');
+list.innerHTML = PROJECTS.map(p => `
+  <div>
+    <button type="button" class="row" data-id="${p.id}">
+      <span class="hd"><span class="nm">${esc(p.name)}</span></span>
+      <span class="ld">${esc(p.short)}</span>
+      <span class="mono">${esc(p.meta)}</span>
+    </button>
+    <div class="touch-only">${p.img ? `<img src="${p.img}" alt="${esc(p.alt)}">` : ''}</div>
+  </div>`).join('');
+
+// ---- cursor preview ----
+let hovered = null, mx = 0, my = 0, px = null, py = null;
+const preview = $('#preview');
+function setHover(id) {
+  hovered = id;
+  list.classList.toggle('hovering', !!id);
+  $$('.row', list).forEach(r => r.classList.toggle('on', r.dataset.id === id));
+  $$('[data-pv]', preview).forEach(n => n.classList.toggle('on', n.dataset.pv === id));
+  preview.classList.toggle('on', !!id);
+  if (!id) px = null;
+  schedule();
+}
+$$('.row', list).forEach(r => {
+  r.addEventListener('mouseenter', () => setHover(r.dataset.id));
+  r.addEventListener('focus', () => { const b = r.getBoundingClientRect(); mx = b.right - 420; my = b.top + b.height / 2; px = null; setHover(r.dataset.id); });
+  r.addEventListener('blur', () => setHover(null));
+  r.addEventListener('click', () => openProject(r.dataset.id));
+});
+list.addEventListener('mouseleave', () => setHover(null));
+addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; if (hovered) schedule(); }, { passive: true });
+
+// ---- one animation loop, driven only by scroll and the cursor ----
+let raf = null;
+function schedule() { if (!raf) raf = requestAnimationFrame(() => { raf = null; tick(); }); }
+addEventListener('scroll', schedule, { passive: true });
+addEventListener('resize', schedule);
+
+function progress(el) {
+  const r = el.getBoundingClientRect(), d = r.height - innerHeight;
+  return d <= 0 ? 1 : clamp01(-r.top / d);
+}
+function clip(name, c) { $$(`[data-clip="${name}"]`).forEach(n => { n.style.clipPath = c; n.style.webkitClipPath = c; }); }
+
+function tick() {
+  const W = innerWidth, H = innerHeight, red = reduced(), mob = W < 760;
+  if ($('#home').hidden) return;
+
+  // Hero: full-bleed -> print on the right half (top strip on phones).
+  const e = red ? 1 : smooth(progress($('[data-pin="hero"]')));
+  const t = (mob ? 84 : 0.2 * H) * e, b = (mob ? 0.46 * H : 0.2 * H) * e;
+  const l = (mob ? 20 : 0.5 * W) * e, r = (mob ? 20 : 40) * e;
+  clip('hero', `inset(${t}px ${r}px ${b}px ${l}px round ${6 * e}px)`);
+  $('[data-zoom="hero"]').style.transform = `scale(${1.12 - 0.12 * e})`;
+
+  // Off the clock: sideways drift, exactly as fast as you scroll.
+  const track = $('[data-track]');
+  if (!red) {
+    const max = Math.max(0, track.scrollWidth - W);
+    track.style.transform = `translate3d(${-progress($('[data-pin="strip"]')) * max}px,0,0)`;
+  }
+
+  // Say hi: centred print -> full-bleed.
+  const k = red ? 0 : 1 - smooth(progress($('[data-pin="hello"]')));
+  const sx = (mob ? 0.08 : 0.3) * W * k, sy = 0.22 * H * k;
+  clip('hello', `inset(${sy}px ${sx}px ${sy}px ${sx}px round ${6 * k}px)`);
+  $('[data-zoom="hello"]').style.transform = `scale(${1 + 0.1 * k})`;
+
+  // Current section in the control bar.
+  let cur = 'top';
+  ['work', 'how', 'offclock', 'hello'].forEach(id => { if (document.getElementById(id).getBoundingClientRect().top < H * 0.5) cur = id; });
+  $$('.navl').forEach(a => a.classList.toggle('cur', a.dataset.nav === cur));
+
+  // Preview follows the cursor with a slight lag.
+  if (hovered) {
+    let tx = mx + 32, ty = my - 118;
+    if (tx + 360 > W - 16) tx = mx - 392;
+    if (px === null || red) { px = tx; py = ty; }
+    px += (tx - px) * 0.22; py += (ty - py) * 0.22;
+    preview.style.transform = `translate3d(${px}px,${py}px,0)`;
+    if (Math.abs(tx - px) > 0.5 || Math.abs(ty - py) > 0.5) schedule();
+  }
+}
+schedule();
+
+// ---- project pages (production: real routes at /work/<slug>) ----
+function swap(update) {
+  if (document.startViewTransition && !reduced()) document.startViewTransition(update);
+  else update();
+}
+function fillProject(i) {
+  const p = PROJECTS[i], n = PROJECTS[(i + 1) % PROJECTS.length];
+  $('#p-index').textContent = `0${i + 1} of 0${PROJECTS.length}`;
+  $('#p-name').textContent = p.name;
+  $('#p-lede').textContent = p.lede;
+  $('#p-shot').innerHTML = p.img ? `<img src="${p.img}" alt="${esc(p.alt)}">` : `<div class="ph mono fill">${esc(p.placeholder)}</div>`;
+  $('#p-facts').innerHTML = p.facts.map(([k, v]) => `<div><dt class="mono">${esc(k)}</dt><dd class="tnum">${esc(v)}</dd></div>`).join('');
+  $('#p-body').textContent = p.body;
+  $('#p-links').innerHTML = p.links.map(([label, href]) => `<a class="btn" href="${href}">${esc(label)}</a>`).join('');
+  $('#p-next-name').textContent = n.name;
+  $('#p-next').onclick = () => openProject(n.id);
+}
+function openProject(id) {
+  const i = PROJECTS.findIndex(p => p.id === id);
+  swap(() => {
+    setHover(null);
+    fillProject(i);
+    $('#home').hidden = true; $('#project').hidden = false;
+    scrollTo({ top: 0, behavior: 'instant' });
+  });
+}
+function goHome(id) {
+  swap(() => {
+    $('#project').hidden = true; $('#home').hidden = false;
+    document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
+    schedule();
+  });
+}
+$('#back').addEventListener('click', () => goHome('work'));
+$$('[data-nav]').forEach(a => a.addEventListener('click', ev => {
+  if ($('#project').hidden) return;
+  ev.preventDefault(); goHome(a.dataset.nav);
+}));
+
+// ---- light and dark ----
+const themeBtn = $('#theme');
+const root = document.documentElement;
+function labelTheme() { themeBtn.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'); }
+function setTheme(t) { swap(() => { root.dataset.theme = t; labelTheme(); }); }
+themeBtn.addEventListener('click', () => {
+  const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  try { localStorage.setItem('theme', next); } catch (_) {}
+  setTheme(next);
+});
+// Follow the system while the visitor hasn't chosen.
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  let saved = null; try { saved = localStorage.getItem('theme'); } catch (_) {}
+  if (!saved) setTheme(e.matches ? 'dark' : 'light');
+});
+labelTheme();
+
+// ---- copy the email ----
+$('#copy').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText('hello@davidwurgler.com'); } catch (_) {}
+  $('#copy').textContent = 'Copied';
+  setTimeout(() => { $('#copy').textContent = 'Copy'; }, 2000);
+});
+</script>
+</body>
+</html>
