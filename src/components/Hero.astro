@@ -1,42 +1,97 @@
 ---
 import { Picture } from 'astro:assets';
 import coast from '../../assets/photos/coast-dusk.jpg';
+
+// The headline is set twice: an ink copy on the paper, and a bone copy that
+// is clipped to the photo's exact shape, so its colour changes right at the
+// photo's edge. Only the ink copy is read out.
+const labels = ['David Wurgler', 'Business systems and AI', 'Salem, Oregon'];
 ---
 
-<section class="hero" aria-labelledby="hero-title">
-  <Picture
-    class="photo"
-    src={coast}
-    alt=""
-    formats={['avif', 'webp']}
-    widths={[640, 960, 1280, 1920, 2560]}
-    sizes="100vw"
-    loading="eager"
-    fetchpriority="high"
-  />
-  <div class="scrim" aria-hidden="true"></div>
+<section id="top" class="hero" aria-labelledby="hero-title">
+  <div class="stick">
+    <div class="hero-text">
+      <h1 id="hero-title" class="headline hero-headline">
+        I build tools people <span class="emphasis">actually</span> use.
+      </h1>
+      <div class="hero-labels">{labels.map((label) => <span class="label">{label}</span>)}</div>
+    </div>
 
-  <div class="hero-body">
-    <h1 id="hero-title" class="headline">
-      I build tools people <span class="emphasis">actually</span> use.
-    </h1>
-    <div class="hero-labels">
-      <span class="label">David Wurgler</span>
-      <span class="label">Business systems &amp; AI</span>
-      <span class="label">Salem, Oregon</span>
+    <div class="window">
+      <Picture
+        class="photo"
+        src={coast}
+        alt="The Oregon coast at dusk."
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1280, 1920, 2560]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <div class="scrim" aria-hidden="true"></div>
+    </div>
+
+    <div class="window on-photo" aria-hidden="true">
+      <div class="hero-text">
+        <p class="headline hero-headline">
+          I build tools people <span class="emphasis">actually</span> use.
+        </p>
+        <div class="hero-labels">{labels.map((label) => <span class="label">{label}</span>)}</div>
+      </div>
     </div>
   </div>
 </section>
 
+<script>
+  import { onFrame, progress, reducedMotion, smooth } from '../scripts/scroll';
+
+  // Scroll sets one number, --settled, from 0 (full-bleed) to 1 (a print).
+  // The CSS turns it into the photo's shape and zoom.
+  const hero = document.querySelector<HTMLElement>('.hero')!;
+
+  onFrame(() => {
+    if (reducedMotion.matches) return () => hero.style.removeProperty('--settled');
+    const settled = smooth(progress(hero)).toFixed(4);
+    return () => hero.style.setProperty('--settled', settled);
+  });
+</script>
+
 <style>
+  /* The photo starts full-bleed and, matched to scroll, becomes a print on
+     the right half of the paper: inset 20% top and bottom, 50% left, and
+     40px right, with its corners rounding as it lands. On phones it lands
+     as a print across the top. */
   .hero {
-    position: relative;
-    color: var(--bone);
-    min-height: max(640px, 100svh);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    --settled: 0;
+    --inset-top: 20%;
+    --inset-right: 40px;
+    --inset-bottom: 20%;
+    --inset-left: 50%;
+    --edge: 40px;
+    height: 230vh;
+  }
+
+  .stick {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
     overflow: hidden;
+  }
+
+  .window {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    clip-path: inset(
+      calc(var(--settled) * var(--inset-top)) calc(var(--settled) * var(--inset-right))
+        calc(var(--settled) * var(--inset-bottom)) calc(var(--settled) * var(--inset-left))
+        round calc(var(--settled) * var(--radius-print))
+    );
+  }
+
+  .on-photo {
+    pointer-events: none;
   }
 
   .photo {
@@ -45,74 +100,92 @@ import coast from '../../assets/photos/coast-dusk.jpg';
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transform: scale(calc(1.12 - 0.12 * var(--settled)));
   }
 
   .scrim {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgb(20 16 14 / 0.1) 0%,
-      rgb(20 16 14 / 0) 35%,
-      rgb(20 16 14 / 0.55) 100%
-    );
+    inset: auto 0 0;
+    height: 62%;
+    background: linear-gradient(180deg, rgb(20 16 14 / 0) 0%, rgb(20 16 14 / 0.58) 100%);
   }
 
-  .hero-body {
-    position: relative;
+  .hero-text {
+    position: absolute;
+    left: var(--edge);
+    right: var(--edge);
+    bottom: var(--edge);
+    max-width: min(46vw, 760px);
     display: flex;
     flex-direction: column;
-    gap: 36px;
-    padding: 0 var(--gutter) var(--gutter);
+    gap: 28px;
+    color: var(--fg);
+    animation: fade-up 700ms var(--ease-out) 150ms both;
   }
 
-  .headline {
-    max-width: 1200px;
-    font-size: clamp(52px, 8.4vw, 132px);
-    color: var(--bone-bright);
+  .hero-headline {
+    font-size: clamp(52px, 6.4vw, 112px);
+    /* Break lines as the mockup does, not balanced. */
+    text-wrap: wrap;
   }
 
   .hero-labels {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 10px 24px;
+    gap: 8px 28px;
     padding-top: 14px;
-    border-top: 1px solid rgb(255 255 255 / 0.3);
+    border-top: 1px solid var(--rule-strong);
   }
 
-  /* The photo settles from a slight blur and scale; the words fade up once.
-     Only runs when motion is welcome, so reduced motion shows the final state. */
-  @media (prefers-reduced-motion: no-preference) {
-    .photo {
-      /* A gentler curve than --ease-out, so the settle reads as slow. */
-      animation: settle 2600ms cubic-bezier(0.4, 0, 0.2, 1) both;
-    }
-
-    .hero-body {
-      animation: rise 1100ms var(--ease-out) 500ms both;
-    }
+  .hero-labels .label {
+    color: var(--fg-muted);
   }
 
-  @keyframes settle {
-    from {
-      transform: scale(1.06);
-      filter: blur(10px);
-    }
-    to {
-      transform: none;
-      filter: none;
-    }
+  /* Text on the photo is the same in both themes. */
+  .on-photo .hero-text {
+    color: var(--bone-bright);
   }
 
-  @keyframes rise {
+  .on-photo .hero-labels {
+    border-top-color: rgb(255 255 255 / 0.4);
+  }
+
+  .on-photo .hero-labels .label {
+    color: var(--bone);
+  }
+
+  @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(24px);
+      transform: translateY(14px);
     }
     to {
       opacity: 1;
       transform: none;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .hero {
+      --inset-top: 84px;
+      --inset-right: 20px;
+      --inset-bottom: 46%;
+      --inset-left: 20px;
+      --edge: 20px;
+    }
+
+    .hero-text {
+      bottom: 24px;
+      max-width: none;
+    }
+  }
+
+  /* Reduced motion: the photo is already a print, and the section is one
+     screen tall, so there is no still stretch to scroll through. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero {
+      --settled: 1;
+      height: auto;
     }
   }
 </style>

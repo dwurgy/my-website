@@ -28,6 +28,8 @@ const links = [
 </header>
 
 <script>
+  import { onFrame } from '../scripts/scroll';
+
   // Light and dark. The head script has already set the theme; this keeps
   // the button's label honest, saves a choice, and follows the system
   // setting live until the visitor makes one.
@@ -78,33 +80,21 @@ const links = [
   label();
 
   // The current section: the last one whose top has passed the middle of the
-  // screen. Read once per frame at most, only while scrolling.
+  // screen, checked in the page's one scroll loop.
   const navLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-nav]')];
   const sections = navLinks
     .map((link) => document.getElementById(link.dataset.nav!))
     .filter((section): section is HTMLElement => section !== null);
-  let queued = false;
 
-  function markCurrent() {
-    queued = false;
+  onFrame(() => {
     let current = '';
     for (const section of sections) {
       if (section.getBoundingClientRect().top < innerHeight * 0.5) current = section.id;
     }
-    for (const link of navLinks) link.classList.toggle('is-current', link.dataset.nav === current);
-  }
-
-  addEventListener(
-    'scroll',
-    () => {
-      if (!queued) {
-        queued = true;
-        requestAnimationFrame(markCurrent);
-      }
-    },
-    { passive: true },
-  );
-  markCurrent();
+    return () => {
+      for (const link of navLinks) link.classList.toggle('is-current', link.dataset.nav === current);
+    };
+  });
 </script>
 
 <style>

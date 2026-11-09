@@ -58,3 +58,11 @@ Details and reasoning that don't belong in CLAUDE.md.
 - New `.btn` (outline on paper, fills with ink on hover). `.pill` is now the lighter v5 glass, used only for the contact links on the lake photo. `.glass` and the card radii are removed; prints and screenshots use `--radius-print` (6px).
 - Work and Off the clock got a plain interim look on paper (ink index with the v3 pinned card, band text moved off the photo). Their v5 versions are later boxes.
 - Note for the accessibility pass: nav links at 0.6 opacity on paper measure about 4.3:1, just under 4.5. That value is from the approved mockup.
+
+## 2026-11-09: v5 hero
+
+- One shared scroll loop (`src/scripts/scroll.ts`). Each job reads first and writes after, so positions are never read after a style change in the same frame. The control bar's current-section check moved onto it. Off the clock and Say hi will use it too.
+- Scroll sets one CSS variable, `--settled` (0 to 1, smoothstep), on the hero. CSS turns it into the clip-path inset, corner radius, and photo zoom, so phone sizes and reduced motion are plain media queries with no JS.
+- Reduced motion: the hero is one screen tall instead of 230vh, so there's no still stretch to scroll through. A small departure from the mockup, which keeps the full height.
+- The hero headline turns off the site-wide `text-wrap: balance`, so it breaks as in the mockup ("people actually / use.").
+- Checked at 1440 and 390, both themes, against the mockup: matches. No layout shift while scrolling the hero.
