@@ -1,6 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-import reeds from '../../assets/photos/lake-dusk-reeds.jpg';
 import { projects } from '../data/projects';
 
 // The first project is in focus until scrolling picks another.
@@ -19,10 +18,6 @@ const activeSlug = projects[0].slug;
   </div>
 
   <div class="stage">
-    <!-- A small image, blurred into a field of colour. -->
-    <Image class="field" src={reeds} alt="" widths={[480]} sizes="480px" format="webp" />
-    <div class="grain" aria-hidden="true"></div>
-
     <div class="layout">
       <h2 id="work-title" class="label heading">Selected work · 2025–2026</h2>
 
@@ -41,7 +36,7 @@ const activeSlug = projects[0].slug;
                   <span class="label status">{project.status}</span>
                 </a>
 
-                <article class="card glass" aria-label={project.name}>
+                <article class="card" aria-label={project.name}>
                   {project.shot && (
                     <Image
                       class="shot"
@@ -56,7 +51,7 @@ const activeSlug = projects[0].slug;
                     <p class="line">{project.line}</p>
                     <div class="card-foot">
                       <span class="label meta">{project.meta}</span>
-                      <a class="pill card-link" href={project.link.href}>
+                      <a class="btn card-link" href={project.link.href}>
                         {project.link.label}
                       </a>
                     </div>
@@ -100,7 +95,7 @@ const activeSlug = projects[0].slug;
 <style>
   .work {
     position: relative;
-    color: var(--bone);
+    color: var(--fg);
   }
 
   .steps {
@@ -113,16 +108,6 @@ const activeSlug = projects[0].slug;
     padding: 120px var(--gutter);
   }
 
-  .field {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: blur(46px) saturate(1.15) brightness(0.72);
-    transform: scale(1.25);
-  }
-
   .layout {
     position: relative;
   }
@@ -131,7 +116,7 @@ const activeSlug = projects[0].slug;
     margin: 0;
     padding-bottom: 18px;
     font-weight: 400;
-    color: rgb(243 238 231 / 0.75);
+    color: var(--fg-muted);
   }
 
   .list {
@@ -146,8 +131,8 @@ const activeSlug = projects[0].slug;
     justify-content: space-between;
     gap: 24px;
     padding: 10px 0;
-    border-top: 1px solid rgb(255 255 255 / 0.16);
-    color: var(--bone-bright);
+    border-top: 1px solid var(--rule);
+    color: var(--fg);
     text-decoration: none;
   }
 
@@ -173,11 +158,7 @@ const activeSlug = projects[0].slug;
 
   .status {
     flex: none;
-    color: rgb(243 238 231 / 0.75);
-  }
-
-  [data-active] .status {
-    color: rgb(243 238 231 / 0.85);
+    color: var(--fg-muted);
   }
 
   .card {
@@ -185,8 +166,6 @@ const activeSlug = projects[0].slug;
     flex-direction: column;
     gap: 18px;
     max-width: 650px;
-    padding: 14px 14px 22px;
-    border-radius: var(--radius-card);
   }
 
   .shot {
@@ -194,22 +173,21 @@ const activeSlug = projects[0].slug;
     height: auto;
     aspect-ratio: 578 / 365;
     object-fit: cover;
-    border-radius: var(--radius-shot);
-    box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+    border-radius: var(--radius-print);
+    background: var(--night);
   }
 
   .card-body {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 0 8px;
   }
 
   .line {
     margin: 0;
     font-size: 18px;
     line-height: 1.5;
-    color: var(--bone-bright);
+    color: var(--body);
   }
 
   .card-foot {
@@ -221,12 +199,7 @@ const activeSlug = projects[0].slug;
   }
 
   .meta {
-    color: rgb(243 238 231 / 0.8);
-  }
-
-  .card-link {
-    padding: 10px 18px;
-    font-size: 14px;
+    color: var(--fg-muted);
   }
 
   /* Narrow, or reduced motion: each project's card sits under its name,
@@ -278,14 +251,6 @@ const activeSlug = projects[0].slug;
       padding-block: 96px;
     }
 
-    .field {
-      /* Drifts a little with each project. */
-      transform: scale(1.25)
-        translate3d(calc(var(--step, 0) * -2%), calc(var(--step, 0) * 1%), 0);
-      transition: transform 1200ms var(--ease-out);
-      will-change: transform;
-    }
-
     .layout {
       height: 100%;
       display: grid;
@@ -310,7 +275,7 @@ const activeSlug = projects[0].slug;
     }
 
     .project:last-child .row {
-      border-bottom: 1px solid rgb(255 255 255 / 0.16);
+      border-bottom: 1px solid var(--rule);
     }
 
     .card {

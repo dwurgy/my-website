@@ -47,7 +47,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 - [x] Commit `design/mockup-v5.html` and `docs/v5-handoff.md`, and point the brief at the mockup.
 - [x] Theme tokens and dark mode: every colour as a token, the no-flash head script, system-following by default, and the toggle in the control bar.
-- [ ] Ground and materials: paper everywhere, one fixed grain layer, and the single glass control bar with the current section shown. Remove the per-section grain, the photo overlays, the glass project card, and the glass band card.
+- [x] Ground and materials: paper everywhere, one fixed grain layer, and the single glass control bar with the current section shown. Remove the per-section grain, the photo overlays, the glass project card, and the glass band card.
 - [ ] Hero: the pinned full-bleed-to-print shrink, with the two-copy headline.
 - [ ] Work: the ink index, the cursor preview, keyboard focus, and the touch fallback.
 - [ ] Off the clock: the pinned sideways strip, plus its reduced-motion fallback.

@@ -54,15 +54,12 @@
   /* Space */
   --gutter: 28px;
 
-  /* Corners */
+  /* Corners: pills fully round; prints, screenshots, and previews about 6px. */
   --radius-pill: 999px;
-  --radius-card: 26px;
-  --radius-card-small: 22px;
-  --radius-shot: 14px;
+  --radius-print: 6px;
 
   /* Materials */
   --grain: url('/grain.png');
-  --grain-photo-opacity: 0.38;
 
   /* Motion: slow ease-out, nothing springy. */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -186,71 +183,83 @@ a {
 
 /* Materials */
 
-/* Grain: one tiled noise image. Place inside a positioned section. */
+/* Grain: one fixed, tiled noise layer for the whole page. It sits behind the
+   content, so it shows on paper and never on photos (their grain is in the
+   scans). The tile is screened onto a warm grey first, so multiplying it adds
+   warm fibres without dimming the paper itself. */
 .grain {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
+  background-color: var(--grain-tint);
   background-image: var(--grain);
   background-size: 192px 192px;
-  mix-blend-mode: overlay;
-  opacity: var(--grain-photo-opacity);
-}
-
-/* On paper the tile is screened onto a warm grey first, so multiplying it
-   adds warm fibres without dimming the paper itself. */
-.grain--paper {
-  background-color: var(--grain-tint);
   background-blend-mode: screen;
   mix-blend-mode: var(--grain-blend);
   opacity: var(--grain-opacity);
 }
 
-/* Glass: controls and small cards only, never full-width elements. */
+/* Content stacks above the grain. */
+main,
+body > footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Buttons on paper: a thin outline that fills with ink on hover. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    color 200ms ease;
+}
+
+.btn:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* Glass: only on controls that sit on a photo. Never on a full-width element. */
 .pill {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid rgb(255 255 255 / 0.32);
   border-radius: var(--radius-pill);
-  background: linear-gradient(
-    180deg,
-    rgb(255 255 255 / 0.42) 0%,
-    rgb(255 255 255 / 0.12) 55%,
-    rgb(255 255 255 / 0.2) 100%
-  );
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
-  backdrop-filter: blur(18px) saturate(1.3);
-  border: 1px solid rgb(255 255 255 / 0.55);
-  box-shadow:
-    inset 0 1px 1px rgb(255 255 255 / 0.7),
-    inset 0 -2px 6px rgb(0 0 0 / 0.12),
-    0 8px 24px rgb(0 0 0 / 0.18);
-  color: #fff;
+  background: rgb(236 230 220 / 0.18);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  color: var(--bone-bright);
+  font: inherit;
+  font-size: 14px;
   text-decoration: none;
+  cursor: pointer;
+  transition: background 200ms ease;
 }
 
 a.pill:hover {
-  background: linear-gradient(
-    180deg,
-    rgb(255 255 255 / 0.55) 0%,
-    rgb(255 255 255 / 0.2) 55%,
-    rgb(255 255 255 / 0.28) 100%
-  );
+  background: rgb(236 230 220 / 0.32);
 }
 
+.btn:focus-visible,
 .pill:focus-visible,
 .pill :focus-visible {
   border-radius: var(--radius-pill);
-}
-
-.glass {
-  background: rgb(255 255 255 / 0.1);
-  -webkit-backdrop-filter: blur(22px) saturate(1.25);
-  backdrop-filter: blur(22px) saturate(1.25);
-  border: 1px solid rgb(255 255 255 / 0.28);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.35),
-    0 24px 60px rgb(0 0 0 / 0.3);
 }
 
 /* Utilities */

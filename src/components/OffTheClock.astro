@@ -22,23 +22,22 @@ const row = [
       sizes="100vw"
     />
     <div class="scrim" aria-hidden="true"></div>
-    <div class="grain" aria-hidden="true"></div>
 
     <div class="edge-labels">
       <h2 id="offclock-title" class="label">Off the clock</h2>
       <span class="label">Photographs, music</span>
     </div>
+  </div>
 
-    <div class="band glass">
-      <h3 class="label band-name">My Brothers And I</h3>
-      <p class="band-line">
-        I sing, write, and produce. Songs placed on Virgin River, Pretty Little Liars, Queen Sugar,
-        and others through Secret Road.
-      </p>
-      <div class="band-links">
-        <a class="pill" href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a>
-        <a class="pill" href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">Apple Music</a>
-      </div>
+  <div class="band">
+    <h3 class="label band-name">My Brothers And I</h3>
+    <p class="band-line">
+      I sing, write, and produce. Songs placed on Virgin River, Pretty Little Liars, Queen Sugar,
+      and others through Secret Road.
+    </p>
+    <div class="band-links">
+      <a class="btn" href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a>
+      <a class="btn" href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">Apple Music</a>
     </div>
   </div>
 
@@ -59,7 +58,7 @@ const row = [
 
 <style>
   .offclock {
-    color: var(--bone);
+    color: var(--fg);
   }
 
   .feature {
@@ -106,11 +105,8 @@ const row = [
     }
   }
 
-  .feature .grain {
-    --grain-photo-opacity: 0.35;
-  }
-
   .edge-labels {
+    color: var(--bone);
     position: absolute;
     top: var(--gutter);
     left: var(--gutter);
@@ -126,41 +122,31 @@ const row = [
   }
 
   .band {
-    position: absolute;
-    left: var(--gutter);
-    right: var(--gutter);
-    bottom: var(--gutter);
-    max-width: 610px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 22px 24px;
-    border-radius: var(--radius-card-small);
+    max-width: 610px;
+    padding: 56px var(--gutter) 64px;
   }
 
   .band-name {
     margin: 0;
     font-weight: 400;
-    color: rgb(243 238 231 / 0.85);
+    color: var(--fg-muted);
   }
 
   .band-line {
     margin: 0;
     font-size: 18px;
     line-height: 1.5;
-    color: var(--bone-bright);
+    color: var(--body);
   }
 
   .band-links {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding-top: 4px;
-  }
-
-  .band-links .pill {
-    padding: 9px 16px;
-    font-size: 13.5px;
+    padding-top: 8px;
   }
 
   .row {
@@ -214,10 +200,6 @@ const row = [
   }
 
   @media (max-width: 720px) {
-    .band {
-      padding: 18px 20px;
-    }
-
     .band-line {
       font-size: 16px;
     }

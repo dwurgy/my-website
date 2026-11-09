@@ -49,3 +49,12 @@ Details and reasoning that don't belong in CLAUDE.md.
 - The sun/moon button sits before "Say hi". Until the visitor clicks it, the site follows system changes live. Switching uses a 240ms view transition, skipped with reduced motion.
 - The v3 photo sections are pinned to bone text so they read the same in both themes until the later boxes rebuild them. The focus ring now uses `currentColor`, so it's ink on paper and bone on photos.
 - The control bar is still the v3 glass pill. Box 3 rebuilds it, so the toggle sits inside the phone menu for now.
+
+### 2026-11-09: Phase 3b, box 3, ground and materials
+
+- One grain layer, fixed behind all content in `Base.astro`, using `public/grain.png` (not the mockup's SVG filter, which is slow). `main` and the footer sit above it, so it shows on paper and never on photos. The per-section grain and the grain over photos are gone.
+- Sections no longer paint their own background; paper (or warm night) shows through everywhere.
+- The header is now the v5 control bar: one fixed, centred glass bar. The current section is found in at most one frame per scroll event; the hero step will fold this into the shared scroll loop. The phone menu is gone; on phones the middle two links hide.
+- New `.btn` (outline on paper, fills with ink on hover). `.pill` is now the lighter v5 glass, used only for the contact links on the lake photo. `.glass` and the card radii are removed; prints and screenshots use `--radius-print` (6px).
+- Work and Off the clock got a plain interim look on paper (ink index with the v3 pinned card, band text moved off the photo). Their v5 versions are later boxes.
+- Note for the accessibility pass: nav links at 0.6 opacity on paper measure about 4.3:1, just under 4.5. That value is from the approved mockup.
