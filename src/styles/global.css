@@ -28,7 +28,9 @@
 /* Tokens */
 
 :root {
-  /* Colour. Most colour comes from the photographs; these are the page's own. */
+  /* Fixed colour, the same in both themes. Most colour comes from the
+     photographs; these are the page's own. Bone is only for text on a photo,
+     night only behind screenshots and placeholders. */
   --night: #151311;
   --paper: #ece6dc;
   --ink: #1b1815;
@@ -61,7 +63,6 @@
   /* Materials */
   --grain: url('/grain.png');
   --grain-photo-opacity: 0.38;
-  --grain-paper-opacity: 0.35;
 
   /* Motion: slow ease-out, nothing springy. */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -74,6 +75,52 @@
   }
 }
 
+/* Theme colour. Light is paper and ink; dark is warm night and bone.
+   Photos, scrims, and text on photos never change. The theme is set on
+   <html> by the script in the head, before first paint. */
+
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #ece6dc;
+  --fg: #1b1815;
+  --fg-muted: #5b534a;
+  --body: #2b2622;
+  --rule: rgb(27 24 21 / 0.2);
+  --rule-strong: rgb(27 24 21 / 0.35);
+  --btn-border: rgb(27 24 21 / 0.32);
+  --bar-bg: rgb(236 230 220 / 0.62);
+  --bar-border: rgb(27 24 21 / 0.1);
+  --bar-hi: rgb(255 255 255 / 0.45);
+  --grain-tint: rgb(176 164 150);
+  --grain-blend: multiply;
+  --grain-opacity: 0.32;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #171512;
+  --fg: #f0eae1;
+  --fg-muted: #a39a8e;
+  --body: #d6cec2;
+  --rule: rgb(240 234 225 / 0.16);
+  --rule-strong: rgb(240 234 225 / 0.3);
+  --btn-border: rgb(240 234 225 / 0.3);
+  --bar-bg: rgb(23 21 18 / 0.55);
+  --bar-border: rgb(255 255 255 / 0.1);
+  --bar-hi: rgb(255 255 255 / 0.06);
+  --grain-tint: transparent;
+  --grain-blend: screen;
+  --grain-opacity: 0.07;
+}
+
+/* Switching theme: a short cross-fade of the whole page. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 240ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 /* Base */
 
 *,
@@ -83,14 +130,13 @@
 }
 
 html {
-  color-scheme: dark;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  background: var(--night);
-  color: var(--bone);
+  background: var(--bg);
+  color: var(--fg);
   font-family: var(--font-grot);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -108,7 +154,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--bone);
+  outline: 2px solid currentColor;
   outline-offset: 4px;
 }
 
@@ -154,10 +200,10 @@ a {
 /* On paper the tile is screened onto a warm grey first, so multiplying it
    adds warm fibres without dimming the paper itself. */
 .grain--paper {
-  background-color: rgb(176 164 150);
+  background-color: var(--grain-tint);
   background-blend-mode: screen;
-  mix-blend-mode: multiply;
-  opacity: var(--grain-paper-opacity);
+  mix-blend-mode: var(--grain-blend);
+  opacity: var(--grain-opacity);
 }
 
 /* Glass: controls and small cards only, never full-width elements. */

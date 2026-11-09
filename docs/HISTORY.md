@@ -41,3 +41,11 @@ Details and reasoning that don't belong in CLAUDE.md.
 - **Brief updated for v5.** CLAUDE.md and PLAN.md were changed to match `docs/v5-handoff.md`. One addition beyond the handoff: the theme switch (about 240ms) is listed with the timed motion, because the handoff's own dark-mode section gives it a view transition.
 - **Mockup check.** `design/mockup-v5.html` served from the repo root ran cleanly at both sizes and in both themes: no script errors, no failed requests, no sideways scroll, and the hover preview and project page worked.
 - **Copywriter Lab wording** confirmed by David on 2026-11-09. "Three days from idea to production" stays.
+
+## 2026-11-09: Theme tokens and dark mode (Phase 3b, box 2)
+
+- Theme tokens (`--bg`, `--fg`, `--fg-muted`, `--body`, `--rule`, `--rule-strong`, `--btn-border`, `--bar-*`, `--grain-*`) live in `global.css`, keyed on `data-theme` on `<html>`, with values taken from the v5 mockup.
+- A tiny inline script in the head sets the theme before first paint: a saved choice in `localStorage` wins, otherwise the system setting. It also sets the browser's `theme-color`.
+- The sun/moon button sits before "Say hi". Until the visitor clicks it, the site follows system changes live. Switching uses a 240ms view transition, skipped with reduced motion.
+- The v3 photo sections are pinned to bone text so they read the same in both themes until the later boxes rebuild them. The focus ring now uses `currentColor`, so it's ink on paper and bone on photos.
+- The control bar is still the v3 glass pill. Box 3 rebuilds it, so the toggle sits inside the phone menu for now.

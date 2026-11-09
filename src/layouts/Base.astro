@@ -17,7 +17,17 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#151311" />
+    <meta name="theme-color" content="#ece6dc" />
+    <script is:inline>
+      // Set the theme before first paint: a saved choice wins, else follow the system.
+      (function () {
+        var saved = null;
+        try { saved = localStorage.getItem('theme'); } catch (e) {}
+        var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.querySelector('meta[name="theme-color"]').content = dark ? '#171512' : '#ece6dc';
+      })();
+    </script>
     <!-- No favicon until phase 5; this stops the browser asking for one. -->
     <link rel="icon" href="data:," />
     <link rel="preload" href={archivo} as="font" type="font/woff2" crossorigin />

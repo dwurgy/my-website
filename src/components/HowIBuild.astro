@@ -67,8 +67,8 @@ const rules = [
     position: relative;
     overflow: hidden;
     padding: 104px var(--gutter) 120px;
-    background: var(--paper);
-    color: var(--ink);
+    background: var(--bg);
+    color: var(--fg);
   }
 
   .stack {
@@ -84,7 +84,7 @@ const rules = [
     gap: 40px 24px;
     margin: 0;
     padding-top: 18px;
-    border-top: 1.5px solid var(--ink);
+    border-top: 1.5px solid var(--fg);
   }
 
   .number {
@@ -96,7 +96,7 @@ const rules = [
   }
 
   .number .label {
-    color: var(--ink-muted);
+    color: var(--fg-muted);
   }
 
   .figure {
@@ -152,7 +152,7 @@ const rules = [
     margin: 0;
     font-size: 19px;
     line-height: 1.55;
-    color: #2b2622;
+    color: var(--body);
   }
 
   .rules {
@@ -167,7 +167,7 @@ const rules = [
 
   .rules-source {
     padding-bottom: 6px;
-    color: var(--ink-muted);
+    color: var(--fg-muted);
   }
 
   .rules-list {
