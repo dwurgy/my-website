@@ -70,7 +70,6 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 - [ ] Social share image (1200 × 630): the coast photo with the headline.
 - [ ] Favicon, page titles, meta descriptions, a sitemap, and a calm 404 page.
-- [ ] A `/resume.pdf` link (David supplies the file).
 - [ ] An accessibility pass: keyboard only, a screen reader skim, and contrast checks over every photo.
 
 **Done test:** Lighthouse is 95 or higher in all four categories, on mobile and desktop. The share card looks right when the link is pasted into a message.
@@ -89,5 +88,4 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 - Alfred: a full-screen chat screenshot with clean formatting, plus an optional clip that David records and Claude in chat trims.
 - Photo captions: v5 shows none. Add them back only if David supplies a place and year for each photo.
 - Worker Previews: still needed, and now essential, because the preview link is the only way David sees the site.
-- His résumé as a PDF.
 - Whether to bring back the NWR brand identity work from the old site (nwr-brand-canvas.netlify.app). It isn't in v3.

@@ -80,5 +80,5 @@ Details and reasoning that don't belong in CLAUDE.md.
 - The lake grows from a centred print (inset 22% top and bottom, 30% sides, 8% on phones) to full-bleed over a 210vh pin, using the mockup's math. One CSS number, `--print`, drives the clip and the zoom.
 - The contact text lives on the photo and is clipped to it. An ink "Say hi." waits on the paper below the print and is covered as the photo grows, as in v5. David asked (2026-11-09) that only one show at a time: the one on the photo stays hidden until the photo has covered the ink one (past its bottom and left edges), then fades in with scroll. This departs from the mockup, where both can show at once.
 - Links to `#hello` use a negative `scroll-margin-top` (-110vh) so they land at the end of the pin, where the links are visible. Tabbing into the links jumps there too.
-- The Résumé link from the mockup is left out until David supplies the PDF (Phase 5), so there's no dead link.
+- No résumé link: David decided (2026-11-09) he doesn't want one. Removed from the v5 mockup and the plan.
 - Contrast over the photo, measured against the brightest 5% of pixels behind each piece of text: the lowest was 5.0:1 (the Copy button at 390px).
