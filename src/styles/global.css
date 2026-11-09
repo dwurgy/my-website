@@ -63,7 +63,6 @@
 
   /* Motion: slow ease-out, nothing springy. */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --reveal-duration: 900ms;
 }
 
 @media (max-width: 640px) {
@@ -274,17 +273,6 @@ body > footer {
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
-}
-
-/* Photo sections: the photo moves a little slower than the page as it passes.
-   Used by photos that are 130% of their frame, so there is room to move. */
-@keyframes parallax {
-  from {
-    transform: translateY(-11%);
-  }
-  to {
-    transform: translateY(11%);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

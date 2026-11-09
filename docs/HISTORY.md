@@ -82,3 +82,4 @@ Details and reasoning that don't belong in CLAUDE.md.
 - Links to `#hello` use a negative `scroll-margin-top` (-110vh) so they land at the end of the pin, where the links are visible. Tabbing into the links jumps there too.
 - No résumé link: David decided (2026-11-09) he doesn't want one. Removed from the v5 mockup and the plan.
 - Contrast over the photo, measured against the brightest 5% of pixels behind each piece of text: the lowest was 5.0:1 (the Copy button at 390px).
+- Removing v3 motion (2026-11-09): the earlier v5 steps had already replaced the hero settle, the pinned work list, and the per-section photo parallax. What was left was dead code: the `parallax` keyframes and a 900ms `--reveal-duration` token. Both removed. The only timer left in the scripts resets the "Copied" label on the email button after 2 seconds, which isn't motion.
