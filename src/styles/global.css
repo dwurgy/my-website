@@ -185,12 +185,25 @@ a {
 /* Grain: one fixed, tiled noise layer for the whole page. It sits behind the
    content, so it shows on paper and never on photos (their grain is in the
    scans). The tile is screened onto a warm grey first, so multiplying it adds
-   warm fibres without dimming the paper itself. */
+   warm fibres without dimming the paper itself.
+
+   The layer paints its own copy of the ground and blends the grain into that,
+   inside itself. Behind the content there is only the flat ground anyway, so
+   it looks the same, but the browser draws it once instead of re-blending it
+   against the page on every scrolled frame. */
 .grain {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  background: var(--bg);
+  isolation: isolate;
+}
+
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background-color: var(--grain-tint);
   background-image: var(--grain);
   background-size: 192px 192px;
