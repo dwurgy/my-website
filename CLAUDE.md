@@ -171,7 +171,8 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **Phase 2: done** (2026-10-20). The homepage, still, matching the mockup. Lighthouse mobile: 99 performance, 100 accessibility, 100 best practices.
 - **Phase 3: done** (2026-10-20). Motion: hero settle, pinned work list, photo parallax, and reduced motion. Done test passed at 60fps with no layout shifts.
 - **2026-11-04:** David approved the v5 direction ("paper with windows"). The homepage built in Phases 2 and 3 matches v3 and needs rework. See Phase 3b in `docs/PLAN.md`.
-- **Phase 3b: next.** The v5 direction. Then Phase 4, project pages.
+- **Phase 3b: in progress.** The v5 direction. Box 1 (brief and mockup) done 2026-11-09. Next: theme tokens and dark mode. Then Phase 4, project pages.
+- **Preview links:** not confirmed yet. David is checking Cloudflare for Worker Previews and will paste one link; derive later links from its pattern.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
