@@ -1,0 +1,58 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { projects } from '../../data/projects';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('work');
+  // Every project on the homepage needs a page, and every page a project.
+  const slugs = new Set(projects.map((p) => p.slug));
+  for (const e of entries) {
+    if (!slugs.has(e.id)) throw new Error(`src/content/work/${e.id}.md has no project in projects.ts`);
+    slugs.delete(e.id);
+  }
+  if (slugs.size) throw new Error(`No page in src/content/work/ for: ${[...slugs].join(', ')}`);
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Base title={`${entry.data.title}: David Wurgler`} description={entry.data.lede}>
+  <main id="main" class="project">
+    <a class="btn back" href="/#work">Back to work</a>
+    <h1 class="headline title">{entry.data.title}</h1>
+    <p class="lede">{entry.data.lede}</p>
+    <div class="body"><Content /></div>
+  </main>
+</Base>
+
+<style>
+  /* A plain first pass. The full v5 layout comes in a later step. */
+  .project {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 40px var(--gutter) 120px;
+  }
+  .back {
+    margin-bottom: clamp(48px, 10vw, 120px);
+  }
+  .title {
+    font-size: clamp(56px, 10vw, 160px);
+  }
+  .lede {
+    max-width: 32ch;
+    margin-top: 28px;
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.35;
+    color: var(--body);
+  }
+  .body {
+    max-width: 60ch;
+    margin-top: 48px;
+    color: var(--fg-muted);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+</style>
