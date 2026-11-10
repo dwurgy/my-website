@@ -110,6 +110,30 @@
   --grain-opacity: 0.07;
 }
 
+/* Moving between pages: a short cross-fade, and the work index preview grows
+   into the project's main image. Off for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+    types: page;
+  }
+}
+
+html:active-view-transition-type(page)::view-transition-group(*),
+html:active-view-transition-type(page)::view-transition-old(*),
+html:active-view-transition-type(page)::view-transition-new(*) {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The two images have different shapes, so crop rather than stretch. */
+::view-transition-old(project-shot),
+::view-transition-new(project-shot) {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
 /* Switching theme: a short cross-fade of the whole page. */
 ::view-transition-old(root),
 ::view-transition-new(root) {

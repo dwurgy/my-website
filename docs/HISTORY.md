@@ -95,3 +95,9 @@ Details and reasoning that don't belong in CLAUDE.md.
 - The mockup frames every main image at 16:10.5 and crops it. The back-office screenshot is much wider (1678 × 924), so the crop cut off both sides of the serial record. Real screenshots now keep their own shape; only placeholders use the 16:10.5 frame.
 - Project pages carry the control bar too, so the theme button is on every page. Its section links point back to the homepage, and "Work" stays lit.
 - Placeholders get a strong rule as an edge, because `night` on the dark theme's ground was nearly invisible.
+
+## 2026-11-10: Preview morphs into the main image (Phase 4, box 5)
+
+- Uses the browser's own cross-page view transitions (CSS `@view-transition`), not Astro's client router, so pages stay plain static pages. Browsers without it (Safari before 18.2, Firefox today) just load the page normally.
+- Only the image that stands for the clicked project gets the shared name: the cursor preview on desktop, the image under the name on touch screens. Leaving a project page ("Next project" or back) is a plain 300ms cross-fade, because a morph from an image scrolled far above looked like it flew in.
+- Reduced motion turns page transitions off entirely. The theme switch keeps its own 240ms fade; page changes are marked with a `page` type so the two durations don't collide.

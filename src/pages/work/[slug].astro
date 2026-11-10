@@ -116,6 +116,17 @@ const poster =
   </main>
 </Base>
 
+<script>
+  // Only an arrival from the work index morphs into the main image. Leaving
+  // this page (for the next project, or back) is a plain cross-fade.
+  addEventListener('pageswap', () => {
+    document.querySelector<HTMLElement>('.project .shot')!.style.viewTransitionName = 'none';
+  });
+  addEventListener('pageshow', () => {
+    document.querySelector<HTMLElement>('.project .shot')!.style.viewTransitionName = '';
+  });
+</script>
+
 <style>
   .project {
     padding: 132px 40px 64px;
@@ -163,6 +174,7 @@ const poster =
   /* The main image: a print on the paper. A real screenshot keeps its own
      shape, so nothing is cropped; a placeholder takes the mockup's frame. */
   .shot {
+    view-transition-name: project-shot;
     overflow: hidden;
     border-radius: 6px;
     background: var(--night);

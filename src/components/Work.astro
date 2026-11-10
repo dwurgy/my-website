@@ -135,6 +135,29 @@ import { projects } from '../data/projects';
     { passive: true },
   );
 
+  // Opening a project: whatever image stands for it on screen (the preview,
+  // or on touch screens the image under its name) becomes the project page's
+  // main image during the page transition.
+  addEventListener('pageswap', (event) => {
+    const url = event.activation?.entry?.url;
+    if (!event.viewTransition || !url) return;
+    const slug = new URL(url).pathname.match(/^\/work\/([^/]+)\/?$/)?.[1];
+    if (!slug) return;
+    const row = rows.find((r) => r.dataset.slug === slug);
+    const shown = preview.matches('[data-on]')
+      ? preview
+      : row?.parentElement?.querySelector<HTMLElement>('.touch-shot');
+    if (!shown || !shown.checkVisibility()) return;
+    shown.style.viewTransitionName = 'project-shot';
+  });
+
+  // Coming back (including from the back/forward cache): start clean.
+  addEventListener('pageshow', () => {
+    preview.style.viewTransitionName = '';
+    list.querySelectorAll<HTMLElement>('.touch-shot').forEach((s) => (s.style.viewTransitionName = ''));
+    show(null);
+  });
+
   // The preview eases toward the cursor (or beside the focused row) with a
   // slight lag, inside the page's one animation loop.
   onFrame(() => {

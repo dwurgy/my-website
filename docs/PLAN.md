@@ -62,7 +62,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 - [x] Each page covers the problem, what David built, the result, and a few images, using only facts from CLAUDE.md. Where a fact or image is missing, leave a clearly marked placeholder for David rather than inventing it.
 - [x] Use the Copywriter Lab demo video on its page, with the poster image, muted, and with controls.
 - [x] Project pages use the paper ground: a back button, the title, a short lede, the main image, a row of facts, one paragraph, links, and a large "Next project" row at the bottom.
-- [ ] Opening a page from the index morphs the cursor preview into the main image in about 300ms. Going back returns to the work index.
+- [x] Opening a page from the index morphs the cursor preview into the main image in about 300ms. Going back returns to the work index.
 
 **Done test:** Every link on the homepage reaches a real page. Each page reads well at 390px. No number or claim appears that isn't in CLAUDE.md.
 
