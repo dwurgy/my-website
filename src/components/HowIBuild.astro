@@ -1,11 +1,5 @@
 ---
-// The paper section: three numbers, then how I build.
-const numbers = [
-  { label: 'Month-end sales tax', from: '3 days', to: '1 report' },
-  { label: 'ERP kickoff to go-live', value: '10 weeks' },
-  { label: 'Warehouse trips gone, per year', value: '500+' },
-];
-
+// The paper section: how I build.
 const rules = [
   'Work in small, testable steps.',
   'No new dependencies without asking.',
@@ -16,29 +10,6 @@ const rules = [
 
 <section id="how" class="paper" aria-labelledby="how-title">
   <div class="stack">
-    <dl class="numbers">
-      {
-        numbers.map((number) => (
-          <div class="number">
-            <dt class="label">{number.label}</dt>
-            <dd class="figure">
-              {number.value ?? (
-                <>
-                  {number.from}
-                  {/* Archivo has no arrow, so it is drawn to match the type. */}
-                  <svg class="arrow" viewBox="0 0 24 16" aria-hidden="true">
-                    <path d="M1 8h20M14 1.5 21 8l-7 6.5" />
-                  </svg>
-                  <span class="visually-hidden">to</span>
-                  {number.to}
-                </>
-              )}
-            </dd>
-          </div>
-        ))
-      }
-    </dl>
-
     <h2 id="how-title" class="headline statement">
       <span>I don't write most of the code.</span>
       <span class="statement-end">I write the <span class="emphasis">brief.</span></span>
@@ -72,47 +43,6 @@ const rules = [
     display: flex;
     flex-direction: column;
     gap: 120px;
-  }
-
-  .numbers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px 24px;
-    margin: 0;
-    padding-top: 18px;
-    border-top: 1.5px solid var(--fg);
-  }
-
-  .number {
-    flex: 1 1 280px;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .number .label {
-    color: var(--fg-muted);
-  }
-
-  .figure {
-    margin: 0;
-    font-size: clamp(40px, 4.45vw, 64px);
-    line-height: 1;
-    font-weight: var(--headline-weight);
-    letter-spacing: var(--headline-tracking);
-  }
-
-  .arrow {
-    display: inline-block;
-    width: 0.9em;
-    height: 0.6em;
-    margin: 0 0.16em;
-    vertical-align: 0.08em;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: square;
   }
 
   .statement {

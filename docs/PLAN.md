@@ -87,7 +87,7 @@ Result (2026-11-10): Lighthouse passed on every page (see HISTORY). Share card c
 See "Direction" in CLAUDE.md. One box at a time; David checks each on the preview link.
 
 - [x] Update the brief with the new direction.
-- [ ] Cut the stats row from How I build.
+- [x] Cut the stats row from How I build. Done 2026-11-10.
 - [ ] Footer: one line, "Photographed and built by David Wurgler, with Claude Code," linking to the source.
 - [ ] Intro and How I build copy: rewritten for the new angle, using the "Who's making it" facts. David approves the words before they go in.
 - [ ] Work index: apps first (Firn, then Utu Weather as "coming soon" once David gives its facts), then Copywriter Lab and Alfred. Decide with David what happens to the back-office rebuild.
