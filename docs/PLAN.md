@@ -70,7 +70,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 - [x] Social share image (1200 × 630): the coast photo with the headline. (2026-11-10)
 - [x] Favicon, page titles, meta descriptions, a sitemap, and a calm 404 page. (2026-11-10)
-- [ ] An accessibility pass: keyboard only, a screen reader skim, and contrast checks over every photo.
+- [x] An accessibility pass: keyboard only, a screen reader skim, and contrast checks over every photo. (2026-11-10)
 
 **Done test:** Lighthouse is 95 or higher in all four categories, on mobile and desktop. The share card looks right when the link is pasted into a message.
 

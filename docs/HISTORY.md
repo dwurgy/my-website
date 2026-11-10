@@ -121,3 +121,9 @@ Details and reasoning that don't belong in CLAUDE.md.
 - `wrangler.jsonc` sets `not_found_handling: "404-page"`, so unknown addresses get `404.html` with a real 404 status. The page is marked noindex.
 - Titles and descriptions were already in place on every page from Phases 2 and 4.
 - The control bar now decides "link to the homepage's sections or not" from the page address, so the 404 page's links work too.
+
+## Phase 5, box 3: accessibility pass (2026-11-10)
+
+- **Keyboard.** Every page tabs in a sensible order: skip link, control bar, the page's own links, contact. Every stop has a visible focus ring and lands on screen, in both themes at 1440 and 390. One fix: on phones, tabbing to Spotify or Apple Music left them off to the side, because the strip only moves with scroll. Now focus in the strip scrolls the page to the nearest point where the link shows (instantly, no animation), and the strip uses `overflow: clip` so focus can't shift it sideways behind the transform. The video's own controls are drawn by the browser and keep its focus style.
+- **Screen reader skim.** One h1 per page, no skipped heading levels, landmarks (banner, nav, main, footer) on every page, alt text on every photo, names on every link and button, nothing focusable inside hidden copies. The duplicate headlines on the photos are hidden from readers. How I build reads its numbers before its heading, which matches what you see.
+- **Contrast over photos** (measured pixel by pixel behind each line, light and dark, 1440 and 390, at several scroll points): hero text at least 6.3:1, Say hi text at least 7.5:1, contact pills at least 6.7:1 once on the photo. Rule is 4.5.

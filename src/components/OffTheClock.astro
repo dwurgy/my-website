@@ -76,6 +76,26 @@ const prints = [
       view.removeAttribute('aria-label');
     };
   });
+
+  // Keyboard: the strip moves with scroll, so a link in it can be focused
+  // while it sits off to the side. When that happens, scroll the page to the
+  // nearest point where the strip shows it.
+  track.addEventListener('focusin', (event) => {
+    if (reducedMotion.matches) return;
+    const target = event.target as HTMLElement;
+    const travel = track.scrollWidth - innerWidth;
+    const pin = section.offsetHeight - innerHeight;
+    if (travel <= 0 || pin <= 0) return;
+    const edge = parseFloat(getComputedStyle(section).getPropertyValue('--track-edge')) || 0;
+    const left = target.getBoundingClientRect().left - track.getBoundingClientRect().left;
+    const earliest = (left + target.offsetWidth + edge - innerWidth) / travel;
+    const latest = (left - edge) / travel;
+    const now = progress(section);
+    const wanted = Math.min(1, Math.max(0, Math.min(latest, Math.max(earliest, now))));
+    if (Math.abs(wanted - now) < 0.001) return;
+    const top = section.getBoundingClientRect().top + scrollY;
+    scrollTo({ top: top + wanted * pin, behavior: 'instant' });
+  });
 </script>
 
 <style>
@@ -89,7 +109,9 @@ const prints = [
     top: 0;
     height: 100vh;
     height: 100svh;
-    overflow: hidden;
+    /* clip, not hidden: focus can't scroll the strip sideways behind the
+       transform's back. */
+    overflow: clip;
     display: flex;
     align-items: center;
   }
