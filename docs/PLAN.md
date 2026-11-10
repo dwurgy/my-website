@@ -74,10 +74,12 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 **Done test:** Lighthouse is 95 or higher in all four categories, on mobile and desktop. The share card looks right when the link is pasted into a message.
 
+Result (2026-11-10): Lighthouse passed on every page (see HISTORY). Share card checked by its tags and image; the real paste test moves to Phase 6, once davidwurgler.com serves this site.
+
 ## Phase 6: Launch (only when David says so)
 
 - [ ] Merge `redesign` into `main`.
-- [ ] Confirm the live site at davidwurgler.com, on a phone and on a laptop.
+- [ ] Confirm the live site at davidwurgler.com, on a phone and on a laptop, and paste the link into a message to check the share card.
 - [ ] The old site stays in git history if it's ever needed.
 
 ## Waiting on David
