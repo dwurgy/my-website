@@ -9,7 +9,7 @@ One job: someone landing here should understand in about 30 seconds that David d
 ### Direction (David, 2026-11-10)
 
 - **Position:** a designer and builder of software, with AI as the method. Design and UI/UX are the strength; Claude Code is how one person ships at that level. Never call it "vibe coding" on the site.
-- **Hero line:** keep "I build tools people actually use." David uses it on his app sites too.
+- **Hero line:** "I make pretty things." with "pretty" as the italic word, matching David's GitHub and Threads bio (2026-11-10). The label under it reads "Design and software."
 - **Work:** the apps lead, Firn first. Copywriter Lab and Alfred stay as proof that his tools get daily use by a real team. The back-office (ERP) rebuild shrinks to a line or goes; ask David.
 - **How I build:** becomes the centrepiece. The stats row (3 days → 1 report, 10 weeks, 500+) is cut.
 - **Off the clock and music:** unchanged.
@@ -150,7 +150,7 @@ These are the only claims and numbers allowed. Never invent or round up a number
 
 ### Voice
 
-Write plainly and directly, like a person talking. Use short sentences, no hype, and no buzzwords. Always use the serial comma. The copy in the mockup is the approved draft; keep it unless David changes it. David has changed the hero headline to "I build tools people actually use."
+Write plainly and directly, like a person talking. Use short sentences, no hype, and no buzzwords. Always use the serial comma. The copy in the mockup is the approved draft; keep it unless David changes it. David has changed the hero headline to "I make pretty things." (2026-11-10).
 
 ### Assets
 
