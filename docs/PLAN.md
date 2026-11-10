@@ -96,7 +96,6 @@ See "Direction" in CLAUDE.md. One box at a time; David checks each on the previe
 ## Waiting on David
 
 - Nynna: whether to show it, and its facts.
-- The back-office rebuild: keep as one line, or cut its page.
 
 - A clean Firn screenshot with his own tabs.
 - Screenshots of the SOP Assistant, with customer names and numbers blurred.

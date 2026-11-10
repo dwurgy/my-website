@@ -2,7 +2,6 @@ import type { ImageMetadata } from 'astro';
 import firnShot from '../../assets/work/firn.jpg';
 import utuShot from '../../assets/work/utu.webp';
 import copywriterShot from '../../assets/work/copywriter-lab-poster.jpg';
-import serialShot from '../../assets/work/serial-lookup.png';
 import copywriterVideo from '../../assets/work/copywriter-lab.mp4?url';
 
 export interface Project {
@@ -62,15 +61,5 @@ export const projects: Project[] = [
     line: 'Two AI assistants inside an Odoo ERP. One question instead of a warehouse walk.',
     // David is supplying a blurred screenshot.
     placeholder: 'Alfred screenshot',
-  },
-  {
-    slug: 'back-office',
-    name: 'Back office',
-    meta: '10 weeks',
-    line: 'Off QuickBooks Desktop and onto one ERP, with zero downtime.',
-    shot: {
-      src: serialShot,
-      alt: 'A serial number record in Odoo with its quality check passed and the test print below it.',
-    },
   },
 ];

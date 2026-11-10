@@ -4,6 +4,7 @@ lede: A calm iPhone weather app that writes the forecast as a plain-English sent
 facts:
   - { label: Status, value: 'In development, not out yet' }
   - { label: Runs on, value: iPhone }
+  - { label: Built with, value: 'SwiftUI, WeatherKit, and WidgetKit' }
   - { label: Images, value: 'Design mockups' }
 links:
   - { label: utuweather.com, href: 'https://utuweather.com' }
