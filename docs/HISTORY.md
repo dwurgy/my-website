@@ -113,3 +113,11 @@ Details and reasoning that don't belong in CLAUDE.md.
 - The card is a screenshot of the hero's first frame at 1200 × 630, with the control bar hidden, so it matches the site exactly instead of being a second design to keep in step. `scripts/share-image.mjs` remakes it (run it against `npm run preview`); rerun it if the headline or hero changes.
 - It uses the Playwright that comes with the cloud environment, not a site dependency. The JPEG carries no EXIF or GPS, only a colour profile.
 - One card for every page, for now. The tags point at `https://davidwurgler.com/share.jpg`, so pasted preview links won't show the card until the site is live.
+
+## 2026-11-10: Favicon, sitemap, and 404 (Phase 5, box 2)
+
+- The favicon is the wordmark's "W": Archivo at full width (125) and weight 800, taken from the self-hosted font file as a shape, in ink on a paper tile, so it reads in light and dark browser tabs. `scripts/icons.mjs` makes the 180px phone icon from it with sharp, which Astro already installs.
+- The sitemap is a small hand-written endpoint (`src/pages/sitemap.xml.ts`) instead of `@astrojs/sitemap`: five pages don't need a dependency. Its addresses end in "/" to match the canonical links.
+- `wrangler.jsonc` sets `not_found_handling: "404-page"`, so unknown addresses get `404.html` with a real 404 status. The page is marked noindex.
+- Titles and descriptions were already in place on every page from Phases 2 and 4.
+- The control bar now decides "link to the homepage's sections or not" from the page address, so the 404 page's links work too.

@@ -2,6 +2,8 @@
   "name": "my-website",
   "compatibility_date": "2026-06-15",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    // Unknown addresses get dist/404.html, with a real 404 status.
+    "not_found_handling": "404-page"
   }
 }

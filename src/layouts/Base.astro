@@ -5,9 +5,11 @@ import archivo from '@fontsource-variable/archivo/files/archivo-latin-wdth-norma
 interface Props {
   title: string;
   description: string;
+  /** Keep the page out of search results (the 404 page). */
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 // Made by scripts/share-image.mjs.
 const shareImage = new URL('/share.jpg', Astro.site).href;
@@ -20,7 +22,7 @@ const shareImage = new URL('/share.jpg', Astro.site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={pageUrl} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={pageUrl} />}
     <!-- The card shown when a link is pasted into a message. -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="David Wurgler" />
@@ -43,8 +45,9 @@ const shareImage = new URL('/share.jpg', Astro.site).href;
         document.querySelector('meta[name="theme-color"]').content = dark ? '#171512' : '#ece6dc';
       })();
     </script>
-    <!-- No favicon until phase 5; this stops the browser asking for one. -->
-    <link rel="icon" href="data:," />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap.xml" />
     <link rel="preload" href={archivo} as="font" type="font/woff2" crossorigin />
   </head>
   <body>

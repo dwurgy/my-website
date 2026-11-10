@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+---
+
+<Base title="Page not found: David Wurgler" description="This page isn't here." noindex>
+  <SiteHeader />
+  <main id="main" class="lost">
+    <p class="label muted">404</p>
+    <h1 class="headline title">This page isn't <span class="emphasis">here.</span></h1>
+    <p class="line">The link may be old, or have a typo in it.</p>
+    <div class="actions">
+      <a class="btn" href="/">Back to the homepage</a>
+      <a class="btn" href="/#work">See the work</a>
+    </div>
+  </main>
+</Base>
+
+<style>
+  /* Calm: the paper, one headline, and two ways back. */
+  .lost {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 28px;
+    min-height: 100svh;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 132px 40px 64px;
+  }
+
+  .muted {
+    color: var(--fg-muted);
+  }
+
+  .title {
+    margin: 0;
+    font-size: clamp(56px, 8vw, 128px);
+  }
+
+  .line {
+    max-width: 480px;
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--body);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 760px) {
+    .lost {
+      padding: 112px var(--gutter) 48px;
+    }
+  }
+</style>

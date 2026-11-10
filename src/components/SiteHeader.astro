@@ -1,11 +1,11 @@
 ---
 interface Props {
-  /** The section this page belongs to, when it isn't the homepage (a project page is "work"). */
+  /** The section a page off the homepage belongs to (a project page is "work"). */
   section?: string;
 }
 const { section } = Astro.props;
 // Off the homepage, the section links go back to the homepage.
-const base = section ? '/' : '';
+const base = Astro.url.pathname === '/' ? '' : '/';
 
 // The control bar: the one glass object on the page, fixed and centred at
 // the top. The link for the section in view is at full strength.
