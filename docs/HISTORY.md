@@ -89,3 +89,9 @@ Details and reasoning that don't belong in CLAUDE.md.
 - Desktop scrolling dropped about 22% of frames in headless Chromium, which has no graphics card; the mockup dropped none under the same conditions. The cause was the grain: it blended against the scrolling page on every frame. It now paints its own copy of the ground and blends inside itself. Screenshots differ by at most 2/255 per channel. Slow frames fell to about 2%.
 - What's left: Say hi on desktop still drops about 1 frame in 10 while the lake grows (the mockup drops none). Bisecting shows it's the glass pills' blur being redrawn as the clip changes. Ruled out: writing clip and zoom straight onto the elements instead of a section variable, and the image format (AVIF, WebP, and the original JPEG all behave the same). Phones are a clean 60fps. Worth checking on a real laptop before spending more on it.
 - Passed: no layout shifts, no long tasks, timers only for the load fade, hovers, view transitions, and the copy button's 2-second label reset. Reduced motion holds still with every photo reachable. Contrast: text 14.2 (light) and 15.2 (dark), labels 6.1 and 6.6, paragraphs 12.1 and 11.7; text on photos at least 6.4 at its brightest point. Theme set before first paint in all four system/saved combinations. No sideways page scroll at 390px. Lighthouse mobile 98, 100, 100, 100.
+
+## 2026-11-10: Project page layout (Phase 4, box 4)
+
+- The mockup frames every main image at 16:10.5 and crops it. The back-office screenshot is much wider (1678 × 924), so the crop cut off both sides of the serial record. Real screenshots now keep their own shape; only placeholders use the 16:10.5 frame.
+- Project pages carry the control bar too, so the theme button is on every page. Its section links point back to the homepage, and "Work" stays lit.
+- Placeholders get a strong rule as an edge, because `night` on the dark theme's ground was nearly invisible.
