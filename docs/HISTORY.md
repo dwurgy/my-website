@@ -107,3 +107,9 @@ Details and reasoning that don't belong in CLAUDE.md.
 - Checked with headless Chromium at 390 × 844 and 1440 × 900, light and dark. Every internal link on the homepage and the four project pages returns a real page; the in-page anchors (#work, #how, #offclock, #hello, #main) all exist. No console errors and no sideways scroll at either width.
 - Claims: every fact on the project pages is in CLAUDE.md. A few short phrases go beyond its exact wording ("for people who don't want to learn a new browser", "The whole team, ongoing", "From a written brief, with Claude Code"); all are verbatim from the approved v5 mockup copy.
 - Full-page screenshots show a faint band where the fixed grain layer ends. That's a screenshot artifact; the real page has grain everywhere.
+
+## 2026-11-10: Share image (Phase 5, box 1)
+
+- The card is a screenshot of the hero's first frame at 1200 × 630, with the control bar hidden, so it matches the site exactly instead of being a second design to keep in step. `scripts/share-image.mjs` remakes it (run it against `npm run preview`); rerun it if the headline or hero changes.
+- It uses the Playwright that comes with the cloud environment, not a site dependency. The JPEG carries no EXIF or GPS, only a colour profile.
+- One card for every page, for now. The tags point at `https://davidwurgler.com/share.jpg`, so pasted preview links won't show the card until the site is live.

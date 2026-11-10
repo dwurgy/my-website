@@ -8,6 +8,9 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+// Made by scripts/share-image.mjs.
+const shareImage = new URL('/share.jpg', Astro.site).href;
 ---
 
 <!doctype html>
@@ -17,6 +20,18 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
+    <!-- The card shown when a link is pasted into a message. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="David Wurgler" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Oregon coast at dusk, with the words: I build tools people actually use." />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#ece6dc" />
     <script is:inline>
       // Set the theme before first paint: a saved choice wins, else follow the system.
