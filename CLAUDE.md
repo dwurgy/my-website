@@ -1,10 +1,20 @@
 # davidwurgler.com
 
-The personal site of David Wurgler: business systems and AI tools, plus the photographs and music that show his taste. This file is the brief. Read it fully before every phase, then work through `docs/PLAN.md` in order.
+The personal site of David Wurgler: a designer who builds software with AI. His apps lead, tools he built for his team back them up, and his photographs and music show his taste. This file is the brief. Read it fully before every phase, then work through `docs/PLAN.md` in order.
 
 ## What the site is for
 
-One job: someone landing here should understand in about 30 seconds that David builds real systems and AI tools that people actually use, and that he has taste. Then they should be able to see the work and get in touch.
+One job: someone landing here should understand in about 30 seconds that David designs and builds software with AI, that it's well made and people actually use it, and that he has taste. Then they should be able to see the work and get in touch. The hope is that the work leads to paid work (Firn alone has already led to a job offer).
+
+### Direction (David, 2026-11-10)
+
+- **Position:** a designer and builder of software, with AI as the method. Design and UI/UX are the strength; Claude Code is how one person ships at that level. Never call it "vibe coding" on the site.
+- **Hero line:** keep "I build tools people actually use." David uses it on his app sites too.
+- **Work:** the apps lead, Firn first. Copywriter Lab and Alfred stay as proof that his tools get daily use by a real team. The back-office (ERP) rebuild shrinks to a line or goes; ask David.
+- **How I build:** becomes the centrepiece. The stats row (3 days → 1 report, 10 weeks, 500+) is cut.
+- **Off the clock and music:** unchanged.
+- **Footer:** "Built with Claude Code" should link to this repo's source, not just sit there as a label.
+- Do not mention the job offer, or who made it, on the site unless David says so.
 
 The site itself is part of the proof. It should feel crafted, calm, and quick, and it should be obvious it was made with care. The footer says it was built with Claude Code, so the code has to hold up if someone opens the repo.
 
@@ -124,6 +134,9 @@ These are the only claims and numbers allowed. Never invent or round up a number
 - **How I build:** every project starts with a brief that says who it's for, the rules the agent can't break, and a done test for each step. The Firn rules quoted in the mockup are real.
 - **Music:** David sings, writes, and produces in My Brothers And I. The band has placements on Virgin River, Pretty Little Liars, Queen Sugar, and others through Secret Road.
 - **Background:** David started in shipping in 2019 and is based in Salem, Oregon.
+- **Utu Weather:** David's next app. Not built yet. Its site, utuweather.com, is live to tease the release. (David, 2026-11-10.) Ask David what it is before describing it.
+- **The apps together:** Firn, Utu, and Nynna are "the David Wurgler apps." Ask David for Nynna's facts before showing it.
+- **"Who's making it" (from David's app sites, 2026-11-10, approved wording):** "I'm David. I design and build software, and I live in Salem, Oregon, with my wife and our two boys. I'm also a songwriter: a few of my songs have ended up on network TV, and I play in a band called My Brothers And I." / "I make these apps with Claude, an AI from Anthropic, as my coding partner. I decide what each app is and how it should feel: the design, the details, the way it behaves. Claude and I write the code together and catch each other's mistakes." / "I build the things I wish already existed: quiet, well-made tools that respect your time and your privacy. If one of them makes your day a little calmer, that's the whole point." Reuse its facts and voice here; adapt it, don't paste it whole.
 
 ### Links
 
@@ -179,6 +192,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **Preview links:** not confirmed yet. David is checking Cloudflare for Worker Previews and will paste one link; derive later links from its pattern.
 - **2026-11-10, Firn facts updated:** native Mac app (Swift, WebKit), iPhone coming soon; Windows and Linux dropped. Merged to `main` the same day.
 - **2026-11-10, real Firn screenshot:** `assets/work/firn.jpg` replaces the placeholder (metadata stripped). Merged to `main` the same day.
+- **2026-11-10, new direction:** designer who builds software with AI; apps lead. See "Direction" at the top and Phase 7 in `docs/PLAN.md`. Brief updated; no site changes yet.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.

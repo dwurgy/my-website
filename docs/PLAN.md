@@ -82,7 +82,22 @@ Result (2026-11-10): Lighthouse passed on every page (see HISTORY). Share card c
 - [ ] Confirm the live site at davidwurgler.com, on a phone and on a laptop, and paste the link into a message to check the share card.
 - [ ] The old site stays in git history if it's ever needed.
 
+## Phase 7: Designer who builds (David, 2026-11-10)
+
+See "Direction" in CLAUDE.md. One box at a time; David checks each on the preview link.
+
+- [x] Update the brief with the new direction.
+- [ ] Cut the stats row from How I build.
+- [ ] Footer: one line, "Photographed and built by David Wurgler, with Claude Code," linking to the source.
+- [ ] Intro and How I build copy: rewritten for the new angle, using the "Who's making it" facts. David approves the words before they go in.
+- [ ] Work index: apps first (Firn, then Utu Weather as "coming soon" once David gives its facts), then Copywriter Lab and Alfred. Decide with David what happens to the back-office rebuild.
+- [ ] Done test: the 30-second read says "designer who builds software with AI," at 1440px and 390px, in both themes.
+
 ## Waiting on David
+
+- Utu Weather: one or two sentences on what it is, and a screenshot or image from utuweather.com.
+- Nynna: whether to show it, and its facts.
+- The back-office rebuild: keep as one line, or cut its page.
 
 - A clean Firn screenshot with his own tabs.
 - Screenshots of the SOP Assistant, with customer names and numbers blurred.
