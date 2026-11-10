@@ -88,7 +88,7 @@ See "Direction" in CLAUDE.md. One box at a time; David checks each on the previe
 
 - [x] Update the brief with the new direction.
 - [x] Cut the stats row from How I build. Done 2026-11-10.
-- [ ] Footer: one line, "Photographed and built by David Wurgler, with Claude Code," linking to the source.
+- [x] Footer: one line, "Photographed and built by David Wurgler, with Claude Code," linking to the source. Done 2026-11-10.
 - [ ] Intro and How I build copy: rewritten for the new angle, using the "Who's making it" facts. David approves the words before they go in.
 - [ ] Work index: apps first (Firn, then Utu Weather as "coming soon" once David gives its facts), then Copywriter Lab and Alfred. Decide with David what happens to the back-office rebuild.
 - [ ] Done test: the 30-second read says "designer who builds software with AI," at 1440px and 390px, in both themes.

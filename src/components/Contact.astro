@@ -45,8 +45,10 @@ const links = [
           </div>
         </div>
         <div class="credits">
-          <span class="label">Photographed and built by David Wurgler</span>
-          <span class="label">Built with Claude Code</span>
+          <p class="label">
+            Photographed and built by David Wurgler, with Claude Code.{' '}
+            <a class="source" href="https://github.com/dwurgy/my-website">See the source</a>
+          </p>
         </div>
       </div>
     </div>
@@ -256,6 +258,22 @@ const links = [
     gap: 10px 24px;
     padding-top: 16px;
     border-top: 1px solid rgb(255 255 255 / 0.3);
+  }
+
+  .credits p {
+    margin: 0;
+  }
+
+  .source {
+    margin-left: 0.6em;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+  }
+
+  .source:hover {
+    text-decoration-thickness: 2px;
   }
 
   @media (max-width: 760px) {
