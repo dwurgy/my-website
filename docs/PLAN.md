@@ -78,7 +78,7 @@ Result (2026-11-10): Lighthouse passed on every page (see HISTORY). Share card c
 
 ## Phase 6: Launch (only when David says so)
 
-- [ ] Merge `redesign` into `main`.
+- [x] Merge `redesign` into `main`. Done 2026-11-10 (fast-forward, build passed).
 - [ ] Confirm the live site at davidwurgler.com, on a phone and on a laptop, and paste the link into a message to check the share card.
 - [ ] The old site stays in git history if it's ever needed.
 
