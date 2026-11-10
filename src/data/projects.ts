@@ -1,5 +1,5 @@
 import type { ImageMetadata } from 'astro';
-import firnShot from '../../assets/work/firn-placeholder.jpg';
+import firnShot from '../../assets/work/firn.jpg';
 import copywriterShot from '../../assets/work/copywriter-lab-poster.jpg';
 import serialShot from '../../assets/work/serial-lookup.png';
 import copywriterVideo from '../../assets/work/copywriter-lab.mp4?url';

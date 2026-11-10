@@ -149,7 +149,7 @@ Write plainly and directly, like a person talking. Use short sentences, no hype,
   - `copywriter-lab.mp4`: the real demo, 34 seconds, no audio. It loops from the empty screen back to it.
   - `copywriter-lab-poster.jpg`: the finished listing. It is the video's poster and also the work index preview.
   - `serial-lookup.png`: the back-office image, a serial record with its test print. The coworker's name and the costs are already blurred.
-  - `firn-placeholder.jpg`: a low-resolution placeholder. David will supply a proper screenshot.
+  - `firn.jpg`: David's real Firn screenshot (sidebar, tab group, and spaces beside a website), added 2026-11-10.
   - The Alfred screenshot, and an optional short Alfred clip, are still to come.
 
 Any new photo must have its metadata (including GPS) stripped before it is committed. This repo is public.
@@ -178,6 +178,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-10, phone jitter fix: done.** The browser runs the pinned motion itself with CSS scroll-driven animations (see HISTORY). Merged to `main`; David confirmed it is smooth on his phone. Next: Phase 6 box 2 (confirm the live site on phone and laptop, and the share card paste test).
 - **Preview links:** not confirmed yet. David is checking Cloudflare for Worker Previews and will paste one link; derive later links from its pattern.
 - **2026-11-10, Firn facts updated:** native Mac app (Swift, WebKit), iPhone coming soon; Windows and Linux dropped. Merged to `main` the same day.
+- **2026-11-10, real Firn screenshot:** `assets/work/firn.jpg` replaces the placeholder (metadata stripped). On `redesign`.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.

@@ -10,8 +10,6 @@ facts:
 links:
   - { label: firnbrowser.com, href: 'https://firnbrowser.com' }
   - { label: Source on GitHub, href: 'https://github.com/dwurgy/firn' }
-waiting:
-  - A clean Firn screenshot with David's own tabs, to replace the low-resolution one above
 ---
 
 Firn has vertical tabs, spaces, and split view. It's a native Mac app, written in Swift on WebKit, the engine behind Safari. An iPhone version is coming soon, with syncing between iPhone and Mac. I wrote its brief, the CLAUDE.md, and directed Claude Code through every phase. It was released in October 2026 and is notarized by Apple.
