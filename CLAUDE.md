@@ -196,6 +196,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-10, Utu Weather added:** second in the work index ("Coming soon"), with its own page using David's copy and the three-phone design mockup. Work order is now Firn, Utu, Copywriter Lab, Alfred. Name meanings and Utu's tech (SwiftUI, WeatherKit, and WidgetKit, from David's Utu notes) added.
 - **2026-11-10, back office is one line:** David chose a single line under the work index; its page and row are gone (`serial-lookup.png` is no longer used).
 - **2026-11-10, merged to `main`:** Utu, the name meanings, and the back-office line. David said to merge.
+- **2026-11-10, How I build copy:** warehouse line dropped; now ends on feel ("pretty to look at, easy to use, and fun"). Merged to `main`.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
