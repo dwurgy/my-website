@@ -12,4 +12,4 @@ links:
   - { label: Source on GitHub, href: 'https://github.com/dwurgy/firn' }
 ---
 
-Firn has vertical tabs, spaces, and split view. It's a native Mac app, written in Swift on WebKit, the engine behind Safari. An iPhone version is coming soon, with syncing between iPhone and Mac. I wrote its brief, the CLAUDE.md, and directed Claude Code through every phase. It was released in October 2026 and is notarized by Apple.
+The name is a Swiss German word for last year's snow: old, packed snow on its way to becoming glacier ice. Firn has vertical tabs, spaces, and split view. It's a native Mac app, written in Swift on WebKit, the engine behind Safari. An iPhone version is coming soon, with syncing between iPhone and Mac. I wrote its brief, the CLAUDE.md, and directed Claude Code through every phase. It was released in October 2026 and is notarized by Apple.
