@@ -95,7 +95,6 @@ See "Direction" in CLAUDE.md. One box at a time; David checks each on the previe
 
 ## Waiting on David
 
-- Utu Weather: one or two sentences on what it is, and a screenshot or image from utuweather.com.
 - Nynna: whether to show it, and its facts.
 - The back-office rebuild: keep as one line, or cut its page.
 

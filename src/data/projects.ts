@@ -1,5 +1,6 @@
 import type { ImageMetadata } from 'astro';
 import firnShot from '../../assets/work/firn.jpg';
+import utuShot from '../../assets/work/utu.webp';
 import copywriterShot from '../../assets/work/copywriter-lab-poster.jpg';
 import serialShot from '../../assets/work/serial-lookup.png';
 import copywriterVideo from '../../assets/work/copywriter-lab.mp4?url';
@@ -31,12 +32,14 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: 'alfred',
-    name: 'Alfred',
-    meta: 'In use',
-    line: 'Two AI assistants inside an Odoo ERP. One question instead of a warehouse walk.',
-    // David is supplying a blurred screenshot.
-    placeholder: 'Alfred screenshot',
+    slug: 'utu',
+    name: 'Utu Weather',
+    meta: 'Coming soon',
+    line: 'A calm iPhone weather app that tells you the forecast in a plain-English sentence, then shows the numbers.',
+    shot: {
+      src: utuShot,
+      alt: 'Three iPhones showing Utu at golden hour, on a drizzly afternoon, and on a clear night, each with a large temperature and a one-sentence forecast.',
+    },
   },
   {
     slug: 'copywriter-lab',
@@ -51,6 +54,14 @@ export const projects: Project[] = [
       src: copywriterVideo,
       label: 'Demo of NW Copywriter Lab, 34 seconds, no sound: a part number goes in, and the eBay title, product description, and weight and dimensions are written one by one.',
     },
+  },
+  {
+    slug: 'alfred',
+    name: 'Alfred',
+    meta: 'In use',
+    line: 'Two AI assistants inside an Odoo ERP. One question instead of a warehouse walk.',
+    // David is supplying a blurred screenshot.
+    placeholder: 'Alfred screenshot',
   },
   {
     slug: 'back-office',
