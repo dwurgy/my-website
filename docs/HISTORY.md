@@ -101,3 +101,9 @@ Details and reasoning that don't belong in CLAUDE.md.
 - Uses the browser's own cross-page view transitions (CSS `@view-transition`), not Astro's client router, so pages stay plain static pages. Browsers without it (Safari before 18.2, Firefox today) just load the page normally.
 - Only the image that stands for the clicked project gets the shared name: the cursor preview on desktop, the image under the name on touch screens. Leaving a project page ("Next project" or back) is a plain 300ms cross-fade, because a morph from an image scrolled far above looked like it flew in.
 - Reduced motion turns page transitions off entirely. The theme switch keeps its own 240ms fade; page changes are marked with a `page` type so the two durations don't collide.
+
+## 2026-11-10: Phase 4 done test
+
+- Checked with headless Chromium at 390 × 844 and 1440 × 900, light and dark. Every internal link on the homepage and the four project pages returns a real page; the in-page anchors (#work, #how, #offclock, #hello, #main) all exist. No console errors and no sideways scroll at either width.
+- Claims: every fact on the project pages is in CLAUDE.md. A few short phrases go beyond its exact wording ("for people who don't want to learn a new browser", "The whole team, ongoing", "From a written brief, with Claude Code"); all are verbatim from the approved v5 mockup copy.
+- Full-page screenshots show a faint band where the fixed grain layer ends. That's a screenshot artifact; the real page has grain everywhere.
