@@ -172,7 +172,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **Phase 3: done** (2026-10-20). Motion: hero settle, pinned work list, photo parallax, and reduced motion. Done test passed at 60fps with no layout shifts.
 - **2026-11-04:** David approved the v5 direction ("paper with windows"). The homepage built in Phases 2 and 3 matches v3 and needs rework. See Phase 3b in `docs/PLAN.md`.
 - **Phase 3b: done** (2026-11-09). The v5 direction. Done test passed except a few slow desktop frames in Say hi (see HISTORY); David gave the go-ahead.
-- **Phase 4: in progress.** Box 1 done 2026-11-09: a Markdown page per project in `src/content/work/`, served at `/work/<slug>`, with a plain first-pass layout. The build fails if a page and `src/data/projects.ts` disagree. Box 2 done 2026-11-10: each page has its lede, facts, one paragraph, links, and marked placeholders, all from the approved mockup copy.
+- **Phase 4: in progress.** Box 1 done 2026-11-09: a Markdown page per project in `src/content/work/`, served at `/work/<slug>`, with a plain first-pass layout. The build fails if a page and `src/data/projects.ts` disagree. Box 2 done 2026-11-10: each page has its lede, facts, one paragraph, links, and marked placeholders, all from the approved mockup copy. Box 3 done 2026-11-10: the Copywriter Lab demo video is its main image, muted, with controls, loading only when played.
 - **Preview links:** not confirmed yet. David is checking Cloudflare for Worker Previews and will paste one link; derive later links from its pattern.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 

@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { projects } from '../../data/projects';
 
@@ -20,6 +20,11 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const project = projects.find((p) => p.slug === entry.id)!;
 const { facts, links, waiting } = entry.data;
+// A video's poster goes through the image pipeline like any other image.
+const poster =
+  project.video && project.shot
+    ? await getImage({ src: project.shot.src, width: 1440, format: 'webp' })
+    : undefined;
 ---
 
 <Base title={`${entry.data.title}: David Wurgler`} description={entry.data.lede}>
@@ -28,7 +33,21 @@ const { facts, links, waiting } = entry.data;
     <h1 class="headline title">{entry.data.title}</h1>
     <p class="lede">{entry.data.lede}</p>
     {
-      project.shot ? (
+      project.video && poster ? (
+        <video
+          class="main-shot"
+          src={project.video.src}
+          poster={poster.src}
+          width={project.shot!.src.width}
+          height={project.shot!.src.height}
+          aria-label={project.video.label}
+          controls
+          muted
+          loop
+          playsinline
+          preload="none"
+        />
+      ) : project.shot ? (
         <Image
           class="main-shot"
           src={project.shot.src}

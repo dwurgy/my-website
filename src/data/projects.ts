@@ -2,6 +2,7 @@ import type { ImageMetadata } from 'astro';
 import firnShot from '../../assets/work/firn-placeholder.jpg';
 import copywriterShot from '../../assets/work/copywriter-lab-poster.jpg';
 import serialShot from '../../assets/work/serial-lookup.png';
+import copywriterVideo from '../../assets/work/copywriter-lab.mp4?url';
 
 export interface Project {
   slug: string;
@@ -12,6 +13,8 @@ export interface Project {
   line: string;
   /** The preview that follows the cursor, and the image under the name on touch screens. */
   shot?: { src: ImageMetadata; alt: string };
+  /** A demo video that takes the main image's place on the project page. The shot is its poster. */
+  video?: { src: string; label: string };
   /** Shown in the preview while a project has no screenshot yet. */
   placeholder?: string;
 }
@@ -43,6 +46,10 @@ export const projects: Project[] = [
     shot: {
       src: copywriterShot,
       alt: 'NW Copywriter Lab: a finished listing for a network switch, with its eBay title, product description, and weight and dimensions each marked done.',
+    },
+    video: {
+      src: copywriterVideo,
+      label: 'Demo of NW Copywriter Lab, 34 seconds, no sound: a part number goes in, and the eBay title, product description, and weight and dimensions are written one by one.',
     },
   },
   {
