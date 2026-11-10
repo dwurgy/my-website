@@ -117,7 +117,7 @@ These were tried and rejected:
 
 These are the only claims and numbers allowed. Never invent or round up a number. If something isn't here, ask.
 
-- **Firn:** a calm desktop browser with vertical tabs, spaces, and split view. It runs on macOS and Windows, with Linux coming. It is open source (github.com/dwurgy/firn), and its site is firnbrowser.com. David wrote the brief (its CLAUDE.md) and directed Claude Code through every phase. Released October 2026 and notarized by Apple.
+- **Firn:** a calm browser with vertical tabs, spaces, and split view. It is a native Mac app built in Swift on WebKit, Safari's engine. It no longer runs on Windows or Linux. An iPhone version, with syncing between iPhone and Mac, is coming soon. (Updated by David on 2026-11-10.) It is open source (github.com/dwurgy/firn), and its site is firnbrowser.com. David wrote the brief (its CLAUDE.md) and directed Claude Code through every phase. Released October 2026 and notarized by Apple.
 - **Alfred and the SOP Assistant:** two AI assistants inside the company's Odoo 19 ERP, both built on the Gemini API. Alfred answers questions from live data, such as which in-stock units meet a customer's license requirement. The SOP Assistant answers how-to questions from the company's own process docs. Both are in ongoing use across the team. A question that used to mean a walk to the warehouse is now one question.
 - **NW Copywriter Lab:** an internal tool that turns a part number into an eBay title that doubles as a quote line, a product description, and weight and dimensions, and it saves the spec data for store filters. It was prototyped in Google AI Studio, rebuilt with Claude, and deployed on Cloudflare, three days from idea to production. A demo video is in `assets/work/`. (Confirmed by David on 2026-11-09. Use this wording in the work index and the project page.)
 - **The back-office rebuild:** a move off QuickBooks Desktop and an unsupported in-house database onto Odoo 19, with David as sole internal owner. It took ten weeks from kickoff to go-live, with zero downtime and every order shipped on launch day. It produced the company's first live P&L. Sales tax is automated across nine states, and month-end compliance went from three days to one report. Serial tracking with searchable test prints removed 500+ warehouse trips a year.
@@ -177,6 +177,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **Phase 6, box 1 done** (2026-11-10): David said to merge; `redesign` fast-forwarded into `main` and pushed. Next: confirm the live site and the share card.
 - **2026-11-10, phone jitter fix: done.** The browser runs the pinned motion itself with CSS scroll-driven animations (see HISTORY). Merged to `main`; David confirmed it is smooth on his phone. Next: Phase 6 box 2 (confirm the live site on phone and laptop, and the share card paste test).
 - **Preview links:** not confirmed yet. David is checking Cloudflare for Worker Previews and will paste one link; derive later links from its pattern.
+- **2026-11-10, Firn facts updated:** native Mac app (Swift, WebKit), iPhone coming soon; Windows and Linux dropped. On `redesign` only.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.

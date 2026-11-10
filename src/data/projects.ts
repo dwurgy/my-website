@@ -24,7 +24,7 @@ export const projects: Project[] = [
     slug: 'firn',
     name: 'Firn',
     meta: 'Oct 2026',
-    line: 'A calm desktop browser. Open source, on macOS and Windows.',
+    line: 'A calm Mac browser, built on Safari’s engine. Open source.',
     shot: {
       src: firnShot,
       alt: 'Firn on a Mac: a sidebar of tabs and spaces beside a website.',

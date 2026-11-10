@@ -1,9 +1,10 @@
 ---
 title: Firn
-lede: A calm desktop browser for people who don't want to learn a new browser. I wrote the brief and directed Claude Code through every phase.
+lede: A calm Mac browser for people who don't want to learn a new browser. I wrote the brief and directed Claude Code through every phase.
 facts:
   - { label: Released, value: October 2026 }
-  - { label: Runs on, value: 'macOS and Windows, Linux coming' }
+  - { label: Runs on, value: 'macOS, iPhone coming soon' }
+  - { label: Engine, value: 'WebKit, in Swift' }
   - { label: Built, value: 'From a written brief, with Claude Code' }
   - { label: Source, value: 'Open, on GitHub' }
 links:
@@ -13,4 +14,4 @@ waiting:
   - A clean Firn screenshot with David's own tabs, to replace the low-resolution one above
 ---
 
-Firn has vertical tabs, spaces, and split view. It runs on macOS and Windows, with Linux coming. I wrote its brief, the CLAUDE.md, and directed Claude Code through every phase. It was released in October 2026 and is notarized by Apple.
+Firn has vertical tabs, spaces, and split view. It's a native Mac app, written in Swift on WebKit, the engine behind Safari. An iPhone version is coming soon, with syncing between iPhone and Mac. I wrote its brief, the CLAUDE.md, and directed Claude Code through every phase. It was released in October 2026 and is notarized by Apple.
