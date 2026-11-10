@@ -66,6 +66,19 @@ const links = [
   // "Say hi." on the photo stays hidden until the photo has covered the ink
   // "Say hi." below it, then fades in as the photo keeps growing. Only one
   // is ever on screen.
+  // The insets only change with the layout, so read them once and again
+  // after a resize, not on every frame (reading styles mid-scroll is slow on
+  // phones).
+  let insets: [number, number] | undefined;
+  const readInsets = (): [number, number] => {
+    const css = getComputedStyle(hello);
+    return [
+      parseFloat(css.getPropertyValue('--inset-y')) / 100,
+      parseFloat(css.getPropertyValue('--inset-x')) / 100,
+    ];
+  };
+  addEventListener('resize', () => (insets = undefined));
+
   onFrame(() => {
     if (reducedMotion.matches) {
       return () => {
@@ -77,9 +90,8 @@ const links = [
     // The print value at which the photo has grown past the ink title's
     // bottom and left edges, so the ink title is fully covered. The insets
     // are the fractions set in the CSS (--inset-y, --inset-x).
-    const css = getComputedStyle(hello);
-    const insetY = parseFloat(css.getPropertyValue('--inset-y')) / 100;
-    const insetX = parseFloat(css.getPropertyValue('--inset-x')) / 100;
+    insets ??= readInsets();
+    const [insetY, insetX] = insets;
     const width = stick.clientWidth;
     const height = stick.clientHeight;
     const below = height - (inkTitle.offsetTop + inkTitle.offsetHeight);

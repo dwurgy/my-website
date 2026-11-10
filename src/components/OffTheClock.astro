@@ -84,7 +84,7 @@ const prints = [
     if (reducedMotion.matches) return;
     const target = event.target as HTMLElement;
     const travel = track.scrollWidth - innerWidth;
-    const pin = section.offsetHeight - innerHeight;
+    const pin = section.offsetHeight - section.querySelector<HTMLElement>('.stick')!.offsetHeight;
     if (travel <= 0 || pin <= 0) return;
     const edge = parseFloat(getComputedStyle(section).getPropertyValue('--track-edge')) || 0;
     const left = target.getBoundingClientRect().left - track.getBoundingClientRect().left;

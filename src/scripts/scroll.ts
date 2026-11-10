@@ -38,9 +38,18 @@ const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 /** Eases in and out, so a pinned move starts and ends gently. */
 export const smooth = (t: number) => t * t * (3 - 2 * t);
 
-/** How far through a pinned section the reader is, from 0 to 1. */
+/**
+ * How far through a pinned section the reader is, from 0 to 1.
+ *
+ * The pin ends when the section's sticky box (.stick) reaches the section's
+ * bottom, so the travel is measured against that box, not innerHeight. On
+ * phones innerHeight grows and shrinks as the browser's address bar hides and
+ * shows mid-scroll, which made every photo jump; the sticky box is 100svh and
+ * holds still.
+ */
 export function progress(section: HTMLElement) {
   const box = section.getBoundingClientRect();
-  const travel = box.height - innerHeight;
+  const pinned = section.querySelector<HTMLElement>('.stick')?.offsetHeight ?? innerHeight;
+  const travel = box.height - pinned;
   return travel <= 0 ? 1 : clamp01(-box.top / travel);
 }
