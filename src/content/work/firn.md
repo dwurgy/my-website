@@ -12,4 +12,4 @@ links:
   - { label: Source on GitHub, href: 'https://github.com/dwurgy/firn' }
 ---
 
-Firn is snow that has made it through a whole season: older than fresh snow, not yet glacier ice. The word is from the Swiss German for "last year's." My family is German-Swiss, so the name felt like mine the moment I found it. Firn has vertical tabs, spaces, and split view. It's a native Mac app, written in Swift on WebKit, the engine behind Safari. An iPhone version is coming soon, with syncing between iPhone and Mac. I wrote its brief, the CLAUDE.md, and directed Claude Code through every phase. It was released in October 2026 and is notarized by Apple.
+Firn is snow that has made it through a whole season: older than fresh snow, not yet glacier ice. The word is from the Swiss German for "last year's." Firn has vertical tabs, spaces, and split view. It's a native Mac app, written in Swift on WebKit, the engine behind Safari. An iPhone version is coming soon, with syncing between iPhone and Mac. I wrote its brief, the CLAUDE.md, and directed Claude Code through every phase. It was released in October 2026 and is notarized by Apple.
