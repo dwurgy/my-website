@@ -59,7 +59,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 ## Phase 4: Project pages
 
 - [x] A page for each project at `/work/firn`, `/work/alfred`, `/work/copywriter-lab`, and `/work/back-office`. Write each as a Markdown file in a content collection.
-- [ ] Each page covers the problem, what David built, the result, and a few images, using only facts from CLAUDE.md. Where a fact or image is missing, leave a clearly marked placeholder for David rather than inventing it.
+- [x] Each page covers the problem, what David built, the result, and a few images, using only facts from CLAUDE.md. Where a fact or image is missing, leave a clearly marked placeholder for David rather than inventing it.
 - [ ] Use the Copywriter Lab demo video on its page, with the poster image, muted, and with controls.
 - [ ] Project pages use the paper ground: a back button, the title, a short lede, the main image, a row of facts, one paragraph, links, and a large "Next project" row at the bottom.
 - [ ] Opening a page from the index morphs the cursor preview into the main image in about 300ms. Going back returns to the work index.

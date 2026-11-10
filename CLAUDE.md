@@ -172,7 +172,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **Phase 3: done** (2026-10-20). Motion: hero settle, pinned work list, photo parallax, and reduced motion. Done test passed at 60fps with no layout shifts.
 - **2026-11-04:** David approved the v5 direction ("paper with windows"). The homepage built in Phases 2 and 3 matches v3 and needs rework. See Phase 3b in `docs/PLAN.md`.
 - **Phase 3b: done** (2026-11-09). The v5 direction. Done test passed except a few slow desktop frames in Say hi (see HISTORY); David gave the go-ahead.
-- **Phase 4: in progress.** Box 1 done 2026-11-09: a Markdown page per project in `src/content/work/`, served at `/work/<slug>`, with a plain first-pass layout. The build fails if a page and `src/data/projects.ts` disagree.
+- **Phase 4: in progress.** Box 1 done 2026-11-09: a Markdown page per project in `src/content/work/`, served at `/work/<slug>`, with a plain first-pass layout. The build fails if a page and `src/data/projects.ts` disagree. Box 2 done 2026-11-10: each page has its lede, facts, one paragraph, links, and marked placeholders, all from the approved mockup copy.
 - **Preview links:** not confirmed yet. David is checking Cloudflare for Worker Previews and will paste one link; derive later links from its pattern.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
@@ -184,7 +184,7 @@ David is not a programmer. He directs the work and judges how it looks and feels
 
 - **Plain English.** No jargon without a one-line explanation. Say what changed and what he'll see, not how the code does it.
 - **One small step at a time.** Before a step, say in a sentence or two what you're about to do. After it, say what changed and exactly what to look at. Then stop and wait for his OK.
-- **Pick the model before starting.** In one line, say which model the step needs: Sonnet only for wording, copy, and simple questions; Opus for anything visual, motion, layout, performance, or accessibility. If the current model is wrong for the step, say so and wait.
+- **Model.** Use Opus for every step. David no longer uses Sonnet (2026-11-10).
 - **Spend his usage carefully.** Read only the files and parts you need, and don't re-read files already read in this conversation. Keep replies short. Never skip testing or the brief's rules to save effort.
 - **Checkpoints.** When a step works and is committed, update "Where we are" in a line, put any reasoning worth keeping in `docs/HISTORY.md`, and recommend `/clear`. Recommend `/compact` instead only if something important lives only in the conversation.
 - **Stuck rule.** After two failed tries at the same fix, stop and say what's known and what's been ruled out.

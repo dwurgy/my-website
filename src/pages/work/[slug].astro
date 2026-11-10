@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { projects } from '../../data/projects';
 
@@ -17,6 +18,8 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const project = projects.find((p) => p.slug === entry.id)!;
+const { facts, links, waiting } = entry.data;
 ---
 
 <Base title={`${entry.data.title}: David Wurgler`} description={entry.data.lede}>
@@ -24,7 +27,45 @@ const { Content } = await render(entry);
     <a class="btn back" href="/#work">Back to work</a>
     <h1 class="headline title">{entry.data.title}</h1>
     <p class="lede">{entry.data.lede}</p>
+    {
+      project.shot ? (
+        <Image
+          class="main-shot"
+          src={project.shot.src}
+          alt={project.shot.alt}
+          widths={[720, 1080, 1440, 2160]}
+          sizes="(max-width: 760px) calc(100vw - 32px), min(100vw - 56px, 1360px)"
+          loading="eager"
+        />
+      ) : (
+        <div class="main-shot placeholder label">[Placeholder for David: {project.placeholder}]</div>
+      )
+    }
+    <dl class="facts">
+      {
+        facts.map((f) => (
+          <div>
+            <dt class="label">{f.label}</dt>
+            <dd>{f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
     <div class="body"><Content /></div>
+    {
+      links.length > 0 && (
+        <ul class="links">
+          {links.map((l) => (
+            <li>
+              <a class="btn" href={l.href}>{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    {
+      waiting.map((w) => <div class="extra placeholder label">[Placeholder for David: {w}]</div>)
+    }
   </main>
 </Base>
 
@@ -48,11 +89,66 @@ const { Content } = await render(entry);
     line-height: 1.35;
     color: var(--body);
   }
+  .main-shot {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: clamp(40px, 6vw, 72px);
+    border-radius: 6px;
+    background: var(--night);
+  }
+  .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    aspect-ratio: 16 / 10;
+    border-radius: 6px;
+    background: var(--night);
+    color: var(--bone);
+    text-align: center;
+  }
+  .extra {
+    aspect-ratio: auto;
+    min-height: 160px;
+    margin-top: 48px;
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+    margin: 56px 0 0;
+  }
+  .facts div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule-strong);
+  }
+  .facts dt {
+    color: var(--fg-muted);
+  }
+  .facts dd {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
   .body {
     max-width: 60ch;
-    margin-top: 48px;
-    color: var(--fg-muted);
-    font-size: 17px;
+    margin-top: 56px;
+    color: var(--body);
+    font-size: 19px;
     line-height: 1.6;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 32px 0 0;
+    padding: 0;
+    list-style: none;
   }
 </style>
