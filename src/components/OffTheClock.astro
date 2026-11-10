@@ -49,7 +49,7 @@ const prints = [
 </section>
 
 <script>
-  import { onFrame, progress, reducedMotion } from '../scripts/scroll';
+  import { cssDriven, onFrame, pinRange, progress, reducedMotion } from '../scripts/scroll';
 
   // The strip slides sideways exactly as far as the section scrolls down:
   // from its start at the top of the pin to its end at the bottom.
@@ -68,9 +68,18 @@ const prints = [
       };
     }
     const travel = Math.max(0, track.scrollWidth - innerWidth);
+    // With CSS scroll-driven animations the strip moves itself; the script
+    // only tells it its range and how far it travels.
+    const range = cssDriven ? pinRange(section) : undefined;
+    const distance = `${Math.round(travel)}px`;
     const x = (-progress(section) * travel).toFixed(1);
     return () => {
-      track.style.transform = `translate3d(${x}px, 0, 0)`;
+      if (range) {
+        range();
+        if (section.style.getPropertyValue('--travel') !== distance) section.style.setProperty('--travel', distance);
+      } else {
+        track.style.transform = `translate3d(${x}px, 0, 0)`;
+      }
       view.removeAttribute('tabindex');
       view.removeAttribute('role');
       view.removeAttribute('aria-label');
@@ -178,6 +187,29 @@ const prints = [
   @media (max-width: 760px) {
     .offclock {
       --track-edge: 20px;
+    }
+  }
+
+  /* The strip slides by --travel across the pin, in step with scrolling. A
+     transform, so the browser can move it without redrawing. */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .track {
+        animation-name: strip;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: scroll(root);
+        animation-range: var(--pin-start, 0px) var(--pin-end, 100vh);
+      }
+    }
+  }
+
+  @keyframes strip {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(calc(-1 * var(--travel, 0px)), 0, 0);
     }
   }
 

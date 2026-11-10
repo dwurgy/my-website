@@ -53,3 +53,29 @@ export function progress(section: HTMLElement) {
   const travel = box.height - pinned;
   return travel <= 0 ? 1 : clamp01(-box.top / travel);
 }
+
+/**
+ * Whether the browser can tie motion straight to scrolling in CSS
+ * (scroll-driven animations). Safari 26 and Chrome can. When it can, the CSS
+ * runs the pinned motion in step with the finger, and the scripts only keep
+ * each section's scroll range up to date. Without it, the scripts set the
+ * motion each frame, as before. Reduced motion uses neither.
+ */
+export const cssDriven = CSS.supports('animation-timeline: scroll()');
+
+/**
+ * Reads where a pinned section's pin starts and ends, in page pixels, and
+ * returns a write that hands them to the CSS as --pin-start and --pin-end.
+ * Pixels, not screen heights, so the range holds still when a phone's address
+ * bar hides or shows. Writes only when a value changes.
+ */
+export function pinRange(section: HTMLElement): Write {
+  const top = section.getBoundingClientRect().top + scrollY;
+  const pinned = section.querySelector<HTMLElement>('.stick')?.offsetHeight ?? innerHeight;
+  const start = `${Math.round(top)}px`;
+  const end = `${Math.round(top + section.offsetHeight - pinned)}px`;
+  return () => {
+    if (section.style.getPropertyValue('--pin-start') !== start) section.style.setProperty('--pin-start', start);
+    if (section.style.getPropertyValue('--pin-end') !== end) section.style.setProperty('--pin-end', end);
+  };
+}

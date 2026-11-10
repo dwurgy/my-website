@@ -322,3 +322,21 @@ body > footer {
     scroll-behavior: auto !important;
   }
 }
+
+/* Pinned sections. Where the browser supports scroll-driven animations, --p
+   runs from 0 to 1 across a section's pin, in step with scrolling. Each
+   section's script sets --pin-start and --pin-end in page pixels. */
+@property --p {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes pin-progress {
+  from {
+    --p: 0;
+  }
+  to {
+    --p: 1;
+  }
+}

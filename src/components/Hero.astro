@@ -43,7 +43,7 @@ const labels = ['David Wurgler', 'Business systems and AI', 'Salem, Oregon'];
 </section>
 
 <script>
-  import { onFrame, progress, reducedMotion, smooth } from '../scripts/scroll';
+  import { cssDriven, onFrame, pinRange, progress, reducedMotion, smooth } from '../scripts/scroll';
 
   // Scroll sets one number, --settled, from 0 (full-bleed) to 1 (a print).
   // The CSS turns it into the photo's shape and zoom.
@@ -51,6 +51,7 @@ const labels = ['David Wurgler', 'Business systems and AI', 'Salem, Oregon'];
 
   onFrame(() => {
     if (reducedMotion.matches) return () => hero.style.removeProperty('--settled');
+    if (cssDriven) return pinRange(hero);
     const settled = smooth(progress(hero)).toFixed(4);
     return () => hero.style.setProperty('--settled', settled);
   });
@@ -182,6 +183,19 @@ const labels = ['David Wurgler', 'Business systems and AI', 'Salem, Oregon'];
 
   /* Reduced motion: the photo is already a print, and the section is one
      screen tall, so there is no still stretch to scroll through. */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .hero {
+        --settled: calc(var(--p) * var(--p) * (3 - 2 * var(--p)));
+        animation-name: pin-progress;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: scroll(root);
+        animation-range: var(--pin-start, 0px) var(--pin-end, 100vh);
+      }
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hero {
       --settled: 1;
