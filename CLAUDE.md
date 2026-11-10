@@ -192,7 +192,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **Preview links:** not confirmed yet. David is checking Cloudflare for Worker Previews and will paste one link; derive later links from its pattern.
 - **2026-11-10, Firn facts updated:** native Mac app (Swift, WebKit), iPhone coming soon; Windows and Linux dropped. Merged to `main` the same day.
 - **2026-11-10, real Firn screenshot:** `assets/work/firn.jpg` replaces the placeholder (metadata stripped). Merged to `main` the same day.
-- **2026-11-10, new direction:** designer who builds software with AI; apps lead. See "Direction" at the top and Phase 7 in `docs/PLAN.md`. Brief updated; no site changes yet.
+- **2026-11-10, new direction:** designer who builds software with AI; apps lead. See "Direction" at the top and Phase 7 in `docs/PLAN.md`. Done so far: brief, hero line and label, stats row cut, tab titles ("Page · David Wurgler"), footer credit linking to the source. Next: intro and How I build copy.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
