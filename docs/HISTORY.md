@@ -150,3 +150,7 @@ David sent the new brand files from the David Wurgler design system: the mark (a
 ## 2026-11-11: A README
 
 The footer's "Built with Claude Code" link lands on this repo, so the README is its front page. It shows the lockup (ink, or bone in GitHub's dark mode), two homepage screenshots (`docs/images/`, taken from the built site at 1440 × 900, 2× scale), how the site was made with links to the brief, plan, and history, the design in brief, and how to run it. The design section is a short summary that points to CLAUDE.md, so the two can't drift far apart. David chose "All rights reserved" for everything, code included; there's no licence file.
+
+## 2026-11-11: Say hi changes colour at the photo's edge
+
+Before, the ink "Say hi." waited at the bottom of the paper, lower than the one on the photo (which sits above the email and links). The photo covered the ink copy, then the bone copy faded in higher up, so the words seemed to jump. David asked for the hero's effect instead. Now the whole contact block is rendered twice in the same place: an ink copy on the paper (only its title visible, the rest kept for layout so the title lands to the pixel; hidden from screen readers and inert) and the bone copy clipped to the photo. The fade (`--title`, `--covered`) is gone, so the script only drives `--print`.
