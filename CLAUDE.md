@@ -209,7 +209,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-11, README added:** the repo's front page (the footer links here): lockup, screenshots, how it was made, the design in brief, and "All rights reserved." Merged to `main` (David said to).
 - **2026-11-11, Say hi two-copy clip:** the ink "Say hi." now sits exactly where the one on the photo does, so it changes colour at the photo's edge like the hero. Merged to `main` (David said to).
 - **2026-11-11, Off the clock on iPhone:** the strip sat blank in Safari; it now reads the same scroll-driven `--p` as the hero and Say hi. Merged to `main` (David said to); waiting for David to check on his phone.
-- **2026-11-11, Who's making this:** David's headshot as a print beside "I'm David." and a short adaptation of the approved "Who's making it" copy, just before Say hi (David chose this over having the lake cover the headshot). On `redesign`.
+- **2026-11-11, Who's making this:** David's headshot as a print beside "I'm David." and a short adaptation of the approved "Who's making it" copy, just before Say hi (David chose this over having the lake cover the headshot). Merged to `main` (David said to).
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
