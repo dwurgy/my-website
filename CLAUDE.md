@@ -204,7 +204,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-10, back office is one line:** David chose a single line under the work index; its page and row are gone (`serial-lookup.png` is no longer used).
 - **2026-11-10, merged to `main`:** Utu, the name meanings, and the back-office line. David said to merge.
 - **2026-11-10, How I build copy:** warehouse line dropped; now ends on feel ("pretty to look at, easy to use, and fun"). Merged to `main`.
-- **2026-11-11, new mark:** the Wurgler mark replaces the W monogram: new favicons, icons, `public/brand/`, and the mark beside WURGLER in the control bar. See Brand.
+- **2026-11-11, new mark:** the Wurgler mark replaces the W monogram: new favicons, icons, `public/brand/`, and the mark beside WURGLER in the control bar. See Brand. Merged to `main` (David said to).
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
