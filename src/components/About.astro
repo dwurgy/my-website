@@ -1,0 +1,92 @@
+---
+// Who's making this: a face to the name, just before Say hi. A print on the
+// paper beside a few lines adapted from "Who's making it" on David's app
+// sites.
+import { Image } from 'astro:assets';
+import portrait from '../../assets/photos/david-portrait.jpg';
+---
+
+<section id="about" class="about" aria-labelledby="about-title">
+  <Image
+    class="portrait"
+    src={portrait}
+    alt="David Wurgler, in a grey t-shirt against a white wall."
+    widths={[320, 480, 640, 900]}
+    sizes="(max-width: 860px) min(calc(100vw - 32px), 420px), 420px"
+  />
+  <div class="words">
+    <h2 id="about-title" class="label about-label">Who's making this</h2>
+    <p class="headline about-line">I'm David.</p>
+    <p class="about-body">
+      I design and build software, and I live in Salem, Oregon, with my wife and our two boys. I
+      decide what each app is and how it should feel: the design, the details, and the way it
+      behaves. Claude, an AI from Anthropic, is my coding partner. We write the code together and
+      catch each other's mistakes.
+    </p>
+    <p class="about-body">
+      I build the things I wish already existed: quiet, well-made tools that respect your time and
+      your privacy.
+    </p>
+  </div>
+</section>
+
+<style>
+  .about {
+    display: flex;
+    align-items: flex-end;
+    gap: 64px;
+    padding: 120px var(--gutter) 160px;
+    color: var(--fg);
+  }
+
+  .portrait {
+    display: block;
+    flex: none;
+    width: 420px;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: var(--radius-print);
+  }
+
+  .words {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 560px;
+  }
+
+  .about-label {
+    margin: 0;
+    font-weight: 400;
+    color: var(--fg-muted);
+  }
+
+  .about-line {
+    font-size: clamp(40px, 4.6vw, 68px);
+    padding-bottom: 8px;
+  }
+
+  .about-body {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--body);
+  }
+
+  @media (max-width: 860px) {
+    .about {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 40px;
+      padding-block: 72px 112px;
+    }
+
+    .portrait {
+      width: min(100%, 420px);
+    }
+
+    .about-body {
+      font-size: 17px;
+    }
+  }
+</style>
