@@ -190,26 +190,24 @@ const prints = [
     }
   }
 
-  /* The strip slides by --travel across the pin, in step with scrolling. A
-     transform, so the browser can move it without redrawing. */
+  /* The strip slides by --travel across the pin, in step with scrolling. The
+     browser runs --p on the section, the same way as the hero and Say hi, and
+     the strip reads it. (An animation on the strip itself, with --travel
+     inside its keyframes, left the strip stuck off screen in Safari on
+     iPhone.) A transform, so the browser can move it without redrawing. */
   @supports (animation-timeline: scroll()) {
     @media (prefers-reduced-motion: no-preference) {
-      .track {
-        animation-name: strip;
+      .offclock {
+        animation-name: pin-progress;
         animation-timing-function: linear;
         animation-fill-mode: both;
         animation-timeline: scroll(root);
         animation-range: var(--pin-start, 0px) var(--pin-end, 100vh);
       }
-    }
-  }
 
-  @keyframes strip {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      transform: translate3d(calc(-1 * var(--travel, 0px)), 0, 0);
+      .track {
+        transform: translate3d(calc(var(--p) * -1 * var(--travel, 0px)), 0, 0);
+      }
     }
   }
 

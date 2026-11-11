@@ -154,3 +154,7 @@ The footer's "Built with Claude Code" link lands on this repo, so the README is 
 ## 2026-11-11: Say hi changes colour at the photo's edge
 
 Before, the ink "Say hi." waited at the bottom of the paper, lower than the one on the photo (which sits above the email and links). The photo covered the ink copy, then the bone copy faded in higher up, so the words seemed to jump. David asked for the hero's effect instead. Now the whole contact block is rendered twice in the same place: an ink copy on the paper (only its title visible, the rest kept for layout so the title lands to the pixel; hidden from screen readers and inert) and the bone copy clipped to the photo. The fade (`--title`, `--covered`) is gone, so the script only drives `--print`.
+
+## 2026-11-11: Off the clock strip blank on iPhone
+
+David's screen recording showed the Off the clock strip empty for most of its pin on his iPhone, with only the moon photo appearing at the very end. Chromium ran it correctly. The strip was the one pinned section animated differently: its own keyframes on the track, with `--travel` (set later by the script) inside the keyframes and the range inherited from the section. The hero and Say hi, which work on his phone, animate `--p` on the section and derive everything from it. The strip now does the same: `pin-progress` runs on `.offclock`, and the track's transform is `--p × --travel`. Could not test Safari here (only Chromium is installed), so David's phone is the check.

@@ -207,6 +207,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-11, new mark:** the Wurgler mark replaces the W monogram: new favicons, icons, `public/brand/`, and the mark beside WURGLER in the control bar. See Brand. Merged to `main` (David said to).
 - **2026-11-11, README added:** the repo's front page (the footer links here): lockup, screenshots, how it was made, the design in brief, and "All rights reserved." Merged to `main` (David said to).
 - **2026-11-11, Say hi two-copy clip:** the ink "Say hi." now sits exactly where the one on the photo does, so it changes colour at the photo's edge like the hero. Merged to `main` (David said to).
+- **2026-11-11, Off the clock on iPhone:** the strip sat blank in Safari; it now reads the same scroll-driven `--p` as the hero and Say hi. On `redesign`, waiting for David to check on his phone.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
