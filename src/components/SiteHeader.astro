@@ -1,4 +1,6 @@
 ---
+import Mark from './Mark.astro';
+
 interface Props {
   /** The section a page off the homepage belongs to (a project page is "work"). */
   section?: string;
@@ -18,7 +20,7 @@ const links = [
 
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="bar">
-  <a class="wordmark" href="/" aria-label="David Wurgler, home">WURGLER</a>
+  <a class="wordmark" href="/" aria-label="David Wurgler, home"><Mark class="wordmark-mark" />WURGLER</a>
   <nav aria-label="Main">
     {
       links.map((link) => (
@@ -157,10 +159,27 @@ const links = [
     font-stretch: 125%;
     letter-spacing: 0.2em;
     text-decoration: none;
+    white-space: nowrap;
+    /* Archivo's cap height (688 of 1000 units), measured from the font. The
+       compact lockup is sized from it: mark height 2.2 caps, gap 0.8 caps. */
+    --cap: 0.688em;
+  }
+
+  /* The mark sits on the text's baseline and is lowered so its waterline
+     (43.3% down) lands on the middle of the capitals: half a cap above the
+     baseline, minus the 56.7% of the mark that lies below the waterline.
+     Negative block margins keep it from making the line (and the bar) taller;
+     the bottom one moves its baseline up by a cap, so add a cap back. */
+  .wordmark :global(.wordmark-mark) {
+    width: calc(2.2 * 1.382 * var(--cap));
+    height: calc(2.2 * var(--cap));
+    margin: calc(-1 * var(--cap)) calc(0.8 * var(--cap)) calc(-1 * var(--cap)) 0;
+    vertical-align: calc(0.5 * var(--cap) - 0.567 * 2.2 * var(--cap) + var(--cap));
   }
 
   nav {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     gap: 2px;
   }
@@ -223,10 +242,21 @@ const links = [
     display: none;
   }
 
-  /* Phones: the middle two links hide. */
+  /* Phones: the middle two links hide, and the bar's left padding and gap
+     tighten (and the wordmark's trailing tracking is taken back) so the
+     lockup fits beside the controls at full size down to 390px. */
   @media (max-width: 760px) {
     .nav-mid {
       display: none;
+    }
+
+    .bar {
+      gap: 6px;
+      padding-left: 14px;
+    }
+
+    .wordmark {
+      margin-right: -0.2em;
     }
   }
 </style>

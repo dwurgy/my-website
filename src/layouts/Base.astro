@@ -45,8 +45,10 @@ const shareImage = new URL('/share.jpg', Astro.site).href;
         document.querySelector('meta[name="theme-color"]').content = dark ? '#171512' : '#ece6dc';
       })();
     </script>
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="preload" href={archivo} as="font" type="font/woff2" crossorigin />
   </head>

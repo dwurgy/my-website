@@ -108,6 +108,13 @@ Nothing else runs on a timer.
 - **Reduced motion:** the hero shows as a finished print and the lake as full-bleed. The Off the clock photos become a normal row the reader can scroll sideways, because a still track would hide them. Nothing is hidden.
 - **Smoothness:** animate only transform, opacity, and clip-path. Read scroll position in one `requestAnimationFrame` loop. Keep 60fps on an ordinary laptop. Ask before adding a smooth-scroll library.
 
+### Brand
+
+- **The mark:** an uneven Cascade ridge over a waterline gap, with a longer reflection below that forms a W. The ridge is `fg-muted` and the W is `fg`, so it follows the theme. Never redraw or recolour it. On the page it's `src/components/Mark.astro`, which inlines the two paths from `public/brand/wurgler-mark-themeable.svg` unchanged.
+- **Compact lockup** (the control bar): mark height = 2.2 × the wordmark's cap height, gap = 0.8 × cap height, and the mark's waterline (43.3% of the way down) on the vertical centre of the capitals. Archivo's cap height is 0.688em. The wordmark stays live text.
+- **Files:** the favicons, phone and manifest icons, `site.webmanifest`, and everything in `public/brand/` come from the David Wurgler design system. Replace them as files; never regenerate, resize, or recolour them. `public/brand/email-monogram-80.png` is used by David's email signature, so keep its address.
+- The W monogram is retired.
+
 ### Never
 
 These were tried and rejected:
@@ -186,7 +193,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-04:** David approved the v5 direction ("paper with windows"). The homepage built in Phases 2 and 3 matches v3 and needs rework. See Phase 3b in `docs/PLAN.md`.
 - **Phase 3b: done** (2026-11-09). The v5 direction. Done test passed except a few slow desktop frames in Say hi (see HISTORY); David gave the go-ahead.
 - **Phase 4: done** (2026-11-10). Box 1 done 2026-11-09: a Markdown page per project in `src/content/work/`, served at `/work/<slug>`, with a plain first-pass layout. The build fails if a page and `src/data/projects.ts` disagree. Box 2 done 2026-11-10: each page has its lede, facts, one paragraph, links, and marked placeholders, all from the approved mockup copy. Box 3 done 2026-11-10: the Copywriter Lab demo video is its main image, muted, with controls, loading only when played. Box 4 done 2026-11-10: the full v5 project layout, with the control bar, "01 of 04", a "Next project" row, and screenshots shown uncropped at their own shape. Box 5 done 2026-11-10: opening a project from the index grows its preview into the page's main image (300ms); back returns to the index. Done test passed: every homepage link reaches a real page, all four pages read well at 390px in both themes, and every claim is from CLAUDE.md or the approved mockup. Next: Phase 5.
-- **Phase 5, box 1 done** (2026-11-10): `public/share.jpg`, the hero's opening frame at 1200 × 630, made by `scripts/share-image.mjs`; share tags on every page. Box 2 done 2026-11-10: a "W" favicon (from Archivo, made into the phone icon by `scripts/icons.mjs`), a sitemap and robots.txt, and a 404 page that Cloudflare serves for unknown addresses. Box 3 done 2026-11-10: accessibility pass; one fix (keyboard focus in the Off the clock strip). Done test 2026-11-10: Lighthouse 95+ on every page, mobile and desktop, after one fix (dimmed control-bar links 0.6 → 0.68 for contrast). Share card tags and image check out; the real paste test waits for launch, since the card's image lives at davidwurgler.com. David approved Phase 5 on 2026-11-10. Next: Phase 6 (launch), only when David says so.
+- **Phase 5, box 1 done** (2026-11-10): `public/share.jpg`, the hero's opening frame at 1200 × 630, made by `scripts/share-image.mjs`; share tags on every page. Box 2 done 2026-11-10: a "W" favicon (retired 2026-11-11; see Brand), a sitemap and robots.txt, and a 404 page that Cloudflare serves for unknown addresses. Box 3 done 2026-11-10: accessibility pass; one fix (keyboard focus in the Off the clock strip). Done test 2026-11-10: Lighthouse 95+ on every page, mobile and desktop, after one fix (dimmed control-bar links 0.6 → 0.68 for contrast). Share card tags and image check out; the real paste test waits for launch, since the card's image lives at davidwurgler.com. David approved Phase 5 on 2026-11-10. Next: Phase 6 (launch), only when David says so.
 - **Phase 6, box 1 done** (2026-11-10): David said to merge; `redesign` fast-forwarded into `main` and pushed. Next: confirm the live site and the share card.
 - **2026-11-10, phone jitter fix: done.** The browser runs the pinned motion itself with CSS scroll-driven animations (see HISTORY). Merged to `main`; David confirmed it is smooth on his phone. Next: Phase 6 box 2 (confirm the live site on phone and laptop, and the share card paste test).
 - **Preview links:** not confirmed yet. David is checking Cloudflare for Worker Previews and will paste one link; derive later links from its pattern.
@@ -197,6 +204,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-10, back office is one line:** David chose a single line under the work index; its page and row are gone (`serial-lookup.png` is no longer used).
 - **2026-11-10, merged to `main`:** Utu, the name meanings, and the back-office line. David said to merge.
 - **2026-11-10, How I build copy:** warehouse line dropped; now ends on feel ("pretty to look at, easy to use, and fun"). Merged to `main`.
+- **2026-11-11, new mark:** the Wurgler mark replaces the W monogram: new favicons, icons, `public/brand/`, and the mark beside WURGLER in the control bar. See Brand.
 - **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
