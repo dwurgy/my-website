@@ -37,7 +37,7 @@ export const projects: Project[] = [
     line: 'A calm iPhone weather app that tells you the forecast in a plain-English sentence, then shows the numbers.',
     shot: {
       src: utuShot,
-      alt: 'Three iPhones showing Utu at golden hour, on a drizzly afternoon, and on a clear night, each with a large temperature and a one-sentence forecast.',
+      alt: 'Four iPhones showing Utu: golden hour, a drizzly afternoon, and a clear night, each with a large temperature and a one-sentence forecast, and the detail sheet for Saturday with parts of the day and a temperature curve.',
     },
   },
   {
