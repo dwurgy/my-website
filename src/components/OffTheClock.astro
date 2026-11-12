@@ -69,6 +69,9 @@ import Camera from './Camera.astro';
      blocks read as a pair, not a stack. */
   .photos {
     align-self: flex-end;
+    /* The camera's canvas keeps empty room above the camera for its turn, so
+       pull it up a little; the boxes still don't overlap. */
+    margin-bottom: -64px;
   }
 
   .eyebrow {
@@ -103,6 +106,7 @@ import Camera from './Camera.astro';
 
     .photos {
       align-self: auto;
+      margin-bottom: -40px;
     }
   }
 </style>
