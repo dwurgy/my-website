@@ -5,5 +5,7 @@
     "directory": "./dist",
     // Unknown addresses get dist/404.html, with a real 404 status.
     "not_found_handling": "404-page"
-  }
+  },
+  // Turns on preview links for branches other than main (wrangler preview).
+  "previews": {}
 }
