@@ -146,6 +146,13 @@ export function createCameraModel(
     bumpScale: 3,
   });
   const leather = new MeshStandardMaterial({ color: 0x141312, roughness: 0.92, bumpMap: pebble, bumpScale: 2.2 });
+  // The small buttons: a touch lighter and shinier than the body, so they read.
+  const buttonMat = new MeshPhysicalMaterial({
+    color: 0x1a1816,
+    roughness: 0.45,
+    specularIntensity: 0.5,
+    envMapIntensity: 0.5,
+  });
   const rubber = new MeshStandardMaterial({ color: 0x0c0c0c, roughness: 0.95 });
   const recessMat = new MeshStandardMaterial({ color: 0x050505, roughness: 1 });
   const glassDark = new MeshPhysicalMaterial({ color: 0x06080b, metalness: 0, roughness: 0.06, clearcoat: 1 });
@@ -162,11 +169,12 @@ export function createCameraModel(
   const cam = new Group();
   scene.add(cam);
 
-  // The body: silver top plate, black middle, thin silver base. Separate
-  // pieces, so a fine seam shows where they meet, as on a real camera.
-  add(rbox(12, 1.5, 3.4, 0.4), silver, cam, 0, 2.75, 0);
-  add(rbox(11.94, 4.92, 3.36, 0.34), paint, cam, 0, -0.45, 0);
-  add(rbox(12, 0.62, 3.4, 0.28), silver, cam, 0, -3.19, 0);
+  // The body: silver top plate, black middle, thin silver base. The black
+  // runs up inside the plate and down inside the base, so only a fine,
+  // shallow seam shows where they meet, as on a real camera.
+  add(rbox(12, 1.1, 3.4, 0.2), silver, cam, 0, 2.95, 0);
+  add(rbox(11.94, 5.7, 3.36, 0.34), paint, cam, 0, -0.25, 0);
+  add(rbox(12, 0.55, 3.4, 0.16), silver, cam, 0, -3.225, 0);
 
   // The raised part of the top plate, left of centre, with an accessory shoe.
   add(rbox(4.4, 0.62, 2.5, 0.2), silver, cam, -2.4, 3.6, -0.15);
@@ -187,38 +195,38 @@ export function createCameraModel(
 
   // Strap lugs on both ends.
   for (const side of [-1, 1]) {
-    const lug = add(new TorusGeometry(0.26, 0.07, 12, 32), silver, cam, side * 6.08, 2.55, 0);
+    const lug = add(new TorusGeometry(0.26, 0.07, 12, 32), silver, cam, side * 6.08, 2.85, 0);
     lug.rotation.y = Math.PI / 2;
   }
 
   // The grip, on the front at the right as seen from the back.
-  add(rbox(1.9, 4.1, 0.55, 0.22), leather, cam, 4.9, -0.6, -1.85);
+  add(rbox(1.9, 4.6, 0.55, 0.22), leather, cam, 4.9, -0.35, -1.85);
   // The lens mount and a body cap on the front.
-  const mount = add(new CylinderGeometry(1.9, 1.9, 0.3, 64), silver, cam, -0.7, -0.4, -1.83);
+  const mount = add(new CylinderGeometry(1.9, 1.9, 0.3, 64), silver, cam, -0.7, -0.3, -1.83);
   mount.rotation.x = Math.PI / 2;
-  const cap = add(new CylinderGeometry(1.7, 1.75, 0.5, 64), rubber, cam, -0.7, -0.4, -2.1);
+  const cap = add(new CylinderGeometry(1.7, 1.75, 0.5, 64), rubber, cam, -0.7, -0.3, -2.1);
   cap.rotation.x = Math.PI / 2;
 
   // The back: a small button on the top plate, the thumb rest, and a few
   // small buttons beside the screen.
   const BACK = 1.68;
-  add(rbox(0.95, 0.6, 0.16, 0.12), rubber, cam, -4.7, 2.75, 1.74);
-  add(rbox(0.7, 0.4, 0.04, 0.08), glassDark, cam, -4.7, 2.75, 1.83);
-  add(rbox(1.3, 1.7, 0.2, 0.1), leather, cam, 5.15, 0.95, BACK + 0.06);
+  add(rbox(0.9, 0.52, 0.16, 0.12), rubber, cam, -4.9, 2.95, 1.74);
+  add(rbox(0.66, 0.34, 0.04, 0.08), glassDark, cam, -4.9, 2.95, 1.83);
+  add(rbox(1.3, 1.6, 0.2, 0.1), leather, cam, 5.15, 1.3, BACK + 0.06);
   for (const [x, y] of [
-    [1.35, 1.4],
-    [2.3, 1.2],
-    [1.3, 0.45],
-    [1.25, -2.4],
-    [5.3, -2.4],
+    [1.8, 1.75],
+    [2.8, 1.6],
+    [1.8, 0.85],
+    [1.8, -2.45],
+    [5.3, -2.5],
   ]) {
-    const b = add(new CylinderGeometry(0.24, 0.26, 0.16, 32), paint, cam, x, y, BACK + 0.06);
+    const b = add(new CylinderGeometry(0.24, 0.26, 0.16, 32), buttonMat, cam, x, y, BACK + 0.06);
     b.rotation.x = Math.PI / 2;
   }
 
   // The four-way dial, with OK in the middle.
   const dial = new Group();
-  dial.position.set(3.6, -1.1, BACK);
+  dial.position.set(3.75, -0.95, BACK);
   cam.add(dial);
   const ring = add(new CylinderGeometry(1.02, 1.04, 0.2, 96), blackKnurl, dial, 0, 0, 0.1);
   ring.rotation.x = Math.PI / 2;
@@ -235,17 +243,17 @@ export function createCameraModel(
   }
 
   // The screen: a recess in the body, and a panel on a hinge along its top.
-  add(new PlaneGeometry(6.35, 4.85), recessMat, cam, -2.72, -0.45, BACK + 0.003);
+  add(new PlaneGeometry(6.95, 5.25), recessMat, cam, -2.3, -0.29, BACK + 0.003);
   const hinge = new Group();
-  hinge.position.set(-2.72, 1.97, BACK);
+  hinge.position.set(-2.3, 2.285, BACK);
   cam.add(hinge);
-  add(rbox(6.25, 4.8, 0.28, 0.12), paint, hinge, 0, -2.4, 0.15);
-  const SCREEN_W = 5.93;
+  add(rbox(6.85, 5.15, 0.28, 0.12), paint, hinge, 0, -2.575, 0.15);
+  const SCREEN_W = 6.6;
   const SCREEN_H = (SCREEN_W * 3) / 4;
   const screenBase = new MeshBasicMaterial({ toneMapped: false, color: 0x000000 });
   const screenTop = new MeshBasicMaterial({ toneMapped: false, transparent: true, opacity: 0 });
-  const base = add(new PlaneGeometry(SCREEN_W, SCREEN_H), screenBase, hinge, 0, -2.4, 0.292);
-  const top = add(new PlaneGeometry(SCREEN_W, SCREEN_H), screenTop, hinge, 0, -2.4, 0.294);
+  const base = add(new PlaneGeometry(SCREEN_W, SCREEN_H), screenBase, hinge, 0, -2.575, 0.292);
+  const top = add(new PlaneGeometry(SCREEN_W, SCREEN_H), screenTop, hinge, 0, -2.575, 0.294);
   top.visible = false;
   void base;
 
@@ -330,7 +338,7 @@ export function createCameraModel(
     view.aspect = w / h;
     // Keep the whole body in frame, with room for the turn and the screen.
     const span = 2 * Math.tan(MathUtils.degToRad(view.fov / 2));
-    view.position.z = Math.max(14 / view.aspect / span, 10.4 / span);
+    view.position.z = Math.max(16.4 / view.aspect / span, 10.8 / span);
     view.updateProjectionMatrix();
     requestRender();
   }
@@ -372,6 +380,9 @@ export function createCameraModel(
       0,
     );
     hinge.rotation.x = -MathUtils.degToRad(rest * angles.tilt);
+    // Turned, the tilted screen reaches out to the left; shift right to keep
+    // the whole camera centred in the frame.
+    cam.position.x = rest * 0.8;
 
     // The photo crossfade.
     if (fadeStart) {
