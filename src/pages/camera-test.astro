@@ -1,0 +1,117 @@
+---
+// Temporary: the camera on its own, with a slider standing in for scroll, so
+// David can judge the look before it goes into Off the clock. Removed in the
+// next step. Not in the sitemap, and kept out of search results.
+import Base from '../layouts/Base.astro';
+import Camera from '../components/Camera.astro';
+---
+
+<Base title="Camera test · David Wurgler" description="A test page for the camera photo viewer." noindex>
+  <main id="main" class="test">
+    <header class="intro">
+      <p class="label">Camera test</p>
+      <p class="note">
+        The slider stands in for scrolling: 0 is the section entering the screen, 1 is the camera centred.
+      </p>
+    </header>
+
+    <Camera />
+
+    <div class="controls">
+      <label class="label" for="progress">Scroll</label>
+      <input id="progress" type="range" min="0" max="1" step="0.001" value="0" />
+      <output class="label" for="progress" id="progress-value">0.00</output>
+      <button type="button" class="btn theme" id="theme">Dark mode</button>
+    </div>
+  </main>
+</Base>
+
+<script>
+  import { setPose } from '../scripts/camera';
+
+  const viewer = document.querySelector<HTMLElement>('[data-camera]')!;
+  const slider = document.getElementById('progress') as HTMLInputElement;
+  const readout = document.getElementById('progress-value')!;
+
+  function update() {
+    const p = Number(slider.value);
+    readout.textContent = p.toFixed(2);
+    setPose(viewer, p);
+  }
+  slider.addEventListener('input', () => requestAnimationFrame(update));
+  update();
+
+  // Light and dark, saved the same way as the main site.
+  const root = document.documentElement;
+  const theme = document.getElementById('theme')!;
+  const label = () => (theme.textContent = root.dataset.theme === 'dark' ? 'Light mode' : 'Dark mode');
+  label();
+  theme.addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try {
+      localStorage.setItem('theme', root.dataset.theme);
+    } catch {}
+    label();
+  });
+</script>
+
+<style>
+  .test {
+    min-height: 100vh;
+    padding-bottom: 120px;
+  }
+
+  .intro {
+    padding: 48px var(--gutter) 40px;
+    max-width: 640px;
+  }
+
+  .intro .label {
+    margin: 0 0 12px;
+    color: var(--fg-muted);
+  }
+
+  .note {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--body);
+  }
+
+  /* The test controls: one glass bar, fixed at the bottom. */
+  .controls {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    z-index: 10;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: min(560px, calc(100vw - 32px));
+    padding: 8px 8px 8px 20px;
+    border: 1px solid var(--bar-border);
+    border-radius: var(--radius-pill);
+    background: var(--bar-bg);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    color: var(--fg);
+  }
+
+  .controls input {
+    flex: 1;
+    min-width: 0;
+    accent-color: var(--fg);
+  }
+
+  .controls output {
+    width: 3.2em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .theme {
+    flex: none;
+    min-height: 40px;
+    padding: 0 16px;
+  }
+</style>
