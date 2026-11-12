@@ -197,7 +197,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **Phase 5, box 1 done** (2026-11-10): `public/share.jpg`, the hero's opening frame at 1200 × 630, made by `scripts/share-image.mjs`; share tags on every page. Box 2 done 2026-11-10: a "W" favicon (retired 2026-11-11; see Brand), a sitemap and robots.txt, and a 404 page that Cloudflare serves for unknown addresses. Box 3 done 2026-11-10: accessibility pass; one fix (keyboard focus in the Off the clock strip). Done test 2026-11-10: Lighthouse 95+ on every page, mobile and desktop, after one fix (dimmed control-bar links 0.6 → 0.68 for contrast). Share card tags and image check out; the real paste test waits for launch, since the card's image lives at davidwurgler.com. David approved Phase 5 on 2026-11-10. Next: Phase 6 (launch), only when David says so.
 - **Phase 6, box 1 done** (2026-11-10): David said to merge; `redesign` fast-forwarded into `main` and pushed. Next: confirm the live site and the share card.
 - **2026-11-10, phone jitter fix: done.** The browser runs the pinned motion itself with CSS scroll-driven animations (see HISTORY). Merged to `main`; David confirmed it is smooth on his phone. Next: Phase 6 box 2 (confirm the live site on phone and laptop, and the share card paste test).
-- **Preview links:** not confirmed yet. David is checking Cloudflare for Worker Previews and will paste one link; derive later links from its pattern.
+- **Preview links:** previews are on (2026-11-12). The Previews tab in Cloudflare had no build command, so previews built nothing; David set it to `npm run build`. Waiting for the first link to derive the pattern.
 - **2026-11-10, Firn facts updated:** native Mac app (Swift, WebKit), iPhone coming soon; Windows and Linux dropped. Merged to `main` the same day.
 - **2026-11-10, real Firn screenshot:** `assets/work/firn.jpg` replaces the placeholder (metadata stripped). Merged to `main` the same day.
 - **2026-11-10, new direction:** designer who builds software with AI; apps lead. See "Direction" at the top and Phase 7 in `docs/PLAN.md`. Done so far: brief, hero line and label, stats row cut, tab titles ("Page · David Wurgler"), footer credit linking to the source. Next: intro and How I build copy.
@@ -211,7 +211,8 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-11, Off the clock on iPhone:** the strip sat blank in Safari; it now reads the same scroll-driven `--p` as the hero and Say hi. Merged to `main` (David said to); waiting for David to check on his phone.
 - **2026-11-11, Who's making this:** David's headshot as a print beside "I'm David." and a short adaptation of the approved "Who's making it" copy, just before Say hi (David chose this over having the lake cover the headshot). Merged to `main` (David said to).
 - **2026-11-11, Utu image in Erode:** `assets/work/utu.webp` swapped for David's new render with Utu's new font (Erode replaces Newsreader); then replaced the same day with David's four-phone image (three skies and the Saturday detail sheet). Merged to `main` (David said to).
-- **Waiting on David:** see the end of `docs/PLAN.md`. Worker Previews are not turned on yet.
+- **2026-11-12, camera viewer, step 1:** the camera alone at `/camera-test/` with a slider standing in for scroll (`src/components/Camera.astro`). Waiting for David's OK on the look before wiring it into Off the clock.
+- **Waiting on David:** see the end of `docs/PLAN.md`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
 
