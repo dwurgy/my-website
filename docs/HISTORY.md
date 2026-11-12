@@ -162,3 +162,8 @@ David's screen recording showed the Off the clock strip empty for most of its pi
 ## 2026-11-11: Who's making this
 
 David noticed his headshot from the old site was gone and wanted a face to the name near the bottom. His first idea was to put it beside the lake at the start of Say hi and let the photo cover it as it grows. That hides the face just as the contact links appear, and phones have no room beside the lake. He chose a short section before Say hi instead: the headshot as a print on the paper, beside "I'm David." and a few lines adapted from the approved "Who's making it" copy (family and Salem, how he works with Claude, and why he builds). Music is left out because Off the clock just covered it. The headshot came out of the old single-file site in the repo's history; it carried no metadata. Also removed seven test screenshots that had been committed by mistake with the Off the clock fix.
+
+## 2026-11-12: Preview links
+
+- Cloudflare's Previews tab (Workers Builds, "Previews Base") had no build command, so preview builds uploaded nothing. David set it to `npm run build`; the preview command is `npx wrangler preview`.
+- `wrangler preview` refuses to run without a `previews` block in `wrangler.jsonc`, so an empty one was added.
