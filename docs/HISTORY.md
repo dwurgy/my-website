@@ -167,3 +167,9 @@ David noticed his headshot from the old site was gone and wanted a face to the n
 
 - Cloudflare's Previews tab (Workers Builds, "Previews Base") had no build command, so preview builds uploaded nothing. David set it to `npm run build`, but preview builds still skipped it, and so did a preview command of `npm run build && npx wrangler preview` (the build log showed the saved setting never reached it). Fix: `build.command` in `wrangler.jsonc`, which wrangler runs before it looks for `dist`.
 - `wrangler preview` refuses to run without a `previews` block in `wrangler.jsonc`, so an empty one was added.
+
+## 2026-11-12: Camera viewer, step 1
+
+- First built in CSS 3D on `/camera-test/`. David asked for no blurred-photo backdrop (it broke the brief's "never switch the background" rule anyway), a bigger camera, and then a real 3D model, so it was rebuilt in three.js 0.186.1 (David approved the dependency by choosing that option).
+- CSS 3D lessons, in case it comes back: headless Chrome's software compositor drops whole tiles of 3D layers, so screenshot with `--use-angle=swiftshader --enable-unsafe-swiftshader`; and at exactly zero rotation Chrome flattens and pixel-snaps a 3D element, which showed as a small drop at the end of the turn (fixed then with a 0.01° residual).
+- three.js choices: draws on demand only (pose, photo, press, theme, resize); loads when the viewer is within a screen of view; RoomEnvironment for soft reflections, NeutralToneMapping, a directional key light, and a rim light that's brighter in dark mode; the site's grain tile is the leatherette's bump; the screen photo is unlit so its colours stay true; satin black paint with low specular so the back stays black face-on; the shadow is a soft oval drawn first. Turn sign is negative in three.js so the grip end shows, as in David's reference.

@@ -1,28 +1,30 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import { photos } from '../data/photos';
 
-// A camera, drawn in CSS 3D, whose rear screen shows David's photographs.
-// The dial's left and right sides flip through them. Its pose comes from --t,
-// 0 (turned, screen tilted out) to 1 (straight-on back, screen flush), which
-// the page sets from scroll (or the test page's slider).
+// A camera, modelled in 3D (three.js, in src/scripts/camera-3d.ts), whose rear
+// screen shows David's photographs. The dial's left and right sides flip
+// through them. Its pose comes from progress, 0 (turned, screen tilted out)
+// to 1 (straight-on back, screen flush), which the page sets from scroll (or
+// the test page's slider) through setPose().
 //
-// Units are cqw: hundredths of the camera's width, so it scales as one piece.
-// The body is 100 wide, 58 tall, and 14 deep. Its parts are placed from the
-// body's top-left corner, as seen from the back.
+// The dial's two halves are real buttons laid over the drawing. If the
+// browser can't draw 3D, the photos show as a plain print with the same
+// buttons below it.
 
-// A cylinder (dials, the shutter button) is two planes: its side, which turns
-// to face the viewer so it always reads as round, and a cap on top.
-const dials = [
-  // x and z: centre, from the body's left edge and its middle (back is +7).
-  // r: radius. h: height above the top plate.
-  { name: 'dial-front', x: 71, z: -1.5, r: 4.8, h: 2.6 },
-  { name: 'dial-rear', x: 86.5, z: 3.2, r: 3.6, h: 2.1 },
-  { name: 'shutter', x: 82, z: -4.2, r: 2, h: 1.7 },
-];
+// Two sizes of each photo for the screen; the script picks by screen size.
+const textures = await Promise.all(
+  photos.map(async (photo) => {
+    const [small, large] = await Promise.all([
+      getImage({ src: photo.src, width: 800, format: 'webp' }),
+      getImage({ src: photo.src, width: 1400, format: 'webp' }),
+    ]);
+    return { small: small.src, large: large.src, alt: photo.alt };
+  }),
+);
 ---
 
-<div class="viewer" data-camera>
+<div class="viewer" data-camera data-photos={JSON.stringify(textures)}>
   <div
     class="stage"
     tabindex="0"
@@ -30,91 +32,28 @@ const dials = [
     aria-roledescription="photo viewer"
     aria-label="Photographs. Use the left and right arrow keys, or the dial, to flip through them."
   >
-    <div class="scene">
-      <div class="shadow" aria-hidden="true"></div>
-      <div class="cam">
-        <!-- Body -->
-        <div class="face front" aria-hidden="true"></div>
-        <div class="face side side-l" aria-hidden="true"><span class="lug"></span></div>
-        <div class="face side side-r" aria-hidden="true"><span class="lug"></span></div>
-        <div class="face top" aria-hidden="true"></div>
-        <div class="face bottom" aria-hidden="true"></div>
+    <div class="scene" data-scene>
+      <canvas class="gl" data-gl role="img" aria-label={photos[0].alt}></canvas>
 
-        <!-- The grip, on the front, at the right as seen from the back -->
-        <div class="grip" aria-hidden="true">
-          <i class="grip-front"></i><i class="grip-side"></i><i class="grip-top"></i><i class="grip-bottom"></i>
-        </div>
-
-        <!-- The raised section of the top plate, with its accessory shoe -->
-        <div class="hump" aria-hidden="true">
-          <i class="hump-back"></i><i class="hump-top"><b class="shoe"></b></i><i class="hump-l"></i><i class="hump-r"></i>
-        </div>
-
+      <!-- Only shown when 3D isn't available. -->
+      <div class="flat" data-flat>
         {
-          dials.map((d) => (
-            <div
-              class:list={['cyl', d.name]}
-              style={`--x: ${d.x}; --z: ${d.z}; --r: ${d.r}; --h: ${d.h}`}
-              aria-hidden="true"
-            >
-              <i class="band" />
-              <i class="cap" />
-            </div>
+          photos.map((photo, i) => (
+            <Image
+              class:list={['shot', { 'is-on': i === 0 }]}
+              src={photo.src}
+              alt=""
+              data-alt={photo.alt}
+              widths={[480, 800, 1200]}
+              sizes="(max-width: 760px) 88vw, 720px"
+              loading="lazy"
+            />
           ))
         }
-
-        <!-- The back -->
-        <div class="face back">
-          <span class="plate-edge" aria-hidden="true"></span>
-          <span class="eyepiece" aria-hidden="true"></span>
-          <span class="thumb" aria-hidden="true"></span>
-          <span class="key k1" aria-hidden="true"></span>
-          <span class="key k2" aria-hidden="true"></span>
-          <span class="key k3" aria-hidden="true"></span>
-          <span class="key k4" aria-hidden="true"></span>
-          <span class="key k5" aria-hidden="true"></span>
-          <span class="recess" aria-hidden="true"></span>
-
-          <div class="hinge">
-            <div class="panel">
-              <i class="edge edge-t" aria-hidden="true"></i>
-              <i class="edge edge-b" aria-hidden="true"></i>
-              <i class="edge edge-l" aria-hidden="true"></i>
-              <i class="edge edge-r" aria-hidden="true"></i>
-              <div class="bezel">
-                <div class="glass" role="img" aria-label={photos[0].alt} data-screen>
-                  {
-                    photos.map((photo, i) => (
-                      <Image
-                        class:list={['shot', { 'is-on': i === 0 }]}
-                        src={photo.src}
-                        alt=""
-                        data-alt={photo.alt}
-                        widths={[320, 480, 720, 960]}
-                        sizes="(max-width: 760px) 42vw, 420px"
-                        loading="lazy"
-                        draggable="false"
-                      />
-                    ))
-                  }
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="dial" data-dial>
-            <span class="tick up" aria-hidden="true"></span>
-            <span class="tick down" aria-hidden="true"></span>
-            <button type="button" class="dial-key prev" aria-label="Previous photo" data-step="-1">
-              <span class="tick" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="dial-key next" aria-label="Next photo" data-step="1">
-              <span class="tick" aria-hidden="true"></span>
-            </button>
-            <span class="ok" aria-hidden="true"></span>
-          </div>
-        </div>
       </div>
+
+      <button type="button" class="dial-key prev" aria-label="Previous photo" data-step="-1"></button>
+      <button type="button" class="dial-key next" aria-label="Next photo" data-step="1"></button>
     </div>
   </div>
 
@@ -123,80 +62,18 @@ const dials = [
 
 <style>
   .viewer {
-    /* The pose: 0 is turned with the screen out, 1 is straight-on and flush. */
-    --t: 0;
-    --ry0: -30deg;
-    --rx0: -11deg;
-    --tilt0: 46deg;
-    /* The script hands over an eased --t. Each angle keeps a hundredth of a
-       degree at rest: at exactly zero the browser treats the camera as flat,
-       snaps it to whole pixels, and it visibly drops at the end of the turn. */
-    --ry: calc((1 - var(--t)) * var(--ry0) - 0.01deg);
-    --rx: calc((1 - var(--t)) * var(--rx0) - 0.01deg);
-    --tilt: calc((1 - var(--t)) * var(--tilt0) + 0.01deg);
-
-    /* Camera materials. On paper the silver is a little cooler and deeper
-       than the warm ground, and a soft shadow sets the camera down on it. */
-    --silver-hi: #dddbd7;
-    --silver: #b5b3ae;
-    --silver-lo: #807e7a;
-    --black: #1b1a19;
-    --black-lo: #111010;
-    --leather: #181716;
-    --rim: rgb(255 255 255 / 0.07);
-    --shadow-soft: rgb(27 24 21 / 0.2);
-    --shadow-core: rgb(27 24 21 / 0.34);
-
     position: relative;
     overflow: clip;
     display: grid;
     place-items: center;
-    padding: clamp(72px, 14vh, 140px) 0;
-  }
-
-  @media (max-width: 760px) {
-    .viewer {
-      --ry0: -15deg;
-      --rx0: -5.5deg;
-      --tilt0: 32deg;
-    }
-
-    /* A touch narrower, so the tilted-out screen stays on the page. */
-    .viewer .stage {
-      width: 88vw;
-    }
-  }
-
-  /* On the dark ground, warmer, brighter silver and a thin lit edge
-     around the black body keep the camera from sinking into the page. */
-  :global([data-theme='dark']) .viewer {
-    --silver-hi: #ebe7e0;
-    --silver: #c6c1b9;
-    --silver-lo: #8e8a83;
-    --rim: rgb(240 234 225 / 0.2);
-    --shadow-soft: rgb(0 0 0 / 0.35);
-    --shadow-core: rgb(0 0 0 / 0.55);
-  }
-
-  /* Crossfade: the new photo fades in over the last one, so the light
-     never dips halfway. */
-  .shot.is-on {
-    z-index: 2;
-    opacity: 1;
-  }
-
-  .shot.was {
-    z-index: 1;
-    opacity: 1;
-    transition: none;
+    padding: clamp(48px, 8vh, 96px) 0;
   }
 
   .stage {
-    container-type: inline-size;
     /* As large as fits: wide on a laptop, but never taller than the screen. */
-    width: min(940px, 92vw, calc((100svh - 160px) * 1.6));
+    width: min(1000px, 94vw, calc((100svh - 120px) * 1.5));
     border-radius: 12px;
-    outline-offset: 56px;
+    outline-offset: 8px;
   }
 
   .stage:focus-visible {
@@ -205,398 +82,89 @@ const dials = [
 
   .scene {
     position: relative;
-    height: 58cqw;
-    perspective: 240cqw;
-    perspective-origin: 50% 40%;
-  }
-
-  .shadow {
-    position: absolute;
-    left: 2%;
-    right: 2%;
-    bottom: -8cqw;
-    height: 12cqw;
-    background:
-      radial-gradient(closest-side, var(--shadow-core), transparent 70%) 50% 40% / 86% 45% no-repeat,
-      radial-gradient(closest-side, var(--shadow-soft), transparent);
-    pointer-events: none;
-  }
-
-  .cam {
-    position: absolute;
-    inset: 0;
-    transform-style: preserve-3d;
-    transform: rotateX(var(--rx)) rotateY(var(--ry));
-    will-change: transform;
-  }
-
-  .cam i,
-  .cam b {
-    display: block;
-  }
-
-  .face,
-  .cam i {
-    position: absolute;
-    backface-visibility: hidden;
-  }
-
-  /* Silver plate on top, black body, thin silver base. */
-  .back,
-  .front,
-  .side {
-    background:
-      linear-gradient(
-        to bottom,
-        transparent 0 27%,
-        var(--black-lo) 27% 27.6%,
-        transparent 27.6% 92.5%,
-        var(--black-lo) 92.5% 93%,
-        transparent 93%
-      ),
-      repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 3px) 0 0 / 100% 27% no-repeat,
-      linear-gradient(
-        to bottom,
-        var(--silver) 0,
-        var(--silver-hi) 3%,
-        var(--silver) 15%,
-        var(--silver-lo) 25%,
-        #6f6b65 27%,
-        var(--black) 27% 92.5%,
-        var(--silver) 92.5%,
-        var(--silver-lo) 100%
-      );
-  }
-
-  /* Leatherette: the site's grain tile, shrunk to a fine pebble. */
-  .front,
-  .side,
-  .thumb,
-  .grip-front,
-  .grip-side {
-    --pebble: var(--grain) 0 0 / 7cqw 7cqw;
-  }
-
-  .back {
-    inset: 0;
-    border-radius: 1.4cqw;
-    transform: translateZ(7cqw);
-    transform-style: preserve-3d;
-    box-shadow:
-      inset 0 0.15cqw 0 rgb(255 255 255 / 0.55),
-      inset 0 0 0 0.15cqw var(--rim);
-  }
-
-  .front {
-    inset: 0;
-    border-radius: 1.4cqw;
-    transform: rotateY(180deg) translateZ(7cqw);
-  }
-
-  .side {
-    top: 0;
-    left: 43cqw;
-    width: 14cqw;
-    height: 58cqw;
-    border-radius: 1cqw;
-    box-shadow: inset 0 0 0 0.15cqw var(--rim);
-  }
-
-  .side-l {
-    transform: rotateY(-90deg) translateZ(50cqw);
-    filter: brightness(1.12);
-  }
-
-  .side-r {
-    transform: rotateY(90deg) translateZ(50cqw);
-    filter: brightness(0.82);
-  }
-
-  .lug {
-    position: absolute;
-    top: 9cqw;
-    left: 4.5cqw;
-    width: 5cqw;
-    height: 4.2cqw;
-    border-radius: 50%;
-    border: 0.9cqw solid var(--silver-lo);
-    box-shadow:
-      inset 0 0 0 0.25cqw var(--black-lo),
-      0 0.2cqw 0.4cqw rgb(0 0 0 / 0.4);
-  }
-
-  .top {
-    top: 22cqw;
-    left: 0;
-    width: 100cqw;
-    height: 14cqw;
-    border-radius: 1.4cqw;
-    transform: rotateX(90deg) translateZ(29cqw);
-    background:
-      repeating-linear-gradient(90deg, rgb(255 255 255 / 0.06) 0 0.12cqw, transparent 0.12cqw 0.5cqw),
-      linear-gradient(to bottom, var(--silver), var(--silver-hi));
-  }
-
-  .bottom {
-    top: 22cqw;
-    left: 0;
-    width: 100cqw;
-    height: 14cqw;
-    border-radius: 1.4cqw;
-    transform: rotateX(-90deg) translateZ(29cqw);
-    background: var(--silver-lo);
-  }
-
-  /* The grip: a pad on the front, 3 deep, to the right of the back view. */
-  .grip {
-    position: absolute;
-    left: 84cqw;
-    top: 16cqw;
-    width: 13cqw;
-    height: 37cqw;
-    transform-style: preserve-3d;
-  }
-
-  .grip-front {
-    inset: 0;
-    border-radius: 1.6cqw;
-    transform: translateZ(-10cqw) rotateY(180deg);
-    background: var(--pebble), var(--leather);
-    background-blend-mode: soft-light;
-  }
-
-  .grip-side {
-    top: 0;
-    left: 11.5cqw;
-    width: 3cqw;
-    height: 37cqw;
-    transform: translateZ(-8.5cqw) rotateY(90deg);
-    background: var(--pebble), #121110;
-    background-blend-mode: soft-light;
-  }
-
-  .grip-top,
-  .grip-bottom {
-    left: 0;
-    top: -1.5cqw;
-    width: 13cqw;
-    height: 3cqw;
-    transform: translateZ(-8.5cqw) rotateX(90deg);
-    background: #222120;
-  }
-
-  .grip-bottom {
-    top: 35.5cqw;
-    transform: translateZ(-8.5cqw) rotateX(-90deg);
-  }
-
-  /* The raised part of the top plate, left of centre. */
-  .hump {
-    position: absolute;
-    left: 15cqw;
-    top: -3.2cqw;
-    width: 33cqw;
-    height: 3.2cqw;
-    transform-style: preserve-3d;
-  }
-
-  .hump-back {
-    inset: 0;
-    border-radius: 0.8cqw 0.8cqw 0 0;
-    transform: translateZ(5cqw);
-    background: linear-gradient(to bottom, var(--silver-hi), var(--silver));
-    box-shadow: inset 0 0.12cqw 0 rgb(255 255 255 / 0.6);
-  }
-
-  .hump-top {
-    left: 0;
-    top: -5.5cqw;
-    width: 33cqw;
-    height: 11cqw;
-    border-radius: 0.8cqw;
-    transform: translateZ(-0.5cqw) rotateX(90deg);
-    background: linear-gradient(to bottom, var(--silver), var(--silver-hi));
-  }
-
-  /* The accessory shoe: a dark slot with two rails. */
-  .shoe {
-    position: absolute;
-    left: 8.5cqw;
-    top: 1.5cqw;
-    width: 16cqw;
-    height: 8cqw;
-    border-radius: 0.4cqw;
-    background: linear-gradient(to right, var(--silver-lo) 0 12%, #2a2826 12% 88%, var(--silver-lo) 88%);
-    box-shadow: inset 0 0 0 0.15cqw rgb(0 0 0 / 0.35);
-  }
-
-  .hump-l,
-  .hump-r {
-    top: 0;
-    left: -5.5cqw;
-    width: 11cqw;
-    height: 3.2cqw;
-    transform: translateZ(-0.5cqw) rotateY(-90deg);
-    background: var(--silver);
-  }
-
-  .hump-r {
-    left: 27.5cqw;
-    transform: translateZ(-0.5cqw) rotateY(90deg);
-    background: var(--silver-lo);
-  }
-
-  /* Cylinders: dials and the shutter button. */
-  .cyl {
-    position: absolute;
-    left: calc(var(--x) * 1cqw);
-    top: 0;
-    width: 0;
-    height: 0;
-    transform-style: preserve-3d;
-    transform: translateZ(calc(var(--z) * 1cqw));
-  }
-
-  .band {
-    bottom: 0;
-    left: calc(var(--r) * -1cqw);
-    width: calc(var(--r) * 2cqw);
-    height: calc(var(--h) * 1cqw);
-    transform: rotateY(calc(-1 * var(--ry)));
-    /* Knurling over a rounded shade, lit from the upper left. */
-    background:
-      repeating-linear-gradient(90deg, rgb(0 0 0 / 0.26) 0 0.1cqw, transparent 0.1cqw 0.34cqw),
-      linear-gradient(90deg, #8f8b85, var(--silver-hi) 28%, var(--silver) 55%, #6f6b66);
-  }
-
-  .cap {
-    left: calc(var(--r) * -1cqw);
-    top: calc((var(--h) + var(--r)) * -1cqw);
-    width: calc(var(--r) * 2cqw);
-    height: calc(var(--r) * 2cqw);
-    border-radius: 50%;
-    transform: rotateX(90deg);
-    background:
-      radial-gradient(circle, var(--silver-hi) 0 38%, var(--silver) 40% 70%, var(--silver-lo) 72% 76%, var(--silver) 78%);
-  }
-
-  .shutter .band {
-    background: linear-gradient(90deg, #8f8b85, var(--silver-hi) 30%, var(--silver) 60%, #77736d);
-  }
-
-  .shutter .cap {
-    background: radial-gradient(circle at 40% 35%, var(--silver-hi), var(--silver) 60%, var(--silver-lo));
-  }
-
-  /* Back details. */
-  .plate-edge {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 27.6%;
-    height: 0.15cqw;
-    background: rgb(255 255 255 / 0.1);
-  }
-
-  .eyepiece {
-    position: absolute;
-    left: 5cqw;
-    top: 4.2cqw;
-    width: 10cqw;
-    height: 6.6cqw;
-    border-radius: 1cqw;
-    background:
-      radial-gradient(ellipse at 35% 30%, rgb(120 140 160 / 0.35), transparent 55%),
-      #0c0c0c;
-    box-shadow:
-      0 0 0 0.6cqw #232120,
-      0 0.3cqw 0.6cqw 0.6cqw rgb(0 0 0 / 0.25);
-  }
-
-  .thumb {
-    position: absolute;
-    left: 85cqw;
-    top: 16.8cqw;
-    width: 11.5cqw;
-    height: 16cqw;
-    border-radius: 0.8cqw 0.8cqw 0.8cqw 3cqw;
-    background: var(--pebble), var(--leather);
-    background-blend-mode: soft-light;
-    box-shadow:
-      inset 0 0.12cqw 0 rgb(255 255 255 / 0.08),
-      inset 0 -0.2cqw 0.4cqw rgb(0 0 0 / 0.5);
-  }
-
-  .key {
-    position: absolute;
-    width: 3.4cqw;
-    height: 3.4cqw;
-    border-radius: 50%;
-    background: radial-gradient(circle at 40% 35%, #34312f, #161514 70%);
-    box-shadow:
-      0 0 0 0.25cqw #0b0b0a,
-      0 0.15cqw 0 0.25cqw rgb(255 255 255 / 0.08);
-  }
-
-  .k1 { left: 69cqw; top: 18.5cqw; }
-  .k2 { left: 76.5cqw; top: 21cqw; }
-  .k3 { left: 68cqw; top: 27cqw; }
-  .k4 { left: 67.5cqw; top: 50.4cqw; width: 2.8cqw; height: 2.8cqw; }
-  .k5 { left: 89.5cqw; top: 50.2cqw; width: 2.8cqw; height: 2.8cqw; }
-
-  /* The screen sits proud of the body on a hinge along its top edge. */
-  .recess,
-  .hinge {
-    position: absolute;
-    left: 4cqw;
-    top: 16.4cqw;
-    width: 52cqw;
-    height: 37.8cqw;
-  }
-
-  .recess {
-    border-radius: 0.8cqw;
-    background: #0a0a09;
-    box-shadow: inset 0 0.6cqw 1.2cqw rgb(0 0 0 / 0.8);
-  }
-
-  .hinge {
-    transform-style: preserve-3d;
-    transform-origin: 50% 0;
-    transform: rotateX(var(--tilt));
-    will-change: transform;
-  }
-
-  .panel {
-    position: absolute;
-    inset: 0;
-    transform-style: preserve-3d;
-  }
-
-  .bezel {
-    position: absolute;
-    inset: 0;
-    padding: 1.6cqw;
-    border-radius: 1cqw;
-    background: linear-gradient(to bottom, #1d1c1b, #121211);
-    box-shadow:
-      inset 0 0.14cqw 0 rgb(255 255 255 / 0.12),
-      inset 0 0 0 0.1cqw rgb(255 255 255 / 0.06);
-    transform: translateZ(1.3cqw);
-    backface-visibility: hidden;
-  }
-
-  .glass {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    border-radius: 0.3cqw;
-    background: #050505;
-    /* Vertical scroll still works; a sideways swipe flips the photo. */
+    aspect-ratio: 3 / 2;
+    /* A sideways swipe flips the photo; vertical scrolling still works. */
     touch-action: pan-y;
     user-select: none;
     -webkit-user-select: none;
+  }
+
+  .gl {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* The dial's halves. The script places them over the drawn dial. */
+  .dial-key {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .dial-key:focus-visible {
+    outline: 2px solid var(--bone-bright);
+    outline-offset: 0;
+  }
+
+  /* If the browser can't draw 3D: the photo as a print, buttons below. */
+  .flat {
+    display: none;
+  }
+
+  .viewer.is-flat .gl {
+    display: none;
+  }
+
+  .viewer.is-flat .flat {
+    display: block;
+    position: absolute;
+    inset: 0 12% 18%;
+    overflow: hidden;
+    border-radius: var(--radius-print);
+  }
+
+  .viewer.is-flat .dial-key {
+    top: auto;
+    bottom: 0;
+    margin: 0;
+    width: auto;
+    height: 44px;
+    padding: 0 20px;
+    border: 1px solid var(--btn-border);
+    border-radius: var(--radius-pill);
+    color: var(--fg);
+    font: inherit;
+    font-size: 14px;
+    transform: none !important;
+  }
+
+  .viewer.is-flat .prev {
+    left: 12%;
+  }
+
+  .viewer.is-flat .next {
+    left: auto;
+    right: 12%;
+  }
+
+  .viewer.is-flat .prev::before {
+    content: 'Previous';
+  }
+
+  .viewer.is-flat .next::before {
+    content: 'Next';
   }
 
   .shot {
@@ -607,192 +175,17 @@ const dials = [
     object-fit: cover;
     opacity: 0;
     transition: opacity 250ms ease;
-    -webkit-user-drag: none;
   }
 
-  .edge {
-    background: #0e0e0d;
+  .shot.is-on {
+    z-index: 2;
+    opacity: 1;
   }
 
-  .edge-t,
-  .edge-b {
-    left: 0;
-    width: 100%;
-    height: 1.3cqw;
-  }
-
-  .edge-t {
-    top: 0;
-    transform-origin: 50% 0;
-    transform: rotateX(90deg);
-  }
-
-  .edge-b {
-    bottom: 0;
-    transform-origin: 50% 100%;
-    transform: rotateX(-90deg);
-    background: #1a1918;
-  }
-
-  .edge-l,
-  .edge-r {
-    top: 0;
-    width: 1.3cqw;
-    height: 100%;
-  }
-
-  .edge-l {
-    left: 0;
-    transform-origin: 0 50%;
-    transform: rotateY(-90deg);
-  }
-
-  .edge-r {
-    right: 0;
-    transform-origin: 100% 50%;
-    transform: rotateY(90deg);
-    background: #171615;
-  }
-
-  /* The four-way dial with OK in the middle. Left and right are buttons. */
-  .dial {
-    position: absolute;
-    left: 71cqw;
-    top: 34cqw;
-    width: 16cqw;
-    height: 16cqw;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle, transparent 0 60%, rgb(255 255 255 / 0.05) 61% 62%, transparent 63%),
-      repeating-conic-gradient(#242322 0 2.5deg, #191817 2.5deg 5deg);
-    box-shadow:
-      0 0 0 0.35cqw #0b0b0a,
-      0 0 0 0.55cqw rgb(255 255 255 / 0.09),
-      0 0.4cqw 0.8cqw 0.4cqw rgb(0 0 0 / 0.35);
-    transition:
-      transform 140ms ease,
-      box-shadow 140ms ease;
-  }
-
-  .dial.press-prev {
-    transform: translateX(-0.25cqw);
-    box-shadow:
-      0 0 0 0.35cqw #0b0b0a,
-      -0.15cqw 0 0 0.55cqw rgb(255 255 255 / 0.05),
-      0 0.15cqw 0.3cqw 0.2cqw rgb(0 0 0 / 0.35);
-  }
-
-  .dial.press-next {
-    transform: translateX(0.25cqw);
-    box-shadow:
-      0 0 0 0.35cqw #0b0b0a,
-      0.15cqw 0 0 0.55cqw rgb(255 255 255 / 0.05),
-      0 0.15cqw 0.3cqw 0.2cqw rgb(0 0 0 / 0.35);
-  }
-
-  .tick {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border: 0.75cqw solid transparent;
-  }
-
-  .tick.up {
-    left: calc(50% - 0.75cqw);
-    top: 0.5cqw;
-    border-bottom-color: #8b867f;
-    border-top-width: 0;
-  }
-
-  .tick.down {
-    left: calc(50% - 0.75cqw);
-    bottom: 0.5cqw;
-    border-top-color: #8b867f;
-    border-bottom-width: 0;
-  }
-
-  .dial-key {
-    position: absolute;
-    top: 25%;
-    width: 30%;
-    height: 50%;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* A hit area of at least 44px, centred on each side. */
-  .dial-key::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: max(44px, 100%);
-    height: max(44px, 100%);
-    transform: translate(-50%, -50%);
-  }
-
-  .dial-key.prev {
-    left: 0;
-  }
-
-  .dial-key.next {
-    right: 0;
-  }
-
-  .dial-key .tick {
-    top: calc(50% - 0.75cqw);
-    transition: border-color 200ms ease;
-  }
-
-  .prev .tick {
-    left: 1.2cqw;
-    border-right-color: #c9c3ba;
-    border-left-width: 0;
-  }
-
-  .next .tick {
-    right: 1.2cqw;
-    border-left-color: #c9c3ba;
-    border-right-width: 0;
-  }
-
-  .dial-key:hover .tick {
-    filter: brightness(1.25);
-  }
-
-  .dial-key:focus-visible {
-    outline: 2px solid var(--bone-bright);
-    outline-offset: 2px;
-  }
-
-  .ok {
-    position: absolute;
-    left: 31%;
-    top: 31%;
-    width: 38%;
-    height: 38%;
-    border-radius: 50%;
-    background: radial-gradient(circle at 42% 36%, var(--silver-hi), var(--silver) 55%, var(--silver-lo));
-    box-shadow:
-      0 0 0 0.3cqw #0b0b0a,
-      0 0.2cqw 0.3cqw 0.3cqw rgb(0 0 0 / 0.3);
-  }
-
-  /* Reduced motion: flat, straight-on, screen flush, and photos switch with
-     no fade (the site-wide rule already shortens every transition). */
-  @media (prefers-reduced-motion: reduce) {
-    .viewer {
-      --t: 1 !important;
-    }
-
-    .cam,
-    .hinge {
-      transform: none;
-    }
+  .shot.was {
+    z-index: 1;
+    opacity: 1;
+    transition: none;
   }
 </style>
 

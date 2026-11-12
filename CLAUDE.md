@@ -180,7 +180,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - Work only on the `redesign` branch. Never push to or merge into `main` unless David says to in so many words.
 - Follow `docs/PLAN.md` one phase at a time, and one checkbox at a time inside a phase. After each step, tell David what to look at and wait for his OK. At the end of each phase, show David screenshots at 1440px and 390px wide, state the done test result honestly, and wait for his go-ahead.
 - Make small commits with plain messages.
-- Ask before adding any dependency beyond Astro, its official integrations, and Fontsource.
+- Ask before adding any dependency beyond Astro, its official integrations, Fontsource, and three.js (approved by David for the camera viewer, 2026-11-12).
 - Keep the repo public-safe. No customer names, prices, emails, order data, home addresses, or photo metadata, in code or in screenshots. Blur sensitive parts of any screenshot of company software before adding it.
 - No trackers, cookies, embeds, or third-party scripts. The one exception is Cloudflare Web Analytics, which is cookieless and already enabled for the domain in Cloudflare. Keep it working, and add nothing else.
 - Accessibility is part of done: real links and buttons, a visible focus state, alt text on every meaningful image, readable contrast over photos, and a full keyboard path.
@@ -211,7 +211,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-11, Off the clock on iPhone:** the strip sat blank in Safari; it now reads the same scroll-driven `--p` as the hero and Say hi. Merged to `main` (David said to); waiting for David to check on his phone.
 - **2026-11-11, Who's making this:** David's headshot as a print beside "I'm David." and a short adaptation of the approved "Who's making it" copy, just before Say hi (David chose this over having the lake cover the headshot). Merged to `main` (David said to).
 - **2026-11-11, Utu image in Erode:** `assets/work/utu.webp` swapped for David's new render with Utu's new font (Erode replaces Newsreader); then replaced the same day with David's four-phone image (three skies and the Saturday detail sheet). Merged to `main` (David said to).
-- **2026-11-12, camera viewer, step 1:** the camera alone at `/camera-test/` with a slider standing in for scroll (`src/components/Camera.astro`). Waiting for David's OK on the look before wiring it into Off the clock.
+- **2026-11-12, camera viewer:** a 3D camera (three.js) whose screen shows the photos, at `/camera-test/` with a slider standing in for scroll. Waiting for David's OK on the look, then step 2 (into Off the clock, plus the copy). The plan and every remaining step are in `docs/PLAN.md` under "Camera photo viewer".
 - **Waiting on David:** see the end of `docs/PLAN.md`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
