@@ -1,6 +1,6 @@
 // The camera viewer: the dial's buttons, arrow keys, and a sideways swipe on
-// the screen flip through the photos, wrapping at both ends. The screen and
-// the blurred colour field behind the camera crossfade to the new photo.
+// the screen flip through the photos, wrapping at both ends. The screen
+// crossfades to the new photo.
 
 /** Eases in and out, so the camera turns slowly at both ends of its move. */
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
@@ -16,7 +16,6 @@ export function setPose(root: HTMLElement, progress: number) {
 
 export function setupCamera(root: HTMLElement) {
   const shots = [...root.querySelectorAll<HTMLImageElement>('.shot')];
-  const backs = [...root.querySelectorAll<HTMLImageElement>('.back-shot')];
   const screen = root.querySelector<HTMLElement>('[data-screen]')!;
   const dial = root.querySelector<HTMLElement>('[data-dial]')!;
   const live = root.querySelector<HTMLElement>('[data-live]')!;
@@ -24,17 +23,16 @@ export function setupCamera(root: HTMLElement) {
   let pressTimer = 0;
 
   // The new layer fades in over the old one, which stays lit underneath.
-  function swap(layers: HTMLElement[], from: number, to: number) {
-    for (const layer of layers) layer.classList.remove('was');
-    layers[from].classList.replace('is-on', 'was');
-    layers[to].classList.add('is-on');
+  function swap(from: number, to: number) {
+    for (const shot of shots) shot.classList.remove('was');
+    shots[from].classList.replace('is-on', 'was');
+    shots[to].classList.add('is-on');
   }
 
   function step(by: number) {
     const next = (index + by + shots.length) % shots.length;
     if (next === index) return;
-    swap(shots, index, next);
-    swap(backs, index, next);
+    swap(index, next);
     index = next;
     const alt = shots[index].dataset.alt ?? '';
     screen.setAttribute('aria-label', alt);

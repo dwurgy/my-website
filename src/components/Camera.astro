@@ -1,5 +1,5 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import { photos } from '../data/photos';
 
 // A camera, drawn in CSS 3D, whose rear screen shows David's photographs.
@@ -10,11 +10,6 @@ import { photos } from '../data/photos';
 // Units are cqw: hundredths of the camera's width, so it scales as one piece.
 // The body is 100 wide, 58 tall, and 14 deep. Its parts are placed from the
 // body's top-left corner, as seen from the back.
-
-// Small blurred copies of each photo for the colour field behind the camera.
-const backdrops = await Promise.all(
-  photos.map((photo) => getImage({ src: photo.src, width: 96, format: 'webp' })),
-);
 
 // A cylinder (dials, the shutter button) is two planes: its side, which turns
 // to face the viewer so it always reads as round, and a cap on top.
@@ -28,10 +23,6 @@ const dials = [
 ---
 
 <div class="viewer" data-camera>
-  <div class="backdrop" aria-hidden="true">
-    {backdrops.map((img, i) => <img class:list={['back-shot', { 'is-on': i === 0 }]} src={img.src} alt="" />)}
-  </div>
-
   <div
     class="stage"
     tabindex="0"
@@ -100,7 +91,7 @@ const dials = [
                         alt=""
                         data-alt={photo.alt}
                         widths={[320, 480, 720, 960]}
-                        sizes="(max-width: 760px) 42vw, 330px"
+                        sizes="(max-width: 760px) 42vw, 420px"
                         loading="lazy"
                         draggable="false"
                       />
@@ -137,21 +128,26 @@ const dials = [
     --ry0: -30deg;
     --rx0: -11deg;
     --tilt0: 46deg;
-    /* Eased again here would double up; the script hands over an eased --t. */
-    --ry: calc((1 - var(--t)) * var(--ry0));
-    --rx: calc((1 - var(--t)) * var(--rx0));
-    --tilt: calc((1 - var(--t)) * var(--tilt0));
+    /* The script hands over an eased --t. Each angle keeps a hundredth of a
+       degree at rest: at exactly zero the browser treats the camera as flat,
+       snaps it to whole pixels, and it visibly drops at the end of the turn. */
+    --ry: calc((1 - var(--t)) * var(--ry0) - 0.01deg);
+    --rx: calc((1 - var(--t)) * var(--rx0) - 0.01deg);
+    --tilt: calc((1 - var(--t)) * var(--tilt0) + 0.01deg);
 
-    /* Camera materials. The same in both themes: it's an object on a photo. */
-    --silver-hi: #e2ded7;
-    --silver: #bcb8b1;
-    --silver-lo: #8c8881;
+    /* Camera materials. On paper the silver is a little cooler and deeper
+       than the warm ground, and a soft shadow sets the camera down on it. */
+    --silver-hi: #dddbd7;
+    --silver: #b5b3ae;
+    --silver-lo: #807e7a;
     --black: #1b1a19;
     --black-lo: #111010;
     --leather: #181716;
+    --rim: rgb(255 255 255 / 0.07);
+    --shadow-soft: rgb(27 24 21 / 0.2);
+    --shadow-core: rgb(27 24 21 / 0.34);
 
     position: relative;
-    isolation: isolate;
     overflow: clip;
     display: grid;
     place-items: center;
@@ -162,54 +158,34 @@ const dials = [
     .viewer {
       --ry0: -15deg;
       --rx0: -5.5deg;
-      --tilt0: 38deg;
+      --tilt0: 32deg;
+    }
+
+    /* A touch narrower, so the tilted-out screen stays on the page. */
+    .viewer .stage {
+      width: 88vw;
     }
   }
 
-  /* The current photo, blurred into colour, across the full width. */
-  .backdrop {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    background: var(--night);
+  /* On the dark ground, warmer, brighter silver and a thin lit edge
+     around the black body keep the camera from sinking into the page. */
+  :global([data-theme='dark']) .viewer {
+    --silver-hi: #ebe7e0;
+    --silver: #c6c1b9;
+    --silver-lo: #8e8a83;
+    --rim: rgb(240 234 225 / 0.2);
+    --shadow-soft: rgb(0 0 0 / 0.35);
+    --shadow-core: rgb(0 0 0 / 0.55);
   }
 
-  .back-shot {
-    position: absolute;
-    inset: -10%;
-    width: 120%;
-    max-width: none;
-    height: 120%;
-    object-fit: cover;
-    filter: blur(40px) saturate(1.08);
-    opacity: 0;
-    transition: opacity 800ms ease;
-    will-change: opacity;
-  }
-
-  /* The same grain as the paper, over the colour field. */
-  .viewer::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image: var(--grain);
-    background-size: 192px 192px;
-    mix-blend-mode: overlay;
-    opacity: 0.5;
-  }
-
-  /* Crossfades: the new layer fades in over the last one, so the light
+  /* Crossfade: the new photo fades in over the last one, so the light
      never dips halfway. */
-  .shot.is-on,
-  .back-shot.is-on {
+  .shot.is-on {
     z-index: 2;
     opacity: 1;
   }
 
-  .shot.was,
-  .back-shot.was {
+  .shot.was {
     z-index: 1;
     opacity: 1;
     transition: none;
@@ -217,13 +193,14 @@ const dials = [
 
   .stage {
     container-type: inline-size;
-    width: min(680px, 90vw);
+    /* As large as fits: wide on a laptop, but never taller than the screen. */
+    width: min(940px, 92vw, calc((100svh - 160px) * 1.6));
     border-radius: 12px;
-    outline-offset: 48px;
+    outline-offset: 56px;
   }
 
   .stage:focus-visible {
-    outline: 2px solid var(--bone-bright);
+    outline: 2px solid var(--fg);
   }
 
   .scene {
@@ -235,11 +212,13 @@ const dials = [
 
   .shadow {
     position: absolute;
-    left: 6%;
-    right: 6%;
-    bottom: -7cqw;
-    height: 9cqw;
-    background: radial-gradient(closest-side, rgb(0 0 0 / 0.42), rgb(0 0 0 / 0));
+    left: 2%;
+    right: 2%;
+    bottom: -8cqw;
+    height: 12cqw;
+    background:
+      radial-gradient(closest-side, var(--shadow-core), transparent 70%) 50% 40% / 86% 45% no-repeat,
+      radial-gradient(closest-side, var(--shadow-soft), transparent);
     pointer-events: none;
   }
 
@@ -248,6 +227,7 @@ const dials = [
     inset: 0;
     transform-style: preserve-3d;
     transform: rotateX(var(--rx)) rotateY(var(--ry));
+    will-change: transform;
   }
 
   .cam i,
@@ -304,7 +284,7 @@ const dials = [
     transform-style: preserve-3d;
     box-shadow:
       inset 0 0.15cqw 0 rgb(255 255 255 / 0.55),
-      inset 0 0 0 0.12cqw rgb(255 255 255 / 0.08);
+      inset 0 0 0 0.15cqw var(--rim);
   }
 
   .front {
@@ -319,6 +299,7 @@ const dials = [
     width: 14cqw;
     height: 58cqw;
     border-radius: 1cqw;
+    box-shadow: inset 0 0 0 0.15cqw var(--rim);
   }
 
   .side-l {
@@ -583,6 +564,7 @@ const dials = [
     transform-style: preserve-3d;
     transform-origin: 50% 0;
     transform: rotateX(var(--tilt));
+    will-change: transform;
   }
 
   .panel {
