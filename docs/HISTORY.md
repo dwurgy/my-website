@@ -165,5 +165,5 @@ David noticed his headshot from the old site was gone and wanted a face to the n
 
 ## 2026-11-12: Preview links
 
-- Cloudflare's Previews tab (Workers Builds, "Previews Base") had no build command, so preview builds uploaded nothing. David set it to `npm run build`; the preview command is `npx wrangler preview`.
+- Cloudflare's Previews tab (Workers Builds, "Previews Base") had no build command, so preview builds uploaded nothing. David set it to `npm run build`, but preview builds still skipped it, so the preview command now builds first: `npm run build && npx wrangler preview`.
 - `wrangler preview` refuses to run without a `previews` block in `wrangler.jsonc`, so an empty one was added.
