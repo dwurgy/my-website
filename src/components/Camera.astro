@@ -8,9 +8,13 @@ import { photos } from '../data/photos';
 // to 1 (straight-on back, screen flush), which the page sets from scroll (or
 // the test page's slider) through setPose().
 //
-// The dial's two halves are real buttons laid over the drawing. If the
-// browser can't draw 3D, the photos show as a plain print with the same
-// buttons below it.
+// The dial's two halves are real buttons laid over the drawing; hovering one
+// lights its arrow. Under the camera, a small count ("01 / 04") between two
+// more arrow buttons says there's more than one photo and works on any
+// screen. If the browser can't draw 3D, the photos show as a plain print with
+// the count below it.
+
+const pad = (n: number) => String(n).padStart(2, '0');
 
 // Two sizes of each photo for the screen; the script picks by screen size.
 const textures = await Promise.all(
@@ -57,6 +61,18 @@ const textures = await Promise.all(
     </div>
   </div>
 
+  <div class="count">
+    <button type="button" class="count-key" aria-label="Previous photo" data-step="-1">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"></path></svg>
+    </button>
+    <p class="label count-text">
+      <span data-index>01</span> / {pad(photos.length)}
+    </p>
+    <button type="button" class="count-key" aria-label="Next photo" data-step="1">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"></path></svg>
+    </button>
+  </div>
+
   <p class="visually-hidden" aria-live="polite" data-live></p>
 </div>
 
@@ -66,7 +82,7 @@ const textures = await Promise.all(
     overflow: clip;
     display: grid;
     place-items: center;
-    padding: clamp(48px, 8vh, 96px) 0;
+    gap: 8px;
   }
 
   .stage {
@@ -118,7 +134,60 @@ const textures = await Promise.all(
     outline-offset: 0;
   }
 
-  /* If the browser can't draw 3D: the photo as a print, buttons below. */
+  /* The count under the camera, between its two arrows. */
+  .count {
+    /* Up into the empty space the canvas keeps below the camera for its turn. */
+    margin-top: max(-56px, -6vw);
+    /* Above the canvas, which would otherwise catch its clicks. */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--fg-muted);
+  }
+
+  .count-text {
+    margin: 0;
+    min-width: 7ch;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .count-key {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: color 200ms ease;
+  }
+
+  .count-key:hover {
+    color: var(--fg);
+  }
+
+  .count-key:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: -4px;
+  }
+
+  .count-key svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* If the browser can't draw 3D: the photo as a print, the count below. */
   .flat {
     display: none;
   }
@@ -130,41 +199,13 @@ const textures = await Promise.all(
   .viewer.is-flat .flat {
     display: block;
     position: absolute;
-    inset: 0 12% 18%;
+    inset: 4% 10%;
     overflow: hidden;
     border-radius: var(--radius-print);
   }
 
   .viewer.is-flat .dial-key {
-    top: auto;
-    bottom: 0;
-    margin: 0;
-    width: auto;
-    height: 44px;
-    padding: 0 20px;
-    border: 1px solid var(--btn-border);
-    border-radius: var(--radius-pill);
-    color: var(--fg);
-    font: inherit;
-    font-size: 14px;
-    transform: none !important;
-  }
-
-  .viewer.is-flat .prev {
-    left: 12%;
-  }
-
-  .viewer.is-flat .next {
-    left: auto;
-    right: 12%;
-  }
-
-  .viewer.is-flat .prev::before {
-    content: 'Previous';
-  }
-
-  .viewer.is-flat .next::before {
-    content: 'Next';
+    display: none;
   }
 
   .shot {

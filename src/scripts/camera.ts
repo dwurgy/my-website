@@ -28,14 +28,15 @@ const angles = () =>
  * (straight-on, screen flush). With reduced motion it stays straight-on.
  */
 export function setPose(root: HTMLElement, progress: number) {
-  const viewer = viewers.get(root);
-  if (!viewer) return;
+  // The page may ask before the viewer is set up; keep the progress for it.
+  let viewer = viewers.get(root);
+  if (!viewer) viewers.set(root, (viewer = { progress: 0 }));
   viewer.progress = Math.min(1, Math.max(0, progress));
   viewer.model?.setPose(reducedMotion.matches ? 1 : easeInOut(viewer.progress));
 }
 
 export function setupCamera(root: HTMLElement) {
-  const viewer: Viewer = { progress: 0 };
+  const viewer: Viewer = viewers.get(root) ?? { progress: 0 };
   viewers.set(root, viewer);
 
   const photos = JSON.parse(root.dataset.photos ?? '[]') as (PhotoSource & { alt: string })[];
@@ -45,6 +46,7 @@ export function setupCamera(root: HTMLElement) {
   const live = root.querySelector<HTMLElement>('[data-live]')!;
   const prevKey = root.querySelector<HTMLButtonElement>('.dial-key.prev')!;
   const nextKey = root.querySelector<HTMLButtonElement>('.dial-key.next')!;
+  const count = root.querySelector<HTMLElement>('[data-index]')!;
   let index = 0;
 
   function step(by: number) {
@@ -57,14 +59,26 @@ export function setupCamera(root: HTMLElement) {
     index = next;
     viewer.model?.show(index, reducedMotion.matches);
     viewer.model?.press(by);
+    count.textContent = String(index + 1).padStart(2, '0');
     const alt = photos[index].alt;
     canvas.setAttribute('aria-label', alt);
     live.textContent = alt;
   }
 
-  for (const button of [prevKey, nextKey]) {
+  for (const button of root.querySelectorAll<HTMLButtonElement>('[data-step]')) {
     const by = Number(button.dataset.step);
     button.addEventListener('click', () => step(by));
+  }
+
+  // Pointing at (or tabbing to) a side of the dial lights its arrow.
+  for (const button of [prevKey, nextKey]) {
+    const by = Number(button.dataset.step);
+    const on = () => viewer.model?.hover(by);
+    const off = () => viewer.model?.hover(0);
+    button.addEventListener('pointerenter', (event) => event.pointerType === 'mouse' && on());
+    button.addEventListener('pointerleave', off);
+    button.addEventListener('focus', on);
+    button.addEventListener('blur', off);
   }
 
   root.addEventListener('keydown', (event) => {

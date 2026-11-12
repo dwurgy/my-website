@@ -102,10 +102,10 @@ Nothing else runs on a timer.
 - **Hero (pinned, about 230vh):** the coast photo starts full-bleed and shrinks, matched to scroll, into a print on the right half of the paper: inset 20% top and bottom, 50% left, 40px right, with corners going from 0 to 6px. On phones it ends as a print across the top. The headline exists twice: an ink copy on the paper and a bone copy clipped to the photo's exact shape, so its colour changes right at the photo's edge. The photo also scales from 1.12 to 1.
 - **Work:** a large ink index with no background photo. Hovering a row fades the other rows to about 0.32 opacity, nudges the name 12px right, and shows a 360 × 236 preview of the project that follows the cursor with a slight lag. Keyboard focus shows the same preview beside the row. On touch screens there's no preview; each project's image shows under its name instead. Clicking a row opens its project page, and the preview morphs into the page's main image in about 300ms.
 - **How I build:** still, on paper.
-- **Off the clock (pinned, about 340vh):** the music text, then the lodge, pavilion, firs, and moon photos at mixed heights and offsets, drifting sideways exactly as fast as you scroll down.
+- **Off the clock (not pinned):** the music text, then "I also take pictures." and a 3D camera (three.js) whose rear screen shows the lodge, pavilion, firs, and moon photos. As it scrolls in, the camera turns from an angled pose (screen tilted out) to straight-on, and back on the way up. The dial's sides, the "01 / 04" count's arrows beneath it, arrow keys, and a sideways swipe flip the photos (250ms crossfade). Hovering a side of the dial lights its arrow.
 - **Say hi (pinned, about 210vh):** the lake starts as a centred print and grows to full-bleed by the bottom of the page. The contact text appears on the photo, using the same two-copy clip as the hero. Only the copy on the photo is interactive.
 - **Pinned lengths** are starting points. If a pinned section starts to feel like a chore, shorten it.
-- **Reduced motion:** the hero shows as a finished print and the lake as full-bleed. The Off the clock photos become a normal row the reader can scroll sideways, because a still track would hide them. Nothing is hidden.
+- **Reduced motion:** the hero shows as a finished print and the lake as full-bleed. The camera stays straight-on and photos change without a crossfade. Nothing is hidden.
 - **Smoothness:** animate only transform, opacity, and clip-path. Read scroll position in one `requestAnimationFrame` loop. Keep 60fps on an ordinary laptop. Ask before adding a smooth-scroll library.
 
 ### Brand
@@ -163,7 +163,7 @@ Write plainly and directly, like a person talking. Use short sentences, no hype,
 
 - `assets/photos/`: David's photographs, with all metadata already stripped. Use these through Astro's image pipeline (AVIF or WebP, responsive sizes) and never serve the originals directly.
   - `coast-dusk.jpg`: the hero.
-  - `lodge-dusk.jpg`, `pavilion-peak.jpg`, `firs-house.jpg`, and `lake-dusk-moon.jpg`: the Off the clock strip, in that order.
+  - `lodge-dusk.jpg`, `pavilion-peak.jpg`, `firs-house.jpg`, and `lake-dusk-moon.jpg`: the photos on the Off the clock camera, in that order (`src/data/photos.ts`).
   - `lake-dusk-reeds.jpg`: the Say hi photo, sharp. It's no longer used blurred.
   - `david-portrait.jpg`: David's headshot (from the old site, about a year old, 900 × 900, no metadata), in "Who's making this."
 - `assets/work/`
@@ -211,7 +211,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-11, Off the clock on iPhone:** the strip sat blank in Safari; it now reads the same scroll-driven `--p` as the hero and Say hi. Merged to `main` (David said to); waiting for David to check on his phone.
 - **2026-11-11, Who's making this:** David's headshot as a print beside "I'm David." and a short adaptation of the approved "Who's making it" copy, just before Say hi (David chose this over having the lake cover the headshot). Merged to `main` (David said to).
 - **2026-11-11, Utu image in Erode:** `assets/work/utu.webp` swapped for David's new render with Utu's new font (Erode replaces Newsreader); then replaced the same day with David's four-phone image (three skies and the Saturday detail sheet). Merged to `main` (David said to).
-- **2026-11-12, camera viewer:** a 3D camera (three.js) whose screen shows the photos, at `/camera-test/` with a slider standing in for scroll. Paused mid-layout-fix (screen size and position, to match David's reference photos; see PLAN). Then David's OK on the look, then step 2 (into Off the clock, plus the copy). The plan and every remaining step are in `docs/PLAN.md` under "Camera photo viewer".
+- **2026-11-12, camera viewer:** a 3D camera (three.js) whose screen shows the photos replaces the sideways strip in Off the clock, with the new photographs copy, a "01 / 04" count, and a lit dial arrow on hover. `/camera-test/` is gone. On `redesign`; waiting for David to check the turn on a trackpad and phone, and dark mode. See `docs/PLAN.md` under "Camera photo viewer".
 - **Waiting on David:** see the end of `docs/PLAN.md`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.

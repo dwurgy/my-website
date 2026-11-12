@@ -1,239 +1,108 @@
 ---
-import { Image } from 'astro:assets';
-import lodge from '../../assets/photos/lodge-dusk.jpg';
-import pavilion from '../../assets/photos/pavilion-peak.jpg';
-import firs from '../../assets/photos/firs-house.jpg';
-import moon from '../../assets/photos/lake-dusk-moon.jpg';
+import Camera from './Camera.astro';
 
-// Prints at mixed heights and offsets, in this order. `height` is in vh; the
-// width follows from each photo's shape, so `sizes` can be worked out exactly.
-const prints = [
-  { src: lodge, height: 66, place: 'middle', alt: 'A glass-fronted lodge under tall pines at dusk.' },
-  { src: pavilion, height: 44, place: 'high', alt: 'A timber pavilion framing a mountain peak beyond a pool.' },
-  { src: firs, height: 56, place: 'low', alt: 'Two old firs in front of a house and a dark car.' },
-  { src: moon, height: 48, place: 'middle', alt: 'Mountains at dusk over still water, a sliver of moon above.' },
-];
+// Off the clock: the music, then the photographs, shown on the screen of a 3D
+// camera that turns to face you as it scrolls into view. Normal page scroll;
+// nothing here is pinned.
 ---
 
 <section id="offclock" class="offclock" aria-labelledby="offclock-title">
-  <div class="stick" data-strip-view>
-    <div class="track" data-track>
-      <div class="music">
-        <h2 id="offclock-title" class="label">Off the clock</h2>
-        <p class="headline music-line">I sing, write, and produce.</p>
-        <p class="music-body">
-          My Brothers And I has songs placed on Virgin River, Pretty Little Liars, Queen Sugar, and
-          others through Secret Road.
-        </p>
-        <div class="music-links">
-          <a class="btn" href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a>
-          <a class="btn" href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">
-            Apple Music
-          </a>
-        </div>
-      </div>
-      {
-        prints.map((print) => (
-          <Image
-            class:list={['print', print.place]}
-            style={`--h: ${print.height}`}
-            src={print.src}
-            alt={print.alt}
-            widths={[480, 720, 960, 1440, 1920]}
-            sizes={`${Math.round((print.height * print.src.width) / print.src.height)}vh`}
-          />
-        ))
-      }
+  <div class="block">
+    <h2 id="offclock-title" class="label eyebrow">Off the clock</h2>
+    <p class="headline line">I sing, write, and produce.</p>
+    <p class="body">
+      My Brothers And I has songs placed on Virgin River, Pretty Little Liars, Queen Sugar, and others
+      through Secret Road.
+    </p>
+    <div class="links">
+      <a class="btn" href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a>
+      <a class="btn" href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">Apple Music</a>
     </div>
   </div>
+
+  <div class="block photos">
+    <h3 class="label eyebrow">Photographs</h3>
+    <p class="headline line">I also take <span class="emphasis">pictures</span>.</p>
+    <p class="body">
+      I'm not a professional. I shoot the places I go and the light I find there. Flip through a few I
+      like.
+    </p>
+  </div>
+
+  <Camera />
 </section>
 
 <script>
-  import { cssDriven, onFrame, pinRange, progress, reducedMotion } from '../scripts/scroll';
+  import { setPose } from '../scripts/camera';
+  import { onFrame } from '../scripts/scroll';
 
-  // The strip slides sideways exactly as far as the section scrolls down:
-  // from its start at the top of the pin to its end at the bottom.
-  const section = document.querySelector<HTMLElement>('.offclock')!;
-  const view = section.querySelector<HTMLElement>('[data-strip-view]')!;
-  const track = section.querySelector<HTMLElement>('[data-track]')!;
+  // The camera's pose follows scroll: 0 when its top enters the bottom of the
+  // screen, 1 when its centre reaches the screen's centre. It turns back the
+  // same way on the way up.
+  const viewer = document.querySelector<HTMLElement>('#offclock [data-camera]')!;
+  const stage = viewer.querySelector<HTMLElement>('.stage')!;
 
   onFrame(() => {
-    if (reducedMotion.matches) {
-      // Still: the row scrolls sideways by hand, so the keyboard must reach it.
-      return () => {
-        track.style.removeProperty('transform');
-        view.tabIndex = 0;
-        view.setAttribute('role', 'region');
-        view.setAttribute('aria-label', 'Off the clock photographs, scrolls sideways');
-      };
-    }
-    const travel = Math.max(0, track.scrollWidth - innerWidth);
-    // With CSS scroll-driven animations the strip moves itself; the script
-    // only tells it its range and how far it travels.
-    const range = cssDriven ? pinRange(section) : undefined;
-    const distance = `${Math.round(travel)}px`;
-    const x = (-progress(section) * travel).toFixed(1);
-    return () => {
-      if (range) {
-        range();
-        if (section.style.getPropertyValue('--travel') !== distance) section.style.setProperty('--travel', distance);
-      } else {
-        track.style.transform = `translate3d(${x}px, 0, 0)`;
-      }
-      view.removeAttribute('tabindex');
-      view.removeAttribute('role');
-      view.removeAttribute('aria-label');
-    };
-  });
-
-  // Keyboard: the strip moves with scroll, so a link in it can be focused
-  // while it sits off to the side. When that happens, scroll the page to the
-  // nearest point where the strip shows it.
-  track.addEventListener('focusin', (event) => {
-    if (reducedMotion.matches) return;
-    const target = event.target as HTMLElement;
-    const travel = track.scrollWidth - innerWidth;
-    const pin = section.offsetHeight - section.querySelector<HTMLElement>('.stick')!.offsetHeight;
-    if (travel <= 0 || pin <= 0) return;
-    const edge = parseFloat(getComputedStyle(section).getPropertyValue('--track-edge')) || 0;
-    const left = target.getBoundingClientRect().left - track.getBoundingClientRect().left;
-    const earliest = (left + target.offsetWidth + edge - innerWidth) / travel;
-    const latest = (left - edge) / travel;
-    const now = progress(section);
-    const wanted = Math.min(1, Math.max(0, Math.min(latest, Math.max(earliest, now))));
-    if (Math.abs(wanted - now) < 0.001) return;
-    const top = section.getBoundingClientRect().top + scrollY;
-    scrollTo({ top: top + wanted * pin, behavior: 'instant' });
+    const box = stage.getBoundingClientRect();
+    const h = innerHeight;
+    const p = (h - box.top) / (h / 2 + box.height / 2);
+    return () => setPose(viewer, p);
   });
 </script>
 
 <style>
   .offclock {
-    --track-edge: 40px;
-    height: 340vh;
-  }
-
-  .stick {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    height: 100svh;
-    /* clip, not hidden: focus can't scroll the strip sideways behind the
-       transform's back. */
-    overflow: clip;
+    padding: 104px var(--gutter) 120px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 96px;
   }
 
-  .track {
-    display: flex;
-    align-items: center;
-    gap: 56px;
-    padding: 0 var(--track-edge);
-    will-change: transform;
-  }
-
-  .music {
-    flex: none;
-    width: min(420px, 78vw);
+  .block {
+    max-width: 560px;
     display: flex;
     flex-direction: column;
     gap: 18px;
   }
 
-  .music h2 {
+  /* The photographs' intro sits to the right on a wide screen, so the two
+     blocks read as a pair, not a stack. */
+  .photos {
+    align-self: flex-end;
+  }
+
+  .eyebrow {
     margin: 0;
     font-weight: 400;
     color: var(--fg-muted);
   }
 
-  .music-line {
+  .line {
     font-size: clamp(40px, 4.6vw, 68px);
     text-wrap: wrap;
   }
 
-  .music-body {
+  .body {
     margin: 0;
     font-size: 17px;
     line-height: 1.55;
     color: var(--body);
   }
 
-  .music-links {
+  .links {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     padding-top: 4px;
   }
 
-  .print {
-    display: block;
-    flex: none;
-    height: calc(var(--h) * 1vh);
-    width: auto;
-    border-radius: var(--radius-print);
-  }
-
-  .high {
-    align-self: flex-start;
-    margin-top: 14vh;
-  }
-
-  .low {
-    align-self: flex-end;
-    margin-bottom: 10vh;
-  }
-
   @media (max-width: 760px) {
     .offclock {
-      --track-edge: 20px;
-    }
-  }
-
-  /* The strip slides by --travel across the pin, in step with scrolling. The
-     browser runs --p on the section, the same way as the hero and Say hi, and
-     the strip reads it. (An animation on the strip itself, with --travel
-     inside its keyframes, left the strip stuck off screen in Safari on
-     iPhone.) A transform, so the browser can move it without redrawing. */
-  @supports (animation-timeline: scroll()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .offclock {
-        animation-name: pin-progress;
-        animation-timing-function: linear;
-        animation-fill-mode: both;
-        animation-timeline: scroll(root);
-        animation-range: var(--pin-start, 0px) var(--pin-end, 100vh);
-      }
-
-      .track {
-        transform: translate3d(calc(var(--p) * -1 * var(--travel, 0px)), 0, 0);
-      }
-    }
-  }
-
-  /* With reduced motion the strip can't move, so it becomes an ordinary row
-     the reader scrolls sideways. Nothing is hidden. */
-  @media (prefers-reduced-motion: reduce) {
-    .offclock {
-      height: auto;
+      gap: 72px;
     }
 
-    .stick {
-      position: relative;
-      height: auto;
-      overflow-x: auto;
-      padding: 120px 0;
-    }
-
-    .track {
-      transform: none !important;
-      will-change: auto;
-    }
-
-    .high,
-    .low {
-      align-self: center;
-      margin: 0;
+    .photos {
+      align-self: auto;
     }
   }
 </style>

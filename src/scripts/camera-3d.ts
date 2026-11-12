@@ -11,6 +11,7 @@
 
 import {
   CanvasTexture,
+  Color,
   CylinderGeometry,
   DirectionalLight,
   Group,
@@ -60,10 +61,13 @@ export interface CameraModel {
   show(index: number, instant: boolean): void;
   /** A short press on one side of the dial. */
   press(direction: number): void;
+  /** Lights the arrow on one side of the dial (-1 or 1), or neither (0). */
+  hover(direction: number): void;
 }
 
 const FADE_MS = 250;
 const PRESS_MS = 160;
+const HOVER_MS = 200;
 
 export function createCameraModel(
   canvas: HTMLCanvasElement,
@@ -234,8 +238,13 @@ export function createCameraModel(
   face.rotation.x = Math.PI / 2;
   const ok = add(new CylinderGeometry(0.4, 0.4, 0.16, 64), silver, dial, 0, 0, 0.28);
   ok.rotation.x = Math.PI / 2;
+  // The left and right arrows get their own material, so a hover can light
+  // just that side.
+  const arrowLeft = marks.clone();
+  const arrowRight = marks.clone();
+  const arrowLit = new Color(0xf3eee7);
   for (let i = 0; i < 4; i++) {
-    const tick = add(triangle(0.11), marks, dial, 0, 0, 0.222);
+    const tick = add(triangle(0.11), i === 0 ? arrowRight : i === 2 ? arrowLeft : marks, dial, 0, 0, 0.222);
     const angle = (i * Math.PI) / 2;
     tick.position.x = Math.cos(angle) * 0.66;
     tick.position.y = Math.sin(angle) * 0.66;
@@ -317,6 +326,11 @@ export function createCameraModel(
   let angles = { turn: 30, lean: 11, tilt: 46 };
   let pressDir = 0;
   let pressStart = 0;
+  // How lit each arrow is, 0 to 1, and which one the pointer is on.
+  let hoverDir = 0;
+  let litLeft = 0;
+  let litRight = 0;
+  let lastFrame = 0;
 
   function applyTheme() {
     const dark = document.documentElement.dataset.theme === 'dark';
@@ -405,6 +419,18 @@ export function createCameraModel(
       else busy = true;
     }
 
+    // The hovered arrow brightens over 200ms; the other fades back.
+    const dt = lastFrame ? Math.min(64, now - lastFrame) : 16;
+    const stepBy = dt / HOVER_MS;
+    const towards = (v: number, target: number) =>
+      target > v ? Math.min(target, v + stepBy) : Math.max(target, v - stepBy);
+    litLeft = towards(litLeft, hoverDir === -1 ? 1 : 0);
+    litRight = towards(litRight, hoverDir === 1 ? 1 : 0);
+    arrowLeft.color.copy(marks.color).lerp(arrowLit, litLeft);
+    arrowRight.color.copy(marks.color).lerp(arrowLit, litRight);
+    if (litLeft !== (hoverDir === -1 ? 1 : 0) || litRight !== (hoverDir === 1 ? 1 : 0)) busy = true;
+    lastFrame = busy ? now : 0;
+
     renderer.render(scene, view);
 
     cam.updateMatrixWorld();
@@ -432,6 +458,11 @@ export function createCameraModel(
     press(direction) {
       pressDir = direction;
       pressStart = performance.now();
+      requestRender();
+    },
+    hover(direction) {
+      if (direction === hoverDir) return;
+      hoverDir = direction;
       requestRender();
     },
   };
