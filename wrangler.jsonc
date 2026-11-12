@@ -1,6 +1,11 @@
 {
   "name": "my-website",
   "compatibility_date": "2026-06-15",
+  // Build the site before any upload, so previews don't depend on the
+  // dashboard's build command (preview builds were skipping it).
+  "build": {
+    "command": "npm run build"
+  },
   "assets": {
     "directory": "./dist",
     // Unknown addresses get dist/404.html, with a real 404 status.
