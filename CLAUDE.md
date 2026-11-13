@@ -212,7 +212,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-11, Who's making this:** David's headshot as a print beside "I'm David." and a short adaptation of the approved "Who's making it" copy, just before Say hi (David chose this over having the lake cover the headshot). Merged to `main` (David said to).
 - **2026-11-11, Utu image in Erode:** `assets/work/utu.webp` swapped for David's new render with Utu's new font (Erode replaces Newsreader); then replaced the same day with David's four-phone image (three skies and the Saturday detail sheet). Merged to `main` (David said to).
 - **2026-11-12, camera viewer:** a 3D camera (three.js) whose screen shows the photos replaces the sideways strip in Off the clock, with the new photographs copy, a "01 / 07" count, and a lit dial arrow on hover. `/camera-test/` is gone. Seven photos (three home photos added the same day). Merged to `main` (David said to). See `docs/PLAN.md` under "Camera photo viewer".
-- **2026-11-13, work index on iPhone:** Safari drew the row rule through wrapped names ("Utu Weather"); rows now bottom-align on phones. On `redesign`, waiting for David to check on his phone.
+- **2026-11-13, work index on iPhone:** Safari drew the row rule through wrapped names ("Utu Weather"); rows now bottom-align on phones. David confirmed it on his phone; merged to `main` (David said to).
 - **Waiting on David:** see the end of `docs/PLAN.md`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
