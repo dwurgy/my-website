@@ -348,8 +348,15 @@ import { projects } from '../data/projects';
       padding-inline: 20px;
     }
 
+    /* Bottom-align rather than baseline-align: Safari lifts a name that wraps
+       to two lines ("Utu Weather") above its row's rule when aligning by baseline. */
     .row {
       grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    .meta {
+      padding-bottom: 0.3em;
     }
 
     .line {
