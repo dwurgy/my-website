@@ -206,6 +206,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-10, merged to `main`:** Utu, the name meanings, and the back-office line. David said to merge.
 - **2026-11-10, How I build copy:** warehouse line dropped; now ends on feel ("pretty to look at, easy to use, and fun"). Merged to `main`.
 - **2026-11-11, new mark:** the Wurgler mark replaces the W monogram: new favicons, icons, `public/brand/`, and the mark beside WURGLER in the control bar. See Brand. Merged to `main` (David said to).
+- **2026-11-15:** the mark's four waterline tips now end in a small true circular round; every mark file in public/ and Mark.astro updated from the design system. Pushed to main (David said to).
 - **2026-11-11, README added:** the repo's front page (the footer links here): lockup, screenshots, how it was made, the design in brief, and "All rights reserved." Merged to `main` (David said to).
 - **2026-11-11, Say hi two-copy clip:** the ink "Say hi." now sits exactly where the one on the photo does, so it changes colour at the photo's edge like the hero. Merged to `main` (David said to).
 - **2026-11-11, Off the clock on iPhone:** the strip sat blank in Safari; it now reads the same scroll-driven `--p` as the hero and Say hi. Merged to `main` (David said to); waiting for David to check on his phone.
