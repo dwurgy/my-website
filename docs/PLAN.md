@@ -126,11 +126,11 @@ How to check it here: build and run `npx astro preview --port 4321`, then screen
 
 ## Music player (David, 2026-11-16)
 
-A 3D compact digital music player in Off the clock, under the music text, that plays a few My Brothers And I songs through Apple MusicKit JS. The camera's companion: a modern device built like a classic object. Work on `feature/music-player` only; don't merge. Details are in CLAUDE.md under "The music player". It replaced a round CD player (lid, disc, spin) the same day, at David's request.
+A 3D music player in Off the clock, under the music text, that plays a few My Brothers And I songs through Apple MusicKit JS. In the style of a classic click-wheel player, at David's request (his reference: a silver "iPod video"); no logo or wordmark. Work on `feature/music-player` only; don't merge. Details are in CLAUDE.md under "The music player". The same day it went from a round CD player, to a compact player with a knob, to this.
 
 - [x] Token endpoint: `worker/index.ts`, `/api/musickit-token`, signed from Worker secrets; `wrangler.jsonc` runs the Worker for `/api/*` only. Tested here with a throwaway key: the signature verifies, the page and 404s are untouched.
-- [x] The player: `MusicPlayer.astro`, `player.ts`, `player-3d.ts`, sharing `studio-3d.ts` with the camera (the camera looks the same as before). Tested here with a stand-in for MusicKit: the 3D button, knob clicks and settling, screen, buttons, sign-in, keyboard, scroll pause, reduced motion, and the no-WebGL print, at 1440 and 390, both themes.
+- [x] The player: `MusicPlayer.astro`, `player.ts`, `player-3d.ts`, sharing `studio-3d.ts` with the camera (the camera looks the same as before). Tested here with a stand-in for MusicKit: the centre button, wheel presses, scrolling round the wheel and settling, the screen, the buttons under it, sign-in, keyboard, scroll pause, reduced motion, and the no-WebGL print, at 1440 and 390, both themes.
 - [ ] David adds the three secrets in Cloudflare (Workers & Pages, my-website, Settings, Variables and Secrets): `MUSICKIT_PRIVATE_KEY`, `MUSICKIT_KEY_ID`, `APPLE_TEAM_ID`.
 - [ ] David opens `/api/music/songs` on the preview link and picks 3 to 5 songs. Their IDs go in `src/data/tracks.ts`; then delete the temporary `/api/music/songs` route from `worker/index.ts`.
-- [ ] Done test on the preview link: previews play when signed out, full songs after signing in; knob, button, screen, drag, and pausing on scroll work on a laptop; the phone works; Safari and iPhone checked by David; no secrets in the repo or `dist`.
+- [ ] Done test on the preview link: previews play when signed out, full songs after signing in; wheel, centre button, screen, drag, and pausing on scroll work on a laptop; the phone works; Safari and iPhone checked by David; no secrets in the repo or `dist`.
 - [ ] Delete the old `feature/cd-player` branch on GitHub (this session can't).
