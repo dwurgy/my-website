@@ -53,8 +53,11 @@ export default {
     }
 
     if (url.pathname === '/api/music/songs') {
+      // Says what's wrong (secret names only, never values), to help set it up.
+      const problem = setupProblem(env);
+      if (problem) return text(`Apple Music is not set up yet: ${problem}`, 503);
       const issued = await developerToken(env, url.origin).catch(() => undefined);
-      if (!issued) return text('Apple Music is not set up yet: the token could not be made.', 503);
+      if (!issued) return text('Apple Music is not set up yet: the private key could not be read.', 503);
       try {
         return text(await listSongs(issued.token));
       } catch (error) {
@@ -67,6 +70,15 @@ export default {
 };
 
 const now = () => Math.floor(Date.now() / 1000);
+
+/** Which secrets this Worker can't see, by name. */
+function setupProblem(env: Env) {
+  const missing = (['MUSICKIT_PRIVATE_KEY', 'MUSICKIT_KEY_ID', 'APPLE_TEAM_ID'] as const).filter(
+    (name) => !env[name]?.trim(),
+  );
+  if (missing.length) return `this Worker can't see ${missing.join(', ')}.`;
+  return '';
+}
 
 function text(body: string, status = 200) {
   return new Response(body, {
