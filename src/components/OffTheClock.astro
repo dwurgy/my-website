@@ -1,9 +1,10 @@
 ---
 import Camera from './Camera.astro';
+import CdPlayer from './CdPlayer.astro';
 
-// Off the clock: the music, then the photographs, shown on the screen of a 3D
-// camera that turns to face you as it scrolls into view. Normal page scroll;
-// nothing here is pinned.
+// Off the clock: the music, played on a 3D CD player, then the photographs,
+// shown on the screen of a 3D camera. Each turns to face you as it scrolls
+// into view. Normal page scroll; nothing here is pinned.
 ---
 
 <section id="offclock" class="offclock" aria-labelledby="offclock-title">
@@ -20,6 +21,8 @@ import Camera from './Camera.astro';
     </div>
   </div>
 
+  <CdPlayer />
+
   <div class="block photos">
     <h3 class="label eyebrow">Photographs</h3>
     <p class="headline line">I also take <span class="emphasis">pictures</span>.</p>
@@ -34,19 +37,28 @@ import Camera from './Camera.astro';
 
 <script>
   import { setPose } from '../scripts/camera';
+  import { setPlayerPose } from '../scripts/player';
   import { onFrame } from '../scripts/scroll';
 
-  // The camera's pose follows scroll: 0 when its top enters the bottom of the
-  // screen, 1 when its centre reaches the screen's centre. It turns back the
-  // same way on the way up.
+  // The camera's and the player's poses follow scroll: 0 when the object's
+  // top enters the bottom of the screen, 1 when its centre reaches the
+  // screen's centre. They turn back the same way on the way up.
   const viewer = document.querySelector<HTMLElement>('#offclock [data-camera]')!;
-  const stage = viewer.querySelector<HTMLElement>('.stage')!;
+  const player = document.querySelector<HTMLElement>('#offclock [data-player]')!;
 
-  onFrame(() => {
+  const progressOf = (stage: HTMLElement) => {
     const box = stage.getBoundingClientRect();
     const h = innerHeight;
-    const p = (h - box.top) / (h / 2 + box.height / 2);
-    return () => setPose(viewer, p);
+    return (h - box.top) / (h / 2 + box.height / 2);
+  };
+
+  onFrame(() => {
+    const camera = progressOf(viewer.querySelector<HTMLElement>('.stage')!);
+    const cd = progressOf(player.querySelector<HTMLElement>('.stage')!);
+    return () => {
+      setPose(viewer, camera);
+      setPlayerPose(player, cd);
+    };
   });
 </script>
 
