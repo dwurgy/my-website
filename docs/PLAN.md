@@ -133,7 +133,7 @@ A 3D music player in Off the clock, under the music text, that plays a few My Br
 - [x] Layout (David, 2026-11-16): player on the left with the music text beside it on wide screens, turning the opposite way to the camera; camera a little right of centre; drag limited to 35° so the back never shows (no logo needed there).
 - [x] Wheel and layout (David, 2026-11-16): a smaller graphite wheel with our own marks (no "MENU"), and Off the clock zigzags on wide screens: player left and text right, then text left and camera right.
 - [x] Screen and spacing (David, 2026-11-16): the screen in the site's own look (paper, ink, mono labels) instead of an iTunes-like Now Playing; the music text moved in beside the player.
-- [x] (2026-11-16) David adds the three secrets in Cloudflare (Workers & Pages, my-website, Settings, Variables and Secrets): `MUSICKIT_PRIVATE_KEY`, `MUSICKIT_KEY_ID`, `APPLE_TEAM_ID`.
+- [x] (2026-11-16) David adds the three secrets in Cloudflare (Workers & Pages, my-website, Settings, Variables and Secrets): `MUSICKIT_PRIVATE_KEY`, `MUSICKIT_KEY_ID`, `APPLE_TEAM_ID`. Worker Previews keep their own secrets, so they were added to the `feature-music-player` preview too; a preview never sees production's.
 - [ ] David opens `/api/music/songs` on the preview link and picks 3 to 5 songs. Their IDs go in `src/data/tracks.ts`; then delete the temporary `/api/music/songs` route from `worker/index.ts`.
 - [ ] Done test on the preview link: previews play when signed out, full songs after signing in; wheel, centre button, screen, drag, and pausing on scroll work on a laptop; the phone works; Safari and iPhone checked by David; no secrets in the repo or `dist`.
 - [ ] Delete the old `feature/cd-player` branch on GitHub (this session can't).
