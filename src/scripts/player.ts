@@ -1,31 +1,31 @@
-// The CD player: plays a few My Brothers And I songs through Apple MusicKit
-// JS. Visitors who aren't signed in to Apple Music hear Apple's 30-second
-// previews; "Sign in with Apple Music for full songs" asks Apple to sign them
-// in, and after that the songs play in full.
+// The music player: plays a few My Brothers And I songs through Apple
+// MusicKit JS. Visitors who aren't signed in to Apple Music hear Apple's
+// 30-second previews; "Sign in with Apple Music for full songs" asks Apple to
+// sign them in, and after that the songs play in full.
 //
 // MusicKit and its token load only when the player comes near, never at the
 // top of the page. The token comes from the site's own Worker
 // (/api/musickit-token); no key is ever in the page.
 //
-// The 3D model (player-3d.ts) loads at the same time. Without WebGL, the
-// song's artwork shows as a plain print and the buttons under it still work.
-// Nothing plays until someone presses play, and the music pauses when the
-// player scrolls out of view.
+// The 3D model (player-3d.ts) loads at the same time. Dragging the knob, the
+// buttons under the player, and the arrow keys change songs; a quick turn
+// through several clicks settles on one song before Apple is asked for it.
+// Without WebGL, the song's artwork shows as a plain print and the buttons
+// still work. Nothing plays until someone presses play, and the music pauses
+// when the player scrolls out of view.
 
-import type { Part, PlayerModel } from './player-3d';
+import type { PlayerModel } from './player-3d';
 
 // Just the parts of MusicKit this uses.
-interface Artwork {
-  url: string;
-}
 interface SongResource {
   id: string;
-  attributes?: { name?: string; url?: string; artwork?: Artwork };
+  attributes?: { name?: string; url?: string; durationInMillis?: number; artwork?: { url: string } };
 }
 interface MusicKitInstance {
   isAuthorized: boolean;
   isPlaying: boolean;
   currentPlaybackTime: number;
+  currentPlaybackDuration: number;
   nowPlayingItemIndex: number;
   play(): Promise<void>;
   pause(): void;
@@ -43,6 +43,8 @@ declare global {
 }
 
 const SCRIPT = 'https://js-cdn.music.apple.com/musickit/v3/musickit.js';
+/** How long the knob must rest before the song it's on is loaded. */
+const SETTLE_MS = 280;
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
@@ -55,7 +57,9 @@ const clock = (seconds: number) => {
 interface Song {
   title: string;
   url?: string;
-  art?: string;
+  artUrl?: string;
+  art?: HTMLImageElement;
+  seconds: number;
 }
 
 const players = new WeakMap<HTMLElement, { progress: number; model?: PlayerModel }>();
@@ -78,7 +82,6 @@ export function setupPlayer(root: HTMLElement) {
   const scene = root.querySelector<HTMLElement>('[data-scene]')!;
   const stage = root.querySelector<HTMLElement>('.stage')!;
   const flatArt = root.querySelector<HTMLImageElement>('[data-flat-art]')!;
-  const lidKey = root.querySelector<HTMLButtonElement>('[data-lid]')!;
   const playKey = root.querySelector<HTMLButtonElement>('[data-play]')!;
   const readout = root.querySelector<HTMLElement>('[data-readout]')!;
   const titleText = root.querySelector<HTMLElement>('[data-title]')!;
@@ -90,10 +93,12 @@ export function setupPlayer(root: HTMLElement) {
   let music: MusicKitInstance | undefined;
   let loading: Promise<MusicKitInstance> | undefined;
   let songs: Song[] = [];
+  // The song shown, which the knob can move ahead of the song loaded.
   let index = 0;
+  let loaded = 0;
+  let settle = 0;
   let playing = false;
   let seconds = -1;
-  let lidOpen = false;
 
   // ---- What shows ---------------------------------------------------------
 
@@ -101,31 +106,48 @@ export function setupPlayer(root: HTMLElement) {
     const song = songs[index];
     titleText.textContent = song?.title ?? '';
     listen.href = song?.url ?? fallbackUrl;
-    state.model?.setArt(song?.art ?? null);
-    if (song?.art) {
-      flatArt.src = song.art;
+    if (song?.artUrl) {
+      flatArt.src = song.artUrl;
       flatArt.alt = `Artwork for ${song.title}`;
       flatArt.hidden = false;
     }
-    canvas.setAttribute(
-      'aria-label',
-      song ? `A round CD player. The disc is ${song.title}.` : 'A round CD player.',
-    );
+    canvas.setAttribute('aria-label', song ? `A music player. Its screen shows ${song.title}.` : 'A music player.');
+    if (song && !song.art && song.artUrl) loadArt(song);
     showTime(true);
   }
 
   function showTime(force = false) {
-    const t = music ? Math.floor(music.currentPlaybackTime || 0) : 0;
+    const t = music && index === loaded ? Math.floor(music.currentPlaybackTime || 0) : 0;
     if (!force && t === seconds) return;
     seconds = t;
-    const number = ids.length && songs.length ? pad(index + 1) : '--';
+    const song = songs[index];
+    const track = songs.length ? `${pad(index + 1)} / ${pad(ids.length)}` : `-- / ${pad(ids.length)}`;
     const time = songs.length ? clock(t) : '-:--';
-    state.model?.setLcd(number, time);
-    readout.textContent = songs.length ? `${number} / ${pad(ids.length)} · ${time}` : `-- / ${pad(ids.length)}`;
+    const length = (index === loaded && music?.currentPlaybackDuration) || song?.seconds || 0;
+    state.model?.setScreen({
+      art: song?.art ?? null,
+      title: song?.title ?? (ids.length ? '' : 'Songs coming soon'),
+      track,
+      time,
+      progress: length ? t / length : 0,
+    });
+    readout.textContent = `${track}${songs.length ? ` · ${time}` : ''}`;
+  }
+
+  function loadArt(song: Song) {
+    // Drawn into the 3D screen, so it must come with Apple's permission to do
+    // that (CORS); without it, the screen shows the title alone.
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.decoding = 'async';
+    image.onload = () => {
+      song.art = image;
+      if (songs[index] === song) showTime(true);
+    };
+    image.src = song.artUrl!;
   }
 
   function showPlaying() {
-    state.model?.setPlaying(playing);
     playKey.setAttribute('aria-label', playing ? 'Pause' : 'Play');
     playKey.dataset.state = playing ? 'playing' : 'paused';
   }
@@ -162,16 +184,17 @@ export function setupPlayer(root: HTMLElement) {
       });
       instance.addEventListener('nowPlayingItemDidChange', () => {
         const at = instance.nowPlayingItemIndex;
-        if (at >= 0 && at !== index) {
-          index = at;
-          showTrack();
-          live.textContent = songs[index] ? `Now playing ${songs[index].title}` : '';
-        }
+        // Ignore it while the knob is still turning toward another song.
+        if (at < 0 || at === loaded || settle) return;
+        state.model?.stepKnob(at > loaded ? 1 : -1);
+        loaded = index = at;
+        showTrack();
+        live.textContent = songs[index] ? `Now playing ${songs[index].title}` : '';
       });
       instance.addEventListener('playbackTimeDidChange', () => showTime());
       instance.addEventListener('authorizationStatusDidChange', showSignIn);
 
-      // Titles, artwork, and links, in the chosen order.
+      // Titles, artwork, lengths, and links, in the chosen order.
       const answer = (await instance.api.music('/v1/catalog/{{storefrontId}}/songs', {
         ids: ids.join(','),
       })) as { data?: { data?: SongResource[] } | SongResource[] };
@@ -181,7 +204,8 @@ export function setupPlayer(root: HTMLElement) {
         return {
           title: a?.name ?? 'Untitled',
           url: a?.url,
-          art: a?.artwork?.url.replace('{w}', '1000').replace('{h}', '1000'),
+          artUrl: a?.artwork?.url.replace('{w}', '600').replace('{h}', '600'),
+          seconds: (a?.durationInMillis ?? 0) / 1000,
         };
       });
 
@@ -193,8 +217,7 @@ export function setupPlayer(root: HTMLElement) {
     })();
     loading.catch(() => {
       fail('The player can’t reach Apple Music right now.');
-      playKey.disabled = true;
-      for (const key of root.querySelectorAll<HTMLButtonElement>('[data-step]')) key.disabled = true;
+      for (const key of root.querySelectorAll<HTMLButtonElement>('[data-play], [data-step]')) key.disabled = true;
     });
     return loading;
   }
@@ -202,37 +225,43 @@ export function setupPlayer(root: HTMLElement) {
   // ---- Actions ----------------------------------------------------------------
 
   async function toggle() {
-    state.model?.press('play');
+    state.model?.press();
     const m = await loadMusic().catch(() => undefined);
     if (!m) return;
     if (m.isPlaying) m.pause();
     else await m.play().catch(() => fail('That song wouldn’t start. Try again.'));
   }
 
-  async function step(by: number) {
-    state.model?.press(by < 0 ? 'prev' : 'next');
-    const m = await loadMusic().catch(() => undefined);
-    if (!m || !songs.length) return;
-    // Back, a few seconds into a song, starts it again, as on a real player.
-    if (by < 0 && (m.currentPlaybackTime || 0) > 3) {
-      await m.seekToTime(0);
+  /** One click of the knob (or a button or arrow key), forward or back. */
+  function step(by: number) {
+    if (!songs.length) return;
+    // Back, a few seconds into a song, starts it again, as on most players.
+    if (by < 0 && !settle && index === loaded && music && (music.currentPlaybackTime || 0) > 3) {
+      void music.seekToTime(0);
       return;
     }
-    const next = (index + by + songs.length) % songs.length;
-    if (m.isPlaying) await m.changeToMediaAtIndex(next);
-    else {
-      await m.setQueue({ songs: ids, startWith: next, startPlaying: false });
-      index = next;
-      showTrack();
-    }
-    live.textContent = songs[next] ? `Track ${pad(next + 1)}, ${songs[next].title}` : '';
+    index = (index + by + songs.length) % songs.length;
+    showTrack();
+    clearTimeout(settle);
+    settle = window.setTimeout(commit, SETTLE_MS);
   }
 
-  function setLid(open: boolean) {
-    lidOpen = open;
-    state.model?.setLid(open);
-    lidKey.setAttribute('aria-pressed', String(open));
-    lidKey.setAttribute('aria-label', open ? 'Close the lid' : 'Open the lid');
+  /** Loads the song the knob came to rest on. */
+  async function commit() {
+    settle = 0;
+    const m = music;
+    if (!m || index === loaded) return;
+    const target = index;
+    loaded = target;
+    if (m.isPlaying) await m.changeToMediaAtIndex(target);
+    else await m.setQueue({ songs: ids, startWith: target, startPlaying: false });
+    showTime(true);
+    live.textContent = songs[target] ? `Track ${pad(target + 1)}, ${songs[target].title}` : '';
+  }
+
+  function skip(by: number) {
+    state.model?.stepKnob(by);
+    step(by);
   }
 
   async function startSignIn() {
@@ -245,15 +274,14 @@ export function setupPlayer(root: HTMLElement) {
     }
     showSignIn();
     // Start the queue again where it was, now with full songs.
-    if (m.isAuthorized && !m.isPlaying) await m.setQueue({ songs: ids, startWith: index, startPlaying: false });
+    if (m.isAuthorized && !m.isPlaying) await m.setQueue({ songs: ids, startWith: loaded, startPlaying: false });
   }
 
   // ---- Controls -----------------------------------------------------------
 
   playKey.addEventListener('click', () => void toggle());
-  lidKey.addEventListener('click', () => setLid(!lidOpen));
   for (const key of root.querySelectorAll<HTMLButtonElement>('[data-step]')) {
-    key.addEventListener('click', () => void step(Number(key.dataset.step)));
+    key.addEventListener('click', () => skip(Number(key.dataset.step)));
   }
   signIn.addEventListener('click', () => void startSignIn());
 
@@ -264,77 +292,86 @@ export function setupPlayer(root: HTMLElement) {
       void toggle();
     } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault();
-      void step(event.key === 'ArrowLeft' ? -1 : 1);
-    } else if (event.key === 'o') {
-      setLid(!lidOpen);
+      skip(event.key === 'ArrowLeft' ? -1 : 1);
     }
   });
 
-  // Drag turns the player; a click (or tap) presses what's under it. On touch
-  // screens only a sideways drag turns it, so the page still scrolls.
-  let down: { id: number; x: number; y: number; lastX: number; lastY: number; dragging: boolean } | null = null;
+  // Dragging the knob turns it; dragging anywhere else turns the player; a
+  // click (or tap) on the button plays or pauses. On touch screens only
+  // sideways drags count, so the page still scrolls.
+  type Down = { id: number; x: number; y: number; lastX: number; lastY: number; on: 'knob' | 'body'; moving: boolean; part: string | null };
+  let down: Down | null = null;
+
+  const partAt = (event: PointerEvent) => {
+    if (!state.model) return null;
+    const box = canvas.getBoundingClientRect();
+    return state.model.hit(event.clientX - box.left, event.clientY - box.top);
+  };
+
   scene.addEventListener('pointerdown', (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
-    down = { id: event.pointerId, x: event.clientX, y: event.clientY, lastX: event.clientX, lastY: event.clientY, dragging: false };
+    const part = partAt(event);
+    down = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      lastX: event.clientX,
+      lastY: event.clientY,
+      on: part === 'knob' ? 'knob' : 'body',
+      moving: false,
+      part,
+    };
   });
   scene.addEventListener('pointermove', (event) => {
     if (!down || event.pointerId !== down.id) {
-      if (event.pointerType === 'mouse' && state.model) {
-        const box = canvas.getBoundingClientRect();
-        const part = state.model.hit(event.clientX - box.left, event.clientY - box.top);
-        scene.style.cursor = part ? 'pointer' : 'grab';
+      if (event.pointerType === 'mouse') {
+        const part = partAt(event);
+        scene.style.cursor = part === 'play' ? 'pointer' : part === 'knob' ? 'ew-resize' : '';
       }
       return;
     }
     const dx = event.clientX - down.lastX;
     const dy = event.clientY - down.lastY;
-    if (!down.dragging && Math.hypot(event.clientX - down.x, event.clientY - down.y) > 5) {
-      down.dragging = true;
+    if (!down.moving && Math.hypot(event.clientX - down.x, event.clientY - down.y) > 5) {
+      down.moving = true;
       scene.setPointerCapture(event.pointerId);
-      scene.style.cursor = 'grabbing';
-      state.model?.grab();
+      if (down.on === 'body') {
+        scene.style.cursor = 'grabbing';
+        state.model?.grab();
+      }
     }
-    if (down.dragging) state.model?.dragBy(dx, event.pointerType === 'mouse' ? dy : 0);
+    if (down.moving) {
+      if (down.on === 'knob') state.model?.turnKnob(dx);
+      else state.model?.dragBy(dx, event.pointerType === 'mouse' ? dy : 0);
+    }
     down.lastX = event.clientX;
     down.lastY = event.clientY;
   });
-  scene.addEventListener('pointerup', (event) => {
+  const end = (event: PointerEvent, cancelled: boolean) => {
     if (!down || event.pointerId !== down.id) return;
-    const wasDrag = down.dragging;
+    const { moving, on, part } = down;
     down = null;
     scene.style.cursor = '';
-    if (wasDrag) {
-      state.model?.release();
-      return;
-    }
-    if (!state.model) return;
-    const box = canvas.getBoundingClientRect();
-    press(state.model.hit(event.clientX - box.left, event.clientY - box.top));
-  });
-  scene.addEventListener('pointercancel', () => {
-    if (down?.dragging) state.model?.release();
-    down = null;
-  });
-
-  function press(part: Part | null) {
-    if (part === 'lid') setLid(!lidOpen);
-    else if (part === 'play') void toggle();
-    else if (part === 'prev') void step(-1);
-    else if (part === 'next') void step(1);
-  }
+    if (moving) {
+      if (on === 'knob') state.model?.releaseKnob();
+      else state.model?.release();
+    } else if (!cancelled && part === 'play') void toggle();
+  };
+  scene.addEventListener('pointerup', (event) => end(event, false));
+  scene.addEventListener('pointercancel', (event) => end(event, true));
 
   // ---- Loading, and pausing out of view -------------------------------------
 
   async function loadModel() {
     try {
       const { createPlayerModel } = await import('./player-3d');
-      const model = createPlayerModel(canvas);
+      const model = createPlayerModel(canvas, (by) => step(by));
       model.setReducedMotion(reducedMotion.matches);
       state.model = model;
       setPlayerPose(root, state.progress);
       showTrack();
-      showPlaying();
-      model.setLid(lidOpen);
+      // The screen's type, once the fonts are in.
+      void document.fonts.ready.then(() => showTime(true));
     } catch {
       root.classList.add('is-flat');
     }

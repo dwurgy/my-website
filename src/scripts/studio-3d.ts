@@ -1,6 +1,6 @@
 // What the 3D objects in Off the clock share: one way of drawing (renderer,
 // tone mapping), one studio light, one set of materials, a soft shadow, and
-// the theme's effect on all of it. The camera (camera-3d.ts) and the CD player
+// the theme's effect on all of it. The camera (camera-3d.ts) and the music player
 // (player-3d.ts) each build their own shape from these, so they read as the
 // same family of object.
 

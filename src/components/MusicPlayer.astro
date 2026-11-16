@@ -1,12 +1,12 @@
 ---
 import { artistUrl, songIds } from '../data/tracks';
 
-// A round portable CD player, modelled in 3D (src/scripts/player-3d.ts) with
-// the camera's light and materials, that plays a few My Brothers And I songs
-// through Apple Music (src/scripts/player.ts). Drag it to turn it; click the
-// lid to open it, and its buttons to play, pause, and skip. The same controls
-// are real buttons under it, for keyboards, screen readers, and browsers
-// that can't draw 3D. The songs are chosen in src/data/tracks.ts.
+// A compact digital music player, modelled in 3D (src/scripts/player-3d.ts)
+// with the camera's light and materials, that plays a few My Brothers And I
+// songs through Apple Music (src/scripts/player.ts). Drag it to turn it; drag
+// the knob on top to change songs; press its button to play or pause. The
+// same controls are real buttons under it, for keyboards, screen readers, and
+// browsers that can't draw 3D. The songs are chosen in src/data/tracks.ts.
 ---
 
 <div class="player" data-player data-songs={JSON.stringify(songIds)} data-artist-url={artistUrl}>
@@ -14,11 +14,11 @@ import { artistUrl, songIds } from '../data/tracks';
     class="stage"
     tabindex="0"
     role="group"
-    aria-roledescription="CD player"
-    aria-label="CD player. Space plays or pauses, the left and right arrow keys change the song, and O opens the lid."
+    aria-roledescription="music player"
+    aria-label="Music player. Space plays or pauses, and the left and right arrow keys change the song."
   >
     <div class="scene" data-scene>
-      <canvas class="gl" data-gl role="img" aria-label="A round CD player."></canvas>
+      <canvas class="gl" data-gl role="img" aria-label="A music player."></canvas>
       <!-- Only shown when 3D isn't available. -->
       <div class="flat">
         <img data-flat-art alt="" hidden width="1000" height="1000" decoding="async" />
@@ -27,9 +27,6 @@ import { artistUrl, songIds } from '../data/tracks';
   </div>
 
   <div class="deck">
-    <button type="button" class="key" data-lid aria-pressed="false" aria-label="Open the lid">
-      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 10h10M4 7l4-4 4 4"></path></svg>
-    </button>
     <button type="button" class="key" data-step="-1" aria-label="Previous song">
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3v10M12 3 6 8l6 5"></path></svg>
     </button>
@@ -63,7 +60,7 @@ import { artistUrl, songIds } from '../data/tracks';
   }
 
   .stage {
-    width: min(680px, 94vw, calc((100svh - 160px) * 4 / 3));
+    width: min(560px, 90vw, calc(100svh - 180px));
     border-radius: 12px;
     outline-offset: 8px;
   }
@@ -74,7 +71,7 @@ import { artistUrl, songIds } from '../data/tracks';
 
   .scene {
     position: relative;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1;
     /* A sideways drag turns the player; vertical scrolling still works. */
     touch-action: pan-y;
     user-select: none;
@@ -96,10 +93,6 @@ import { artistUrl, songIds } from '../data/tracks';
   }
 
   .player:global(.is-flat) .gl {
-    display: none;
-  }
-
-  .player:global(.is-flat) [data-lid] {
     display: none;
   }
 
@@ -126,7 +119,7 @@ import { artistUrl, songIds } from '../data/tracks';
   /* The buttons under the player, in the style of the camera's count. */
   .deck {
     /* Up into the empty space the canvas keeps below the player. */
-    margin-top: max(-24px, -3vw);
+    margin-top: max(-28px, -4vw);
     position: relative;
     z-index: 1;
     display: flex;
@@ -149,8 +142,7 @@ import { artistUrl, songIds } from '../data/tracks';
     transition: color 200ms ease;
   }
 
-  .key:hover:not(:disabled),
-  .key[aria-pressed='true'] {
+  .key:hover:not(:disabled) {
     color: var(--fg);
   }
 

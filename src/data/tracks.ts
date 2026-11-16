@@ -1,4 +1,4 @@
-// The CD player's songs: Apple Music catalog song IDs, in play order. David
+// The music player's songs: Apple Music catalog song IDs, in play order. David
 // picks these (3 to 5). Titles, artwork, and lengths come from Apple Music
 // when the player loads, so nothing else about the songs is written here.
 //

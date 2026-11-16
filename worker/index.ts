@@ -2,7 +2,7 @@
 // Cloudflare serves without running this (see run_worker_first in
 // wrangler.jsonc); only /api/* comes here.
 //
-// /api/musickit-token hands the CD player an Apple MusicKit developer token.
+// /api/musickit-token hands the music player an Apple MusicKit developer token.
 // The token is a short-lived JWT, signed here with ES256 from three Worker
 // secrets, so the private key never leaves Cloudflare and never reaches the
 // repo or the browser. Each token works only on the site address that asked
