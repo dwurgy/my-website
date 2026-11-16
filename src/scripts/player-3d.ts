@@ -1,8 +1,9 @@
 // The music player, modelled in three.js with the camera's light (studio-3d.ts):
 // in the style of a classic click-wheel player, at David's request
-// (2026-11-16). A satin silver front, a glossy black screen area, a white
-// wheel marked MENU, back, forward, and play/pause around a silver centre
-// button, and a polished chrome back. No logo and no wordmark.
+// (2026-11-16), with its own wheel and marks. A satin silver front, a glossy
+// black screen area, a graphite wheel marked with a dot, back, forward, and
+// play/pause around a silver centre button, and a polished steel back. No
+// logo and no wordmark.
 //
 // It draws only while something moves (a drag, a press, the time on the
 // screen), never on an idle loop.
@@ -31,7 +32,7 @@ import {
 } from 'three';
 import { add, createStudio } from './studio-3d';
 
-export type Part = 'play' | 'menu' | 'prev' | 'next' | 'center';
+export type Part = 'play' | 'top' | 'prev' | 'next' | 'center';
 
 export interface Screen {
   /** The song's artwork, already loaded, or null. */
@@ -87,8 +88,8 @@ const SCREEN_Y = 2.45;
 const DISPLAY_W = 4.7;
 const DISPLAY_H = (DISPLAY_W * 3) / 4;
 const WHEEL_Y = -2.5;
-const WHEEL_R = 1.98;
-const CENTER_R = 0.72;
+const WHEEL_R = 1.7;
+const CENTER_R = 0.62;
 
 const CLICK = MathUtils.degToRad(24); // one click of the wheel
 const PRESS_MS = 180;
@@ -121,14 +122,15 @@ export function createPlayerModel(
   anodised.bumpScale = 0.12;
   // Polished stainless steel on the back.
   const chrome = new MeshPhysicalMaterial({ color: 0xf2f2f2, metalness: 1, roughness: 0.26 });
-  const seam = new MeshBasicMaterial({ color: 0x9c9c9a });
-  // The wheel: matte white plastic, with its marks drawn on.
+  const seam = new MeshBasicMaterial({ color: 0x55534f });
+  // The wheel: satin graphite, like the camera's black, with its marks drawn on.
   const wheelFace = new MeshPhysicalMaterial({
     map: wheelMarks(),
-    roughness: 0.5,
-    clearcoat: 0.15,
+    roughness: 0.62,
+    specularIntensity: 0.35,
+    envMapIntensity: 0.4,
   });
-  const wheelSide = new MeshPhysicalMaterial({ color: 0xe9e8e4, roughness: 0.5 });
+  const wheelSide = new MeshPhysicalMaterial({ color: 0x1c1b19, roughness: 0.6 });
   // The centre button: silver, a touch brighter than the front.
   const centerMat = new MeshPhysicalMaterial({ color: 0xdcdcda, metalness: 0.85, roughness: 0.32 });
 
@@ -284,7 +286,7 @@ export function createPlayerModel(
       const d = Math.max(-0.12, depth);
       const rock = MathUtils.degToRad(2.2) * d;
       if (pressPart === 'center') button.position.z = -0.05 * d;
-      else if (pressPart === 'menu') wheel.rotation.x = -rock;
+      else if (pressPart === 'top') wheel.rotation.x = -rock;
       else if (pressPart === 'play') wheel.rotation.x = rock;
       else if (pressPart === 'prev') wheel.rotation.y = -rock;
       else if (pressPart === 'next') wheel.rotation.y = rock;
@@ -383,11 +385,11 @@ export function createPlayerModel(
       while (o && !o.userData.part && !o.userData.wheel) o = o.parent;
       if (o?.userData.part) return o.userData.part as Part;
       if (!o?.userData.wheel) return 'body';
-      // Which quarter of the wheel: MENU at the top, then clockwise.
+      // Which quarter of the wheel: the dot at the top, then clockwise.
       local.copy(first.point);
       wheel.worldToLocal(local);
       const a = Math.atan2(local.y, local.x);
-      if (a > Math.PI / 4 && a <= (3 * Math.PI) / 4) return 'menu';
+      if (a > Math.PI / 4 && a <= (3 * Math.PI) / 4) return 'top';
       if (a <= Math.PI / 4 && a > -Math.PI / 4) return 'next';
       if (a <= -Math.PI / 4 && a > (-3 * Math.PI) / 4) return 'play';
       return 'prev';
@@ -418,45 +420,49 @@ function roundedRect(w: number, h: number, r: number) {
   return s;
 }
 
-/** The wheel's face: white, with MENU, back, forward, and play/pause in grey. */
+/**
+ * The wheel's face: graphite, with four fine bone marks in the site's line
+ * style: a dot at the top, back and forward at the sides, and play/pause at
+ * the bottom.
+ */
 function wheelMarks() {
   const size = 1024;
   const c = document.createElement('canvas');
   c.width = c.height = size;
   const g = c.getContext('2d')!;
-  g.fillStyle = '#f3f2ef';
+  g.fillStyle = '#1e1d1b';
   g.fillRect(0, 0, size, size);
-  g.fillStyle = '#8a8a8a';
   const mid = size / 2;
-  const at = size * 0.39; // distance of the marks from the centre
-
-  g.font = '600 72px "Archivo Variable", "Archivo", system-ui, sans-serif';
-  g.textAlign = 'center';
-  g.textBaseline = 'middle';
-  g.fillText('MENU', mid, mid - at);
-
-  const tri = (x: number, y: number, dir: number, s: number) => {
-    g.beginPath();
-    g.moveTo(x + dir * s, y);
-    g.lineTo(x - dir * s, y - s);
-    g.lineTo(x - dir * s, y + s);
-    g.closePath();
-    g.fill();
-  };
-  const bar = (x: number, y: number, s: number) => g.fillRect(x - 5, y - s, 10, s * 2);
+  const at = size * 0.37; // distance of the marks from the centre
   const s = 26;
-  // Forward, on the right: two arrows and a bar.
-  tri(mid + at - 22, mid, 1, s);
-  tri(mid + at + 10, mid, 1, s);
-  bar(mid + at + 38, mid, s);
-  // Back, on the left.
-  tri(mid - at + 22, mid, -1, s);
-  tri(mid - at - 10, mid, -1, s);
-  bar(mid - at - 38, mid, s);
-  // Play/pause, at the bottom.
-  tri(mid - 22, mid + at, 1, s);
-  bar(mid + 18, mid + at, s);
-  bar(mid + 40, mid + at, s);
+  g.strokeStyle = g.fillStyle = '#cfc8bd';
+  g.lineWidth = 9;
+  g.lineCap = 'round';
+  g.lineJoin = 'round';
+  const line = (points: [number, number][]) => {
+    g.beginPath();
+    g.moveTo(...points[0]);
+    for (const point of points.slice(1)) g.lineTo(...point);
+    g.stroke();
+  };
+
+  // Top: a single dot.
+  g.beginPath();
+  g.arc(mid, mid - at, 11, 0, Math.PI * 2);
+  g.fill();
+  // Forward, on the right: a chevron and a bar.
+  const fx = mid + at;
+  line([[fx - s * 0.7, mid - s], [fx + s * 0.3, mid], [fx - s * 0.7, mid + s]]);
+  line([[fx + s * 0.9, mid - s], [fx + s * 0.9, mid + s]]);
+  // Back, on the left, mirrored.
+  const bx = mid - at;
+  line([[bx + s * 0.7, mid - s], [bx - s * 0.3, mid], [bx + s * 0.7, mid + s]]);
+  line([[bx - s * 0.9, mid - s], [bx - s * 0.9, mid + s]]);
+  // Play/pause, at the bottom: an outlined triangle and two bars.
+  const py = mid + at;
+  line([[mid - s * 1.3, py - s], [mid - s * 0.2, py], [mid - s * 1.3, py + s], [mid - s * 1.3, py - s]]);
+  line([[mid + s * 0.45, py - s], [mid + s * 0.45, py + s]]);
+  line([[mid + s * 1.15, py - s], [mid + s * 1.15, py + s]]);
 
   const t = new CanvasTexture(c);
   t.colorSpace = SRGBColorSpace;

@@ -25,6 +25,7 @@ import MusicPlayer from './MusicPlayer.astro';
   <MusicPlayer />
   </div>
 
+  <div class="pictures">
   <div class="block photos">
     <h3 class="label eyebrow">Photographs</h3>
     <p class="headline line">I also take <span class="emphasis">pictures</span>.</p>
@@ -35,6 +36,7 @@ import MusicPlayer from './MusicPlayer.astro';
   </div>
 
   <Camera />
+  </div>
 </section>
 
 <script>
@@ -72,9 +74,9 @@ import MusicPlayer from './MusicPlayer.astro';
     gap: 96px;
   }
 
-  /* On a wide screen the player sits on the left with the music text beside
-     it, and the camera sits a little right of centre, so the two objects
-     face each other across the section. */
+  /* On a wide screen the section zigzags: the player on the left with the
+     music text beside it, then the photographs' text on the left with the
+     camera beside it, so the two objects face each other across the page. */
   .music {
     display: flex;
     flex-direction: column;
@@ -100,8 +102,22 @@ import MusicPlayer from './MusicPlayer.astro';
       grid-row: 1;
     }
 
-    .offclock > :global([data-camera]) {
-      padding-left: min(14vw, 220px);
+    .offclock .pictures {
+      display: grid;
+      grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+      align-items: center;
+      gap: 48px;
+    }
+
+    .offclock .pictures > .photos {
+      align-self: center;
+      margin-bottom: 0;
+    }
+
+    /* The camera fills its column (the page, less the gutters, the text
+       column, and the gap), and is never taller than the screen. */
+    .pictures :global([data-camera] .stage) {
+      width: min(1000px, calc(100vw - var(--gutter) * 2 - 488px), calc((100svh - 120px) * 1.5));
     }
   }
 
@@ -112,8 +128,13 @@ import MusicPlayer from './MusicPlayer.astro';
     gap: 18px;
   }
 
-  /* The photographs' intro sits to the right on a wide screen, so the two
-     blocks read as a pair, not a stack. */
+  .pictures {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Between phone and wide screens, the photographs' intro sits to the
+     right, so the two blocks read as a pair, not a stack. */
   .photos {
     align-self: flex-end;
     /* The camera's canvas keeps empty room above the camera for its turn, so

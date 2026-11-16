@@ -351,7 +351,7 @@ export function setupPlayer(root: HTMLElement) {
       if (event.pointerType === 'mouse' && state.model) {
         const p = local(event);
         const part = state.model.hit(p.x, p.y);
-        scene.style.cursor = part && part !== 'body' && part !== 'menu' ? 'pointer' : '';
+        scene.style.cursor = part && part !== 'body' && part !== 'top' ? 'pointer' : '';
       }
       return;
     }
@@ -395,7 +395,7 @@ export function setupPlayer(root: HTMLElement) {
     if (part === 'center' || part === 'play') void toggle(part);
     else if (part === 'prev') skip(-1);
     else if (part === 'next') skip(1);
-    else if (part === 'menu') state.model?.press('menu');
+    else if (part === 'top') state.model?.press('top');
   };
   scene.addEventListener('pointerup', (event) => end(event, false));
   scene.addEventListener('pointercancel', (event) => end(event, true));
