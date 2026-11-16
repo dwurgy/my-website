@@ -4,3 +4,5 @@ dist/
 .DS_Store
 .claude/*
 !.claude/launch.json
+.dev.vars*
+.wrangler/

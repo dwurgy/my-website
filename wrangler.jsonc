@@ -1,6 +1,9 @@
 {
   "name": "my-website",
   "compatibility_date": "2026-06-15",
+  // A small Worker for /api/* only (the MusicKit token); see worker/index.ts.
+  // Its secrets live in Cloudflare, never here.
+  "main": "./worker/index.ts",
   // Build the site before any upload, so previews don't depend on the
   // dashboard's build command (preview builds were skipping it).
   "build": {
@@ -8,6 +11,9 @@
   },
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
+    // Every other address is served straight from dist, without the Worker.
+    "run_worker_first": ["/api/*"],
     // Unknown addresses get dist/404.html, with a real 404 status.
     "not_found_handling": "404-page"
   },
