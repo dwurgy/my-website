@@ -131,7 +131,7 @@ export function setupPlayer(root: HTMLElement) {
       art: song?.art ?? null,
       title: song?.title ?? (ids.length ? '' : 'Songs coming soon'),
       artist: song?.artist ?? '',
-      track: songs.length ? `${index + 1} of ${songs.length}` : '',
+      track: songs.length ? `${pad(index + 1)} / ${pad(songs.length)}` : '',
       elapsed: time,
       remaining: songs.length && length ? `-${clock(length - t)}` : '-:--',
       progress: length ? t / length : 0,

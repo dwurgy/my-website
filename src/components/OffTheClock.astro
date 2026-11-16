@@ -87,9 +87,10 @@ import MusicPlayer from './MusicPlayer.astro';
     .music {
       display: grid;
       grid-template-columns: auto minmax(0, 560px);
-      justify-content: space-between;
+      justify-content: start;
       align-items: center;
-      gap: 48px;
+      /* The text sits close beside the player, not out at the far edge. */
+      gap: clamp(48px, 6vw, 112px);
     }
 
     .music > :global([data-player]) {

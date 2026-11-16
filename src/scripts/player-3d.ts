@@ -470,82 +470,69 @@ function wheelMarks() {
 }
 
 /**
- * The screen, in the style of a classic player's Now Playing: a title bar,
- * the artwork on the left, the song, artist, and count on the right, and the
- * progress bar with elapsed and remaining time along the bottom. Dark type on
- * white, the same in both themes.
+ * The screen, in the site's own language: warm paper with ink type. A small
+ * mono label row (track count, and playing or paused), the artwork beside
+ * the title and artist, and a fine ink progress line with the times in mono
+ * at the bottom. The same in both themes, like a photo.
  */
 function drawScreen(c: HTMLCanvasElement, screen: Screen) {
   const g = c.getContext('2d')!;
   const { width: w, height: h } = c;
   const sans = '"Archivo Variable", "Archivo", system-ui, sans-serif';
-  g.fillStyle = '#fbfbfa';
+  const mono = '"JetBrains Mono", ui-monospace, monospace';
+  const paper = '#ece6dc';
+  const ink = '#1b1815';
+  const muted = '#5b534a';
+  const pad = 48;
+  const right = w - pad;
+
+  g.fillStyle = paper;
   g.fillRect(0, 0, w, h);
 
-  // Title bar.
-  const bar = 76;
-  g.fillStyle = '#e6e7ea';
-  g.fillRect(0, 0, w, bar);
-  g.fillStyle = '#b9bbc0';
-  g.fillRect(0, bar - 2, w, 2);
-  g.fillStyle = '#1b1b1d';
-  g.font = `600 38px ${sans}`;
-  g.textAlign = 'center';
-  g.textBaseline = 'middle';
-  g.fillText('Now Playing', w / 2, bar / 2 + 1);
-  // Play or pause, at the left of the bar.
-  g.fillStyle = '#55555a';
-  if (screen.playing) {
-    g.beginPath();
-    g.moveTo(34, bar / 2 - 16);
-    g.lineTo(62, bar / 2);
-    g.lineTo(34, bar / 2 + 16);
-    g.closePath();
-    g.fill();
-  } else {
-    g.fillRect(34, bar / 2 - 16, 9, 32);
-    g.fillRect(52, bar / 2 - 16, 9, 32);
-  }
+  // Labels: the track count, and whether it's playing.
+  g.fillStyle = muted;
+  g.font = `500 28px ${mono}`;
+  g.textBaseline = 'top';
+  g.textAlign = 'left';
+  const spaced = (text: string) => text.toUpperCase().split('').join(' ');
+  g.fillText(spaced(screen.track), pad, pad);
+  g.textAlign = 'right';
+  g.fillText(spaced(screen.track ? (screen.playing ? 'Playing' : 'Paused') : ''), right, pad);
 
-  // Artwork.
-  const pad = 40;
-  const art = 380;
-  const top = bar + 44;
+  // Artwork, as a small print.
+  const art = 330;
+  const top = pad + 74;
   if (screen.art) g.drawImage(screen.art, pad, top, art, art);
   else {
-    g.fillStyle = '#e4e4e2';
+    g.fillStyle = '#ddd5c9';
     g.fillRect(pad, top, art, art);
   }
 
-  // Song, artist, count.
-  const x = pad * 2 + art;
-  const right = w - pad;
+  // Title and artist, beside it.
+  const x = pad + art + 44;
   g.textAlign = 'left';
-  g.textBaseline = 'top';
-  g.fillStyle = '#1b1b1d';
-  g.font = `600 46px ${sans}`;
+  g.fillStyle = ink;
+  g.font = `640 54px ${sans}`;
   const lines = wrap(g, screen.title, right - x).slice(0, 4);
-  lines.forEach((line, i) => g.fillText(line, x, top + 30 + i * 54));
-  g.fillStyle = '#5c5c60';
-  g.font = `400 38px ${sans}`;
-  const below = top + 30 + lines.length * 54 + 14;
+  lines.forEach((line, i) => g.fillText(line, x, top - 4 + i * 56));
+  g.fillStyle = muted;
+  g.font = `400 34px ${sans}`;
   wrap(g, screen.artist, right - x)
     .slice(0, 2)
-    .forEach((line, i) => g.fillText(line, x, below + i * 46));
-  g.fillText(screen.track, x, top + art - 44);
+    .forEach((line, i) => g.fillText(line, x, top + lines.length * 56 + 18 + i * 42));
 
-  // Progress, with elapsed and remaining time.
-  const py = top + art + 70;
-  g.fillStyle = '#d9dadd';
-  g.fillRect(pad, py, w - pad * 2, 22);
-  g.fillStyle = '#55555a';
-  g.fillRect(pad, py, (w - pad * 2) * Math.min(1, Math.max(0, screen.progress)), 22);
-  g.fillStyle = '#1b1b1d';
-  g.font = `500 34px ${sans}`;
+  // Progress: a fine rule, filled in ink, with the times under it.
+  const py = h - pad - 72;
+  g.fillStyle = 'rgba(27,24,21,0.2)';
+  g.fillRect(pad, py, w - pad * 2, 3);
+  g.fillStyle = ink;
+  g.fillRect(pad, py - 1, (w - pad * 2) * Math.min(1, Math.max(0, screen.progress)), 5);
+  g.fillStyle = muted;
+  g.font = `500 30px ${mono}`;
   g.textBaseline = 'top';
-  g.fillText(screen.elapsed, pad, py + 36);
+  g.fillText(screen.elapsed, pad, py + 26);
   g.textAlign = 'right';
-  g.fillText(screen.remaining, w - pad, py + 36);
+  g.fillText(screen.remaining, right, py + 26);
 }
 
 function wrap(g: CanvasRenderingContext2D, text: string, width: number) {
