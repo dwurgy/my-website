@@ -23,7 +23,7 @@ The site itself is part of the proof. It should feel crafted, calm, and quick, a
 1. **Real over decorative.** Texture and mood come from David's own photographs and real screenshots of real work, never from effects that imitate film.
 2. **Calm.** Lots of space, few elements on screen at once, slow and smooth motion. Nothing bounces, flashes, or competes.
 3. **Tactile.** Grain, glass, paper. It should feel like a physical object, not a template.
-4. **Quick.** A fast, light, static site. No cookies and no third-party requests, with two exceptions: Cloudflare Web Analytics, and Apple Music (MusicKit JS) for the CD player, which loads only when the player comes near (David, 2026-11-16).
+4. **Quick.** A fast, light, static site. No cookies and no third-party requests, with two exceptions: Cloudflare Web Analytics, and Apple Music (MusicKit JS) for the music player, which loads only when the player comes near (David, 2026-11-16).
 
 ## The design
 
@@ -102,23 +102,24 @@ Nothing else runs on a timer.
 - **Hero (pinned, about 230vh):** the coast photo starts full-bleed and shrinks, matched to scroll, into a print on the right half of the paper: inset 20% top and bottom, 50% left, 40px right, with corners going from 0 to 6px. On phones it ends as a print across the top. The headline exists twice: an ink copy on the paper and a bone copy clipped to the photo's exact shape, so its colour changes right at the photo's edge. The photo also scales from 1.12 to 1.
 - **Work:** a large ink index with no background photo. Hovering a row fades the other rows to about 0.32 opacity, nudges the name 12px right, and shows a 360 × 236 preview of the project that follows the cursor with a slight lag. Keyboard focus shows the same preview beside the row. On touch screens there's no preview; each project's image shows under its name instead. Clicking a row opens its project page, and the preview morphs into the page's main image in about 300ms.
 - **How I build:** still, on paper.
-- **Off the clock (not pinned):** the music text, then a 3D CD player (see "The CD player" below) that turns to face you as it scrolls in, like the camera, then "I also take pictures." and a 3D camera (three.js) whose rear screen shows seven of David's photos. As it scrolls in, the camera turns from an angled pose (screen tilted out) to straight-on, and back on the way up. The dial's sides, the "01 / 04" count's arrows beneath it, arrow keys, and a sideways swipe flip the photos (250ms crossfade). Hovering a side of the dial lights its arrow.
+- **Off the clock (not pinned):** the music text, then a 3D music player (see "The music player" below) that turns to face you as it scrolls in, like the camera, then "I also take pictures." and a 3D camera (three.js) whose rear screen shows seven of David's photos. As it scrolls in, the camera turns from an angled pose (screen tilted out) to straight-on, and back on the way up. The dial's sides, the "01 / 04" count's arrows beneath it, arrow keys, and a sideways swipe flip the photos (250ms crossfade). Hovering a side of the dial lights its arrow.
 - **Say hi (pinned, about 210vh):** the lake starts as a centred print and grows to full-bleed by the bottom of the page. The contact text appears on the photo, using the same two-copy clip as the hero. Only the copy on the photo is interactive.
 - **Pinned lengths** are starting points. If a pinned section starts to feel like a chore, shorten it.
-- **Reduced motion:** the hero shows as a finished print and the lake as full-bleed. The camera stays straight-on and photos change without a crossfade. The CD player sits settled, its disc doesn't spin, a drag turns it with no coast, and the lid opens at once; music still plays. Nothing is hidden.
+- **Reduced motion:** the hero shows as a finished print and the lake as full-bleed. The camera stays straight-on and photos change without a crossfade. The music player sits settled, and a drag turns it, or its knob, with no lag or coast; music still plays. Nothing is hidden.
 - **Smoothness:** animate only transform, opacity, and clip-path. Read scroll position in one `requestAnimationFrame` loop. Keep 60fps on an ordinary laptop. Ask before adding a smooth-scroll library.
 
-### The CD player (David, 2026-11-16)
+### The music player (David, 2026-11-16)
 
-A round portable CD player of David's own design, in Off the clock under the music text, that plays a few My Brothers And I songs. It is the camera's companion and uses the same 3D setup.
+A compact digital music player of David's own design, in Off the clock under the music text, that plays a few My Brothers And I songs. It follows the camera's idea, a modern digital device built like a classic object (the camera takes its cue from the Olympus PEN E-P5), and uses the same 3D setup. It replaced a first-draft round CD player the same day.
 
-- **No brand cues:** no logos, stickers, "anti-skip" or "ESP" labels, or details from any real player.
-- **Files:** `src/components/CdPlayer.astro` (markup and the buttons under it), `src/scripts/player.ts` (MusicKit, controls, drag, scroll pause), `src/scripts/player-3d.ts` (the model). `src/scripts/studio-3d.ts` holds what it shares with the camera: renderer, light, materials, shadow, and the theme.
-- **Songs:** Apple Music catalog song IDs in `src/data/tracks.ts`, in play order. David picks them; titles, artwork, and links come from Apple Music at load. Never write song or placement facts that aren't in this file.
-- **How it works:** drag turns it on its own axis, following the hand with a slight lag and a short coast. Clicking the lid opens it to show the disc, whose label is the song's Apple Music artwork. Play spins the disc; pause runs it down gradually. Previous and next change songs (back, more than 3 seconds in, restarts the song). The LCD shows the track number and elapsed time. Buttons press in with a little give. The same controls are real buttons under the player (lid, previous, play/pause, next), plus Space, the arrow keys, and O on the player. Nothing autoplays, and music pauses when the player leaves the screen.
+- **The object:** a brushed silver top plate and base with a satin black body, as on the camera (the silver brushed more finely); strap lugs; a leatherette panel on the back; a 4:3 screen on the front; one silver play/pause button below it; a knurled knob on the top plate.
+- **Never:** a click wheel, Apple shapes, logos, or details from any real player (Teenage Engineering, Astell&Kern, Sony, or others).
+- **Files:** `src/components/MusicPlayer.astro` (markup and the buttons under it), `src/scripts/player.ts` (MusicKit, controls, drag, scroll pause), `src/scripts/player-3d.ts` (the model). `src/scripts/studio-3d.ts` holds what it shares with the camera: renderer, light, materials, shadow, and the theme.
+- **Songs:** Apple Music catalog song IDs in `src/data/tracks.ts`, in play order. David picks them; titles, artwork, lengths, and links come from Apple Music at load. Never write song or placement facts that aren't in this file.
+- **How it works:** dragging the player turns it, following the hand with a slight lag and a short coast, so the back can be seen. Dragging the knob sideways turns it, and every 30° it clicks to the next or previous song, holding a little at each click (soft detents). A quick turn through several clicks loads only the song it stops on. The button presses in with a little give and plays or pauses. The screen shows the song's Apple Music artwork, its title, the track count, the elapsed time, and a thin progress line. Back, more than 3 seconds into a song, restarts it. The same controls are real buttons under the player (previous, play/pause, next), plus Space and the arrow keys on the player. Nothing autoplays, and music pauses when the player leaves the screen.
 - **Audio:** all from Apple Music through MusicKit JS v3. Visitors who aren't signed in hear Apple's 30-second previews. A quiet "Sign in with Apple Music for full songs" link calls `authorize()`; after that, songs play in full (for Apple Music subscribers). A plain "Listen on Apple Music" link under the player, required by Apple, points to the current song (or the band before one loads).
 - **Token:** the Worker (`worker/index.ts`, only for `/api/*`) signs a MusicKit developer token (ES256 JWT, 12 hours, limited to the asking site address) at `/api/musickit-token`, from three Worker secrets: `MUSICKIT_PRIVATE_KEY` (the .p8 file's contents), `MUSICKIT_KEY_ID`, and `APPLE_TEAM_ID`. It reuses each token until 30 minutes before it ends. The key and tokens never go in the repo or the page. Without the secrets, the endpoint answers 503 and the player says it can't reach Apple Music.
-- **Phones:** the same 3D player as on a laptop (the camera's pattern), with a sideways drag only, so the page still scrolls. Without WebGL, the song's artwork shows as a plain print with the buttons under it.
+- **Phones:** the same 3D player as on a laptop (the camera's pattern), with sideways drags only, so the page still scrolls. Without WebGL, the song's artwork shows as a plain print with the buttons under it.
 
 ### Brand
 
@@ -189,12 +190,12 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 
 ## Rules for working in this repo
 
-- Work only on the `redesign` branch (the CD player is on `feature/cd-player`, at David's request). Never push to or merge into `main` unless David says to in so many words.
+- Work only on the `redesign` branch (the music player is on `feature/music-player`, at David's request). Never push to or merge into `main` unless David says to in so many words.
 - Follow `docs/PLAN.md` one phase at a time, and one checkbox at a time inside a phase. After each step, tell David what to look at and wait for his OK. At the end of each phase, show David screenshots at 1440px and 390px wide, state the done test result honestly, and wait for his go-ahead.
 - Make small commits with plain messages.
 - Ask before adding any dependency beyond Astro, its official integrations, Fontsource, and three.js (approved by David for the camera viewer, 2026-11-12).
 - Keep the repo public-safe. No customer names, prices, emails, order data, home addresses, or photo metadata, in code or in screenshots. Blur sensitive parts of any screenshot of company software before adding it.
-- No trackers, cookies, embeds, or third-party scripts. The exceptions are Cloudflare Web Analytics, which is cookieless and already enabled for the domain in Cloudflare, and Apple's MusicKit JS for the CD player (David, 2026-11-16). Keep them working, and add nothing else. Secrets live only in Cloudflare's Worker settings.
+- No trackers, cookies, embeds, or third-party scripts. The exceptions are Cloudflare Web Analytics, which is cookieless and already enabled for the domain in Cloudflare, and Apple's MusicKit JS for the music player (David, 2026-11-16). Keep them working, and add nothing else. Secrets live only in Cloudflare's Worker settings.
 - Accessibility is part of done: real links and buttons, a visible focus state, alt text on every meaningful image, readable contrast over photos, and a full keyboard path.
 - If something in this brief conflicts with what David asks in the moment, do what David asks and update this file.
 
@@ -226,7 +227,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-11, Utu image in Erode:** `assets/work/utu.webp` swapped for David's new render with Utu's new font (Erode replaces Newsreader); then replaced the same day with David's four-phone image (three skies and the Saturday detail sheet). Merged to `main` (David said to).
 - **2026-11-12, camera viewer:** a 3D camera (three.js) whose screen shows the photos replaces the sideways strip in Off the clock, with the new photographs copy, a "01 / 07" count, and a lit dial arrow on hover. `/camera-test/` is gone. Seven photos (three home photos added the same day). Merged to `main` (David said to). See `docs/PLAN.md` under "Camera photo viewer".
 - **2026-11-13, work index on iPhone:** Safari drew the row rule through wrapped names ("Utu Weather"); rows now bottom-align on phones. David confirmed it on his phone; merged to `main` (David said to).
-- **2026-11-16, CD player:** on `feature/cd-player` (not merged). Token endpoint, 3D player, and docs done; waiting on David to add the three Worker secrets and pick 3 to 5 songs. See "CD player" in `docs/PLAN.md`.
+- **2026-11-16, music player:** on `feature/music-player` (not merged; replaces the first-draft CD player). Token endpoint, 3D player, and docs done; waiting on David to add the three Worker secrets and pick 3 to 5 songs. See "Music player" in `docs/PLAN.md`.
 - **Waiting on David:** see the end of `docs/PLAN.md`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
