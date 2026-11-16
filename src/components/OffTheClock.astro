@@ -8,6 +8,7 @@ import MusicPlayer from './MusicPlayer.astro';
 ---
 
 <section id="offclock" class="offclock" aria-labelledby="offclock-title">
+  <div class="music">
   <div class="block">
     <h2 id="offclock-title" class="label eyebrow">Off the clock</h2>
     <p class="headline line">I sing, write, and produce.</p>
@@ -22,6 +23,7 @@ import MusicPlayer from './MusicPlayer.astro';
   </div>
 
   <MusicPlayer />
+  </div>
 
   <div class="block photos">
     <h3 class="label eyebrow">Photographs</h3>
@@ -68,6 +70,39 @@ import MusicPlayer from './MusicPlayer.astro';
     display: flex;
     flex-direction: column;
     gap: 96px;
+  }
+
+  /* On a wide screen the player sits on the left with the music text beside
+     it, and the camera sits a little right of centre, so the two objects
+     face each other across the section. */
+  .music {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  @media (min-width: 1100px) {
+    .music {
+      display: grid;
+      grid-template-columns: auto minmax(0, 560px);
+      justify-content: space-between;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .music > :global([data-player]) {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .music > .block {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .offclock > :global([data-camera]) {
+      padding-left: min(14vw, 220px);
+    }
   }
 
   .block {

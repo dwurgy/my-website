@@ -95,6 +95,8 @@ const PRESS_MS = 180;
 const FOLLOW = 0.12;
 const COAST = 0.55;
 const DEG_PER_PX = 0.3;
+// A drag turns it this far each way at most, so the back never shows.
+const MAX_TURN = 35;
 
 export function createPlayerModel(
   canvas: HTMLCanvasElement,
@@ -251,7 +253,8 @@ export function createPlayerModel(
     const dt = lastFrame ? Math.min(0.064, (now - lastFrame) / 1000) : 1 / 60;
 
     if (!held && coast && !reduced) {
-      yawTarget += coast * dt;
+      yawTarget = MathUtils.clamp(yawTarget + coast * dt, -MAX_TURN, MAX_TURN);
+      if (Math.abs(yawTarget) === MAX_TURN) coast = 0;
       coast *= Math.exp(-dt / COAST);
       if (Math.abs(coast) < 0.5) coast = 0;
       busy = true;
@@ -266,9 +269,10 @@ export function createPlayerModel(
     yaw = follow(yaw, yawTarget);
     tilt = follow(tilt, tiltTarget);
 
-    // Turned so the side shows, and settled straight-on.
+    // Turned the opposite way to the camera, so the two face each other
+    // across the section, and settled straight-on.
     const rest = 1 - pose;
-    root.rotation.set(MathUtils.degToRad(rest * 10 + tilt), MathUtils.degToRad(-rest * 28 + yaw), 0, 'YXZ');
+    root.rotation.set(MathUtils.degToRad(rest * 10 + tilt), MathUtils.degToRad(rest * 28 + yaw), 0, 'YXZ');
 
     // A press: the wheel rocks toward the pressed side, or the centre button
     // goes in, and either comes back with a little give.
@@ -339,7 +343,7 @@ export function createPlayerModel(
       lastDt = Math.max(8, t - lastMove);
       lastMove = t;
       lastDx = dx;
-      yawTarget += dx * DEG_PER_PX;
+      yawTarget = MathUtils.clamp(yawTarget + dx * DEG_PER_PX, -MAX_TURN, MAX_TURN);
       tiltTarget = MathUtils.clamp(tiltTarget + dy * DEG_PER_PX * 0.5, -25, 25);
       requestRender();
     },
