@@ -1,12 +1,13 @@
 ---
 import { artistUrl, songIds } from '../data/tracks';
 
-// A compact digital music player, modelled in 3D (src/scripts/player-3d.ts)
-// with the camera's light and materials, that plays a few My Brothers And I
-// songs through Apple Music (src/scripts/player.ts). Drag it to turn it; drag
-// the knob on top to change songs; press its button to play or pause. The
-// same controls are real buttons under it, for keyboards, screen readers, and
-// browsers that can't draw 3D. The songs are chosen in src/data/tracks.ts.
+// A music player in the style of a classic click-wheel player, modelled in
+// 3D (src/scripts/player-3d.ts) with the camera's light, that plays a few My
+// Brothers And I songs through Apple Music (src/scripts/player.ts). Run a
+// finger round the wheel to change songs; press its sides or centre to skip
+// or play; drag elsewhere to turn it. The same controls are real buttons
+// under it, for keyboards, screen readers, and browsers that can't draw 3D.
+// The songs are chosen in src/data/tracks.ts.
 ---
 
 <div class="player" data-player data-songs={JSON.stringify(songIds)} data-artist-url={artistUrl}>
@@ -19,6 +20,8 @@ import { artistUrl, songIds } from '../data/tracks';
   >
     <div class="scene" data-scene>
       <canvas class="gl" data-gl role="img" aria-label="A music player."></canvas>
+      <!-- Over the drawn wheel (the script places it), so a circle there scrolls songs, not the page. -->
+      <div class="wheel" data-wheel aria-hidden="true"></div>
       <!-- Only shown when 3D isn't available. -->
       <div class="flat">
         <img data-flat-art alt="" hidden width="1000" height="1000" decoding="async" />
@@ -77,6 +80,20 @@ import { artistUrl, songIds } from '../data/tracks';
     user-select: none;
     -webkit-user-select: none;
     cursor: grab;
+  }
+
+  .wheel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    touch-action: none;
+  }
+
+  .player:global(.is-flat) .wheel {
+    display: none;
   }
 
   .gl {

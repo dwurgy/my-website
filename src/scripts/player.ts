@@ -7,19 +7,20 @@
 // top of the page. The token comes from the site's own Worker
 // (/api/musickit-token); no key is ever in the page.
 //
-// The 3D model (player-3d.ts) loads at the same time. Dragging the knob, the
-// buttons under the player, and the arrow keys change songs; a quick turn
-// through several clicks settles on one song before Apple is asked for it.
+// The 3D model (player-3d.ts) loads at the same time. Running a finger round
+// the wheel, pressing its sides, the buttons under the player, and the arrow
+// keys change songs; a quick scroll through several clicks settles on one
+// song before Apple is asked for it.
 // Without WebGL, the song's artwork shows as a plain print and the buttons
 // still work. Nothing plays until someone presses play, and the music pauses
 // when the player scrolls out of view.
 
-import type { PlayerModel } from './player-3d';
+import type { Part, PlayerModel, WheelLayout } from './player-3d';
 
 // Just the parts of MusicKit this uses.
 interface SongResource {
   id: string;
-  attributes?: { name?: string; url?: string; durationInMillis?: number; artwork?: { url: string } };
+  attributes?: { name?: string; artistName?: string; url?: string; durationInMillis?: number; artwork?: { url: string } };
 }
 interface MusicKitInstance {
   isAuthorized: boolean;
@@ -43,7 +44,7 @@ declare global {
 }
 
 const SCRIPT = 'https://js-cdn.music.apple.com/musickit/v3/musickit.js';
-/** How long the knob must rest before the song it's on is loaded. */
+/** How long the wheel must rest before the song it's on is loaded. */
 const SETTLE_MS = 280;
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -56,6 +57,7 @@ const clock = (seconds: number) => {
 
 interface Song {
   title: string;
+  artist: string;
   url?: string;
   artUrl?: string;
   art?: HTMLImageElement;
@@ -81,6 +83,7 @@ export function setupPlayer(root: HTMLElement) {
   const canvas = root.querySelector<HTMLCanvasElement>('[data-gl]')!;
   const scene = root.querySelector<HTMLElement>('[data-scene]')!;
   const stage = root.querySelector<HTMLElement>('.stage')!;
+  const zone = root.querySelector<HTMLElement>('[data-wheel]')!;
   const flatArt = root.querySelector<HTMLImageElement>('[data-flat-art]')!;
   const playKey = root.querySelector<HTMLButtonElement>('[data-play]')!;
   const readout = root.querySelector<HTMLElement>('[data-readout]')!;
@@ -93,7 +96,7 @@ export function setupPlayer(root: HTMLElement) {
   let music: MusicKitInstance | undefined;
   let loading: Promise<MusicKitInstance> | undefined;
   let songs: Song[] = [];
-  // The song shown, which the knob can move ahead of the song loaded.
+  // The song shown, which the wheel can move ahead of the song loaded.
   let index = 0;
   let loaded = 0;
   let settle = 0;
@@ -127,9 +130,12 @@ export function setupPlayer(root: HTMLElement) {
     state.model?.setScreen({
       art: song?.art ?? null,
       title: song?.title ?? (ids.length ? '' : 'Songs coming soon'),
-      track,
-      time,
+      artist: song?.artist ?? '',
+      track: songs.length ? `${index + 1} of ${songs.length}` : '',
+      elapsed: time,
+      remaining: songs.length && length ? `-${clock(length - t)}` : '-:--',
       progress: length ? t / length : 0,
+      playing,
     });
     readout.textContent = `${track}${songs.length ? ` · ${time}` : ''}`;
   }
@@ -150,6 +156,7 @@ export function setupPlayer(root: HTMLElement) {
   function showPlaying() {
     playKey.setAttribute('aria-label', playing ? 'Pause' : 'Play');
     playKey.dataset.state = playing ? 'playing' : 'paused';
+    showTime(true);
   }
 
   function showSignIn() {
@@ -184,9 +191,8 @@ export function setupPlayer(root: HTMLElement) {
       });
       instance.addEventListener('nowPlayingItemDidChange', () => {
         const at = instance.nowPlayingItemIndex;
-        // Ignore it while the knob is still turning toward another song.
+        // Ignore it while the wheel is still scrolling toward another song.
         if (at < 0 || at === loaded || settle) return;
-        state.model?.stepKnob(at > loaded ? 1 : -1);
         loaded = index = at;
         showTrack();
         live.textContent = songs[index] ? `Now playing ${songs[index].title}` : '';
@@ -203,6 +209,7 @@ export function setupPlayer(root: HTMLElement) {
         const a = found.find((s) => s.id === id)?.attributes;
         return {
           title: a?.name ?? 'Untitled',
+          artist: a?.artistName ?? '',
           url: a?.url,
           artUrl: a?.artwork?.url.replace('{w}', '600').replace('{h}', '600'),
           seconds: (a?.durationInMillis ?? 0) / 1000,
@@ -224,15 +231,15 @@ export function setupPlayer(root: HTMLElement) {
 
   // ---- Actions ----------------------------------------------------------------
 
-  async function toggle() {
-    state.model?.press();
+  async function toggle(part: Part = 'center') {
+    state.model?.press(part);
     const m = await loadMusic().catch(() => undefined);
     if (!m) return;
     if (m.isPlaying) m.pause();
     else await m.play().catch(() => fail('That song wouldn’t start. Try again.'));
   }
 
-  /** One click of the knob (or a button or arrow key), forward or back. */
+  /** One click of the wheel (or a button or arrow key), forward or back. */
   function step(by: number) {
     if (!songs.length) return;
     // Back, a few seconds into a song, starts it again, as on most players.
@@ -246,7 +253,7 @@ export function setupPlayer(root: HTMLElement) {
     settle = window.setTimeout(commit, SETTLE_MS);
   }
 
-  /** Loads the song the knob came to rest on. */
+  /** Loads the song the wheel came to rest on. */
   async function commit() {
     settle = 0;
     const m = music;
@@ -260,7 +267,7 @@ export function setupPlayer(root: HTMLElement) {
   }
 
   function skip(by: number) {
-    state.model?.stepKnob(by);
+    state.model?.press(by < 0 ? 'prev' : 'next');
     step(by);
   }
 
@@ -296,53 +303,80 @@ export function setupPlayer(root: HTMLElement) {
     }
   });
 
-  // Dragging the knob turns it; dragging anywhere else turns the player; a
-  // click (or tap) on the button plays or pauses. On touch screens only
-  // sideways drags count, so the page still scrolls.
-  type Down = { id: number; x: number; y: number; lastX: number; lastY: number; on: 'knob' | 'body'; moving: boolean; part: string | null };
-  let down: Down | null = null;
-
-  const partAt = (event: PointerEvent) => {
-    if (!state.model) return null;
-    const box = canvas.getBoundingClientRect();
-    return state.model.hit(event.clientX - box.left, event.clientY - box.top);
+  // Running a finger round the wheel scrolls through the songs; a press on
+  // one of its sides, or the centre button, works that control. Dragging
+  // anywhere else turns the player. The wheel's zone takes every touch, so a
+  // circle there doesn't scroll the page; elsewhere on touch screens only
+  // sideways drags count.
+  type Down = {
+    id: number;
+    x: number;
+    y: number;
+    lastX: number;
+    lastY: number;
+    angle: number;
+    on: 'wheel' | 'body';
+    moving: boolean;
+    part: Part | 'body' | null;
   };
+  let down: Down | null = null;
+  let wheel: WheelLayout = { x: 0, y: 0, outer: 0, inner: 0 };
+
+  const local = (event: PointerEvent) => {
+    const box = canvas.getBoundingClientRect();
+    return { x: event.clientX - box.left, y: event.clientY - box.top };
+  };
+  const angleAt = (p: { x: number; y: number }) => Math.atan2(p.y - wheel.y, p.x - wheel.x);
 
   scene.addEventListener('pointerdown', (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
-    const part = partAt(event);
+    const p = local(event);
+    const part = state.model?.hit(p.x, p.y) ?? null;
+    const onRing = event.target === zone && Math.hypot(p.x - wheel.x, p.y - wheel.y) > wheel.inner;
     down = {
       id: event.pointerId,
       x: event.clientX,
       y: event.clientY,
       lastX: event.clientX,
       lastY: event.clientY,
-      on: part === 'knob' ? 'knob' : 'body',
+      angle: angleAt(p),
+      on: onRing ? 'wheel' : 'body',
       moving: false,
       part,
     };
+    if (event.target === zone) zone.setPointerCapture(event.pointerId);
   });
   scene.addEventListener('pointermove', (event) => {
     if (!down || event.pointerId !== down.id) {
-      if (event.pointerType === 'mouse') {
-        const part = partAt(event);
-        scene.style.cursor = part === 'play' ? 'pointer' : part === 'knob' ? 'ew-resize' : '';
+      if (event.pointerType === 'mouse' && state.model) {
+        const p = local(event);
+        const part = state.model.hit(p.x, p.y);
+        scene.style.cursor = part && part !== 'body' && part !== 'menu' ? 'pointer' : '';
       }
       return;
     }
-    const dx = event.clientX - down.lastX;
-    const dy = event.clientY - down.lastY;
+    const p = local(event);
     if (!down.moving && Math.hypot(event.clientX - down.x, event.clientY - down.y) > 5) {
       down.moving = true;
-      scene.setPointerCapture(event.pointerId);
       if (down.on === 'body') {
+        scene.setPointerCapture(event.pointerId);
         scene.style.cursor = 'grabbing';
         state.model?.grab();
       }
     }
     if (down.moving) {
-      if (down.on === 'knob') state.model?.turnKnob(dx);
-      else state.model?.dragBy(dx, event.pointerType === 'mouse' ? dy : 0);
+      if (down.on === 'wheel') {
+        const angle = angleAt(p);
+        let delta = angle - down.angle;
+        if (delta > Math.PI) delta -= Math.PI * 2;
+        if (delta < -Math.PI) delta += Math.PI * 2;
+        down.angle = angle;
+        state.model?.scroll(delta);
+      } else {
+        const dx = event.clientX - down.lastX;
+        const dy = event.clientY - down.lastY;
+        state.model?.dragBy(dx, event.pointerType === 'mouse' ? dy : 0);
+      }
     }
     down.lastX = event.clientX;
     down.lastY = event.clientY;
@@ -353,19 +387,33 @@ export function setupPlayer(root: HTMLElement) {
     down = null;
     scene.style.cursor = '';
     if (moving) {
-      if (on === 'knob') state.model?.releaseKnob();
+      if (on === 'wheel') state.model?.endScroll();
       else state.model?.release();
-    } else if (!cancelled && part === 'play') void toggle();
+      return;
+    }
+    if (cancelled) return;
+    if (part === 'center' || part === 'play') void toggle(part);
+    else if (part === 'prev') skip(-1);
+    else if (part === 'next') skip(1);
+    else if (part === 'menu') state.model?.press('menu');
   };
   scene.addEventListener('pointerup', (event) => end(event, false));
   scene.addEventListener('pointercancel', (event) => end(event, true));
+
+  /** Keeps the wheel's touch zone over the drawn wheel. */
+  function placeZone(layout: WheelLayout) {
+    wheel = layout;
+    const size = layout.outer * 2;
+    zone.style.transform = `translate(${(layout.x - layout.outer).toFixed(1)}px, ${(layout.y - layout.outer).toFixed(1)}px)`;
+    zone.style.width = zone.style.height = `${size.toFixed(0)}px`;
+  }
 
   // ---- Loading, and pausing out of view -------------------------------------
 
   async function loadModel() {
     try {
       const { createPlayerModel } = await import('./player-3d');
-      const model = createPlayerModel(canvas, (by) => step(by));
+      const model = createPlayerModel(canvas, (by) => step(by), placeZone);
       model.setReducedMotion(reducedMotion.matches);
       state.model = model;
       setPlayerPose(root, state.progress);
