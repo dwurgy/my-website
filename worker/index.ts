@@ -59,7 +59,7 @@ export default {
       const issued = await developerToken(env, url.origin).catch(() => undefined);
       if (!issued) return text('Apple Music is not set up yet: the private key could not be read.', 503);
       try {
-        return text(await listSongs(issued.token));
+        return text(await listSongs(issued.token, url.origin));
       } catch (error) {
         return text(`The token was made, but the catalog lookup failed: ${String(error)}`, 502);
       }
@@ -147,18 +147,20 @@ interface Resource {
   relationships?: { tracks?: { data: Resource[] } };
 }
 
-async function apple(token: string, path: string) {
+// The token only works for the site address it was made for, and Apple checks
+// that against the Origin header, which a server request doesn't send by itself.
+async function apple(token: string, origin: string, path: string) {
   const response = await fetch(`https://api.music.apple.com${path}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${token}`, Origin: origin },
   });
   if (!response.ok) throw new Error(`Apple Music answered ${response.status} for ${path}`);
   return (await response.json()) as { data?: Resource[]; next?: string; results?: { artists?: { data: Resource[] } } };
 }
 
-async function listSongs(token: string) {
+async function listSongs(token: string, origin: string) {
   const lines: string[] = [];
 
-  const search = await apple(token, '/v1/catalog/us/search?types=artists&limit=5&term=My+Brothers+And+I');
+  const search = await apple(token, origin, '/v1/catalog/us/search?types=artists&limit=5&term=My+Brothers+And+I');
   lines.push('Artists matching "My Brothers And I":');
   for (const artist of search.results?.artists?.data ?? []) {
     lines.push(`  ${artist.attributes?.name}  (artist ID ${artist.id})`);
@@ -168,7 +170,7 @@ async function listSongs(token: string) {
   const albums: Resource[] = [];
   let next: string | undefined = `/v1/catalog/us/artists/${ARTIST_ID}/albums?limit=100`;
   while (next) {
-    const page = await apple(token, next);
+    const page = await apple(token, origin, next);
     albums.push(...(page.data ?? []));
     next = page.next;
   }
@@ -176,7 +178,7 @@ async function listSongs(token: string) {
 
   for (let i = 0; i < albums.length; i += 50) {
     const ids = albums.slice(i, i + 50).map((album) => album.id).join(',');
-    const page = await apple(token, `/v1/catalog/us/albums?ids=${ids}&include=tracks`);
+    const page = await apple(token, origin, `/v1/catalog/us/albums?ids=${ids}&include=tracks`);
     for (const album of page.data ?? []) {
       lines.push(`${album.attributes?.name} (${album.attributes?.releaseDate ?? 'no date'})`);
       for (const track of album.relationships?.tracks?.data ?? []) {
