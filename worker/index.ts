@@ -71,12 +71,17 @@ export default {
 
 const now = () => Math.floor(Date.now() / 1000);
 
-/** Which secrets this Worker can't see, by name. */
+/** Which secrets this Worker can't see, and the names of those it can. */
 function setupProblem(env: Env) {
   const missing = (['MUSICKIT_PRIVATE_KEY', 'MUSICKIT_KEY_ID', 'APPLE_TEAM_ID'] as const).filter(
     (name) => !env[name]?.trim(),
   );
-  if (missing.length) return `this Worker can't see ${missing.join(', ')}.`;
+  if (!missing.length) return '';
+  // Names only (never values), so a misnamed secret is easy to spot.
+  const seen = Object.keys(env)
+    .filter((name) => name !== 'ASSETS')
+    .map((name) => JSON.stringify(name));
+  return `this Worker can't see ${missing.join(', ')}. Settings it can see: ${seen.join(', ') || 'none'}.`;
   return '';
 }
 
