@@ -36,11 +36,9 @@ const shareImage = new URL('/share.jpg', Astro.site).href;
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#ece6dc" />
     <script is:inline>
-      // Set the theme before first paint: a saved choice wins, else follow the system.
+      // Set the theme before first paint, from the visitor's system setting.
       (function () {
-        var saved = null;
-        try { saved = localStorage.getItem('theme'); } catch (e) {}
-        var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        var dark = matchMedia('(prefers-color-scheme: dark)').matches;
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
         document.querySelector('meta[name="theme-color"]').content = dark ? '#171512' : '#ece6dc';
       })();

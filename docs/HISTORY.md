@@ -181,3 +181,9 @@ David approved the reshaped camera (taller screen, thinner silver top, shallow s
 ## 2026-11-17: Off the clock spacing, previews only
 
 From David's iPhone recording: the camera's top edge sat over the last line of "Flip through a few I like." The photographs text was pulled down over the camera's canvas (-40px on phones, -64px up to 1100px) on the idea that the canvas's top was empty room, but the angled pose fills it as it turns in. It now keeps a 24px gap at every width below the desktop zigzag. On phones the gap above the player drops from 72px to 32px, since the player's canvas already keeps room above it. David chose previews only: the sign-in link and its code are gone, and the Spotify and Apple Music buttons are where the full songs live.
+
+## 2026-11-17: Theme follows the system; wheel and abort fixes
+
+David asked for light and dark to follow the device only, so the sun/moon button and its saved choice are gone. The head script reads the system setting before first paint, and the control bar's script follows live changes (still with the 240ms view transition). A choice saved in `localStorage` by the old button is simply ignored now.
+
+From David's iPhone recording, two player bugs. The wheel rocks about 2° when pressed, which sank its pressed edge (about 0.065 units) behind the front plate's surface, so the silver covered half the wheel. The front plate now has a round well cut through it with a dark floor that shows as the seam, and the wheel's side is deeper, so a rocking wheel shows graphite at its edge rather than a gap. Skipping quickly made MusicKit cancel the song still loading, and MusicKit showed its own "The operation was aborted." dialog. `suppressErrorDialog` turns that off, and the loads now catch the cancel quietly (a real failure still shows a note under the player).

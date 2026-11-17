@@ -74,17 +74,16 @@ The site has a light theme (paper and ink) and a dark theme (warm night and bone
 | Grain | multiply at 0.32 | screen at 0.07 |
 
 - Write every colour on the page as one of these tokens, so a theme is just a change of token values.
-- By default the site follows the visitor's system setting, and it changes live if that setting changes.
-- A sun/moon button in the control bar, just before "Say hi," overrides the system setting. Its label says what it will do ("Switch to dark mode"). The choice is saved in `localStorage` (not a cookie) and wins over the system setting from then on.
+- The site follows the visitor's system setting only, and it changes live if that setting changes. There is no theme button on the page (David, 2026-11-17).
 - Set the theme in a tiny inline script in `<head>`, before first paint, so the page never flashes the wrong theme.
-- Switching themes uses a short view transition (about 240ms).
+- When the system setting changes while the page is open, the switch uses a short view transition (about 240ms).
 - Both themes must pass the brief's contrast rules on their own.
 
 ### Materials
 
 - **Grain:** one fixed, tiled noise layer behind the content, blended with multiply at about 0.32, so it shows only on paper (screen at about 0.07 in dark mode). There is no grain overlay on photos. Their grain comes from the scans. Use the one small tiled noise image (`public/grain.png`), not an SVG filter, which is slow.
 - **Glass:** only on the control bar, and on buttons that sit on top of a photo (the contact links). There are no glass cards. Never put `backdrop-filter` on a full-width or full-height element.
-- **Control bar:** one glass bar, fixed and centred at the top. It holds the WURGLER wordmark, Work, How I build, Off the clock, the theme button, and an ink "Say hi" pill. The current section's link is at full opacity and the others are at 0.68 (0.6 was just under 4.5:1). On phones the middle two links hide.
+- **Control bar:** one glass bar, fixed and centred at the top. It holds the WURGLER wordmark, Work, How I build, Off the clock, and an ink "Say hi" pill. The current section's link is at full opacity and the others are at 0.68 (0.6 was just under 4.5:1). On phones the middle two links hide.
 - **Corners:** pills are fully round. Prints, screenshots, and the cursor preview are about 6px.
 - **Buttons on paper:** a 1px ink outline that fills with ink on hover.
 
@@ -230,6 +229,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-13, work index on iPhone:** Safari drew the row rule through wrapped names ("Utu Weather"); rows now bottom-align on phones. David confirmed it on his phone; merged to `main` (David said to).
 - **2026-11-16, music player:** a classic click-wheel look (replacing the CD player and the knob player). Merged to `main` on 2026-11-17 because David said to push it to production. Secrets set on production 2026-11-17; the token works and Apple accepts it. Five songs picked the same day and the temporary `/api/music/songs` page removed. Next: David checks playback on his laptop and iPhone.
 - **2026-11-17, Off the clock spacing and previews only:** the camera no longer overlaps the photographs text below 1100px, the gap above the player is smaller on phones, and the "Sign in for full songs" link is gone (previews only). Merged to `main` (David said to).
+- **2026-11-17, theme and wheel fixes:** the theme button is gone (the site follows the system setting only); the wheel no longer half-disappears when pressed; Apple's "The operation was aborted." box no longer pops up when skipping quickly. Next: David checks on his phone.
 - **Waiting on David:** see the end of `docs/PLAN.md`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.

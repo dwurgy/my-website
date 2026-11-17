@@ -26,6 +26,8 @@ interface MusicKitInstance {
   currentPlaybackTime: number;
   currentPlaybackDuration: number;
   nowPlayingItemIndex: number;
+  /** Off: Apple's own error box, which would pop up over the page. */
+  suppressErrorDialog: boolean;
   play(): Promise<void>;
   pause(): void;
   seekToTime(seconds: number): Promise<void>;
@@ -155,6 +157,9 @@ export function setupPlayer(root: HTMLElement) {
     showTime(true);
   }
 
+  /** A load cut short by a newer one: expected, not worth a message. */
+  const aborted = (error: unknown) => (error as { name?: string } | null)?.name === 'AbortError';
+
   function fail(message: string) {
     note.textContent = message;
     note.hidden = false;
@@ -176,6 +181,7 @@ export function setupPlayer(root: HTMLElement) {
         developerToken: token.token,
         app: { name: 'davidwurgler.com', build: '1.0' },
       });
+      instance.suppressErrorDialog = true;
 
       instance.addEventListener('playbackStateDidChange', () => {
         playing = instance.isPlaying;
@@ -226,7 +232,10 @@ export function setupPlayer(root: HTMLElement) {
     const m = await loadMusic().catch(() => undefined);
     if (!m) return;
     if (m.isPlaying) m.pause();
-    else await m.play().catch(() => fail('That song wouldn’t start. Try again.'));
+    else
+      await m.play().catch((error: unknown) => {
+        if (!aborted(error)) fail('That song wouldn’t start. Try again.');
+      });
   }
 
   /** One click of the wheel (or a button or arrow key), forward or back. */
@@ -250,8 +259,15 @@ export function setupPlayer(root: HTMLElement) {
     if (!m || index === loaded) return;
     const target = index;
     loaded = target;
-    if (m.isPlaying) await m.changeToMediaAtIndex(target);
-    else await m.setQueue({ songs: ids, startWith: target, startPlaying: false });
+    try {
+      if (m.isPlaying) await m.changeToMediaAtIndex(target);
+      else await m.setQueue({ songs: ids, startWith: target, startPlaying: false });
+    } catch (error) {
+      // A newer click cancels the song still loading; that one takes over.
+      if (loaded === target) loaded = -1;
+      if (!aborted(error)) fail('That song wouldn’t load. Try again.');
+      return;
+    }
     showTime(true);
     live.textContent = songs[target] ? `Track ${pad(target + 1)}, ${songs[target].title}` : '';
   }

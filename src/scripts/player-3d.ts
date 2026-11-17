@@ -20,10 +20,10 @@ import {
   MathUtils,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
+  Path,
   PerspectiveCamera,
   PlaneGeometry,
   Raycaster,
-  RingGeometry,
   Shape,
   SRGBColorSpace,
   Vector2,
@@ -141,7 +141,13 @@ export function createPlayerModel(
 
   // The front: a flat plate with a fine bevel. The back: polished steel,
   // rounded off all round, like a pebble.
-  const front = new ExtrudeGeometry(roundedRect(W, H, CORNER), {
+  // The wheel sits in a round well cut through the front, so it can rock in
+  // when pressed without sinking behind the metal.
+  const plate = roundedRect(W, H, CORNER);
+  const well = new Path();
+  well.absarc(0, WHEEL_Y, WHEEL_R + 0.055, 0, Math.PI * 2, true);
+  plate.holes.push(well);
+  const front = new ExtrudeGeometry(plate, {
     depth: FRONT - 0.06,
     bevelEnabled: true,
     bevelThickness: 0.03,
@@ -179,8 +185,10 @@ export function createPlayerModel(
   const wheel = new Group();
   wheel.position.set(0, WHEEL_Y, 0);
   root.add(wheel);
-  add(new RingGeometry(WHEEL_R, WHEEL_R + 0.025, 96), seam, root, 0, WHEEL_Y, 0.002);
-  const rim = add(new CylinderGeometry(WHEEL_R, WHEEL_R, 0.05, 96, 1, true), wheelSide, wheel, 0, 0, 0.0);
+  // The well's floor shows as the thin seam round the wheel.
+  add(new CircleGeometry(WHEEL_R + 0.1, 96), seam, root, 0, WHEEL_Y, -0.2);
+  // A deep side, so a rocking wheel shows graphite at its edge, not a gap.
+  const rim = add(new CylinderGeometry(WHEEL_R, WHEEL_R, 0.16, 96, 1, true), wheelSide, wheel, 0, 0, -0.055);
   rim.rotation.x = Math.PI / 2;
   const face = add(new CircleGeometry(WHEEL_R, 96), wheelFace, wheel, 0, 0, 0.026);
   face.userData.wheel = true;
