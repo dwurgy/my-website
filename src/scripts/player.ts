@@ -1,7 +1,6 @@
 // The music player: plays a few My Brothers And I songs through Apple
-// MusicKit JS. Visitors who aren't signed in to Apple Music hear Apple's
-// 30-second previews; "Sign in with Apple Music for full songs" asks Apple to
-// sign them in, and after that the songs play in full.
+// MusicKit JS. Visitors hear Apple's 30-second previews; the links under the
+// player lead to the full songs on Apple Music and Spotify.
 //
 // MusicKit and its token load only when the player comes near, never at the
 // top of the page. The token comes from the site's own Worker
@@ -23,7 +22,6 @@ interface SongResource {
   attributes?: { name?: string; artistName?: string; url?: string; durationInMillis?: number; artwork?: { url: string } };
 }
 interface MusicKitInstance {
-  isAuthorized: boolean;
   isPlaying: boolean;
   currentPlaybackTime: number;
   currentPlaybackDuration: number;
@@ -33,7 +31,6 @@ interface MusicKitInstance {
   seekToTime(seconds: number): Promise<void>;
   changeToMediaAtIndex(index: number): Promise<void>;
   setQueue(options: { songs: string[]; startWith?: number; startPlaying?: boolean }): Promise<unknown>;
-  authorize(): Promise<string>;
   addEventListener(name: string, listener: () => void): void;
   api: { music(path: string, query?: Record<string, string>): Promise<unknown> };
 }
@@ -89,7 +86,6 @@ export function setupPlayer(root: HTMLElement) {
   const readout = root.querySelector<HTMLElement>('[data-readout]')!;
   const titleText = root.querySelector<HTMLElement>('[data-title]')!;
   const listen = root.querySelector<HTMLAnchorElement>('[data-listen]')!;
-  const signIn = root.querySelector<HTMLButtonElement>('[data-sign-in]')!;
   const note = root.querySelector<HTMLElement>('[data-note]')!;
   const live = root.querySelector<HTMLElement>('[data-live]')!;
 
@@ -159,10 +155,6 @@ export function setupPlayer(root: HTMLElement) {
     showTime(true);
   }
 
-  function showSignIn() {
-    signIn.hidden = !music || music.isAuthorized;
-  }
-
   function fail(message: string) {
     note.textContent = message;
     note.hidden = false;
@@ -198,7 +190,6 @@ export function setupPlayer(root: HTMLElement) {
         live.textContent = songs[index] ? `Now playing ${songs[index].title}` : '';
       });
       instance.addEventListener('playbackTimeDidChange', () => showTime());
-      instance.addEventListener('authorizationStatusDidChange', showSignIn);
 
       // Titles, artwork, lengths, and links, in the chosen order.
       const answer = (await instance.api.music('/v1/catalog/{{storefrontId}}/songs', {
@@ -219,7 +210,6 @@ export function setupPlayer(root: HTMLElement) {
       await instance.setQueue({ songs: ids, startPlaying: false });
       music = instance;
       showTrack();
-      showSignIn();
       return instance;
     })();
     loading.catch(() => {
@@ -271,26 +261,12 @@ export function setupPlayer(root: HTMLElement) {
     step(by);
   }
 
-  async function startSignIn() {
-    const m = await loadMusic().catch(() => undefined);
-    if (!m) return;
-    try {
-      await m.authorize();
-    } catch {
-      return;
-    }
-    showSignIn();
-    // Start the queue again where it was, now with full songs.
-    if (m.isAuthorized && !m.isPlaying) await m.setQueue({ songs: ids, startWith: loaded, startPlaying: false });
-  }
-
   // ---- Controls -----------------------------------------------------------
 
   playKey.addEventListener('click', () => void toggle());
   for (const key of root.querySelectorAll<HTMLButtonElement>('[data-step]')) {
     key.addEventListener('click', () => skip(Number(key.dataset.step)));
   }
-  signIn.addEventListener('click', () => void startSignIn());
 
   stage.addEventListener('keydown', (event) => {
     if (event.altKey || event.metaKey || event.ctrlKey) return;

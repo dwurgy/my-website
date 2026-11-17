@@ -177,3 +177,7 @@ David noticed his headshot from the old site was gone and wanted a face to the n
 ## 2026-11-12: the camera goes into Off the clock
 
 David approved the reshaped camera (taller screen, thinner silver top, shallow seam). To show that the photos can be flipped, he chose a small "01 / 04" count with arrow buttons under the camera, plus the dial's arrow lighting on hover. A pulsing hint was ruled out: it would be timed motion, which the brief forbids. The count is nudged up into the empty canvas space below the camera (the canvas keeps that room for the turned pose), so it sits above the canvas in stacking order or the canvas would swallow its clicks. The sideways strip, its pin, and the `/camera-test/` page are gone; the section now scrolls normally.
+
+## 2026-11-17: Off the clock spacing, previews only
+
+From David's iPhone recording: the camera's top edge sat over the last line of "Flip through a few I like." The photographs text was pulled down over the camera's canvas (-40px on phones, -64px up to 1100px) on the idea that the canvas's top was empty room, but the angled pose fills it as it turns in. It now keeps a 24px gap at every width below the desktop zigzag. On phones the gap above the player drops from 72px to 32px, since the player's canvas already keeps room above it. David chose previews only: the sign-in link and its code are gone, and the Spotify and Apple Music buttons are where the full songs live.

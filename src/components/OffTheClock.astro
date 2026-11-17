@@ -138,9 +138,9 @@ import MusicPlayer from './MusicPlayer.astro';
      right, so the two blocks read as a pair, not a stack. */
   .photos {
     align-self: flex-end;
-    /* The camera's canvas keeps empty room above the camera for its turn, so
-       pull it up a little; the boxes still don't overlap. */
-    margin-bottom: -64px;
+    /* The camera turns up toward the text as it scrolls in, so it keeps
+       clear of it rather than tucking under. */
+    margin-bottom: 24px;
   }
 
   .eyebrow {
@@ -175,7 +175,12 @@ import MusicPlayer from './MusicPlayer.astro';
 
     .photos {
       align-self: auto;
-      margin-bottom: -40px;
+    }
+
+    /* The player's canvas keeps empty room above the player for its turn,
+       so the gap above it can be smaller. */
+    .music {
+      gap: 32px;
     }
   }
 </style>
