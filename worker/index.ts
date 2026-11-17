@@ -8,10 +8,6 @@
 // repo or the browser. Each token works only on the site address that asked
 // for it (Apple's "origin" claim), and is reused until shortly before it
 // expires.
-//
-// /api/music/songs is temporary: it lists My Brothers And I's songs and their
-// catalog IDs, so David can pick the player's tracks. Remove it once the IDs
-// are in src/data/tracks.ts.
 
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
@@ -24,9 +20,6 @@ interface Env {
 /** How long a token lasts, and how long before the end we stop handing it out. */
 const TOKEN_SECONDS = 12 * 60 * 60;
 const RENEW_BEFORE = 30 * 60;
-
-/** The band's Apple Music artist ID, from the site's Apple Music link. */
-const ARTIST_ID = '892386824';
 
 const tokens = new Map<string, { token: string; expires: number }>();
 let signingKey: Promise<CryptoKey> | undefined;
@@ -52,38 +45,11 @@ export default {
       );
     }
 
-    if (url.pathname === '/api/music/songs') {
-      // Says what's wrong (secret names only, never values), to help set it up.
-      const problem = setupProblem(env);
-      if (problem) return text(`Apple Music is not set up yet: ${problem}`, 503);
-      const issued = await developerToken(env, url.origin).catch(() => undefined);
-      if (!issued) return text('Apple Music is not set up yet: the private key could not be read.', 503);
-      try {
-        return text(await listSongs(issued.token, url.origin));
-      } catch (error) {
-        return text(`The token was made, but the catalog lookup failed: ${String(error)}`, 502);
-      }
-    }
-
     return env.ASSETS.fetch(request);
   },
 };
 
 const now = () => Math.floor(Date.now() / 1000);
-
-/** Which secrets this Worker can't see, and the names of those it can. */
-function setupProblem(env: Env) {
-  const missing = (['MUSICKIT_PRIVATE_KEY', 'MUSICKIT_KEY_ID', 'APPLE_TEAM_ID'] as const).filter(
-    (name) => !env[name]?.trim(),
-  );
-  if (!missing.length) return '';
-  // Names only (never values), so a misnamed secret is easy to spot.
-  const seen = Object.keys(env)
-    .filter((name) => name !== 'ASSETS')
-    .map((name) => JSON.stringify(name));
-  return `this Worker can't see ${missing.join(', ')}. Settings it can see: ${seen.join(', ') || 'none'}.`;
-  return '';
-}
 
 function text(body: string, status = 200) {
   return new Response(body, {
@@ -137,55 +103,4 @@ function base64url(input: string | ArrayBuffer) {
   let binary = '';
   for (const byte of bytes) binary += String.fromCharCode(byte);
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-// ---- Temporary: the song list for picking tracks --------------------------
-
-interface Resource {
-  id: string;
-  attributes?: { name?: string; releaseDate?: string; artistName?: string };
-  relationships?: { tracks?: { data: Resource[] } };
-}
-
-// The token only works for the site address it was made for, and Apple checks
-// that against the Origin header, which a server request doesn't send by itself.
-async function apple(token: string, origin: string, path: string) {
-  const response = await fetch(`https://api.music.apple.com${path}`, {
-    headers: { Authorization: `Bearer ${token}`, Origin: origin },
-  });
-  if (!response.ok) throw new Error(`Apple Music answered ${response.status} for ${path}`);
-  return (await response.json()) as { data?: Resource[]; next?: string; results?: { artists?: { data: Resource[] } } };
-}
-
-async function listSongs(token: string, origin: string) {
-  const lines: string[] = [];
-
-  const search = await apple(token, origin, '/v1/catalog/us/search?types=artists&limit=5&term=My+Brothers+And+I');
-  lines.push('Artists matching "My Brothers And I":');
-  for (const artist of search.results?.artists?.data ?? []) {
-    lines.push(`  ${artist.attributes?.name}  (artist ID ${artist.id})`);
-  }
-  lines.push('', `Songs for artist ID ${ARTIST_ID}, by release:`, '');
-
-  const albums: Resource[] = [];
-  let next: string | undefined = `/v1/catalog/us/artists/${ARTIST_ID}/albums?limit=100`;
-  while (next) {
-    const page = await apple(token, origin, next);
-    albums.push(...(page.data ?? []));
-    next = page.next;
-  }
-  albums.sort((a, b) => (b.attributes?.releaseDate ?? '').localeCompare(a.attributes?.releaseDate ?? ''));
-
-  for (let i = 0; i < albums.length; i += 50) {
-    const ids = albums.slice(i, i + 50).map((album) => album.id).join(',');
-    const page = await apple(token, origin, `/v1/catalog/us/albums?ids=${ids}&include=tracks`);
-    for (const album of page.data ?? []) {
-      lines.push(`${album.attributes?.name} (${album.attributes?.releaseDate ?? 'no date'})`);
-      for (const track of album.relationships?.tracks?.data ?? []) {
-        lines.push(`  ${track.id}  ${track.attributes?.name}`);
-      }
-      lines.push('');
-    }
-  }
-  return lines.join('\n');
 }
