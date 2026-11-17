@@ -1,12 +1,14 @@
 ---
 import Camera from './Camera.astro';
+import MusicPlayer from './MusicPlayer.astro';
 
-// Off the clock: the music, then the photographs, shown on the screen of a 3D
-// camera that turns to face you as it scrolls into view. Normal page scroll;
-// nothing here is pinned.
+// Off the clock: the music, played on a 3D music player, then the photographs,
+// shown on the screen of a 3D camera. Each turns to face you as it scrolls
+// into view. Normal page scroll; nothing here is pinned.
 ---
 
 <section id="offclock" class="offclock" aria-labelledby="offclock-title">
+  <div class="music">
   <div class="block">
     <h2 id="offclock-title" class="label eyebrow">Off the clock</h2>
     <p class="headline line">I sing, write, and produce.</p>
@@ -20,6 +22,10 @@ import Camera from './Camera.astro';
     </div>
   </div>
 
+  <MusicPlayer />
+  </div>
+
+  <div class="pictures">
   <div class="block photos">
     <h3 class="label eyebrow">Photographs</h3>
     <p class="headline line">I also take <span class="emphasis">pictures</span>.</p>
@@ -30,23 +36,33 @@ import Camera from './Camera.astro';
   </div>
 
   <Camera />
+  </div>
 </section>
 
 <script>
   import { setPose } from '../scripts/camera';
+  import { setPlayerPose } from '../scripts/player';
   import { onFrame } from '../scripts/scroll';
 
-  // The camera's pose follows scroll: 0 when its top enters the bottom of the
-  // screen, 1 when its centre reaches the screen's centre. It turns back the
-  // same way on the way up.
+  // The camera's and the player's poses follow scroll: 0 when the object's
+  // top enters the bottom of the screen, 1 when its centre reaches the
+  // screen's centre. They turn back the same way on the way up.
   const viewer = document.querySelector<HTMLElement>('#offclock [data-camera]')!;
-  const stage = viewer.querySelector<HTMLElement>('.stage')!;
+  const player = document.querySelector<HTMLElement>('#offclock [data-player]')!;
 
-  onFrame(() => {
+  const progressOf = (stage: HTMLElement) => {
     const box = stage.getBoundingClientRect();
     const h = innerHeight;
-    const p = (h - box.top) / (h / 2 + box.height / 2);
-    return () => setPose(viewer, p);
+    return (h - box.top) / (h / 2 + box.height / 2);
+  };
+
+  onFrame(() => {
+    const camera = progressOf(viewer.querySelector<HTMLElement>('.stage')!);
+    const cd = progressOf(player.querySelector<HTMLElement>('.stage')!);
+    return () => {
+      setPose(viewer, camera);
+      setPlayerPose(player, cd);
+    };
   });
 </script>
 
@@ -58,6 +74,54 @@ import Camera from './Camera.astro';
     gap: 96px;
   }
 
+  /* On a wide screen the section zigzags: the player on the left with the
+     music text beside it, then the photographs' text on the left with the
+     camera beside it, so the two objects face each other across the page. */
+  .music {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  @media (min-width: 1100px) {
+    .music {
+      display: grid;
+      grid-template-columns: auto minmax(0, 560px);
+      justify-content: start;
+      align-items: center;
+      /* The text sits close beside the player, not out at the far edge. */
+      gap: clamp(48px, 6vw, 112px);
+    }
+
+    .music > :global([data-player]) {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .music > .block {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .offclock .pictures {
+      display: grid;
+      grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+      align-items: center;
+      gap: 48px;
+    }
+
+    .offclock .pictures > .photos {
+      align-self: center;
+      margin-bottom: 0;
+    }
+
+    /* The camera fills its column (the page, less the gutters, the text
+       column, and the gap), and is never taller than the screen. */
+    .pictures :global([data-camera] .stage) {
+      width: min(1000px, calc(100vw - var(--gutter) * 2 - 488px), calc((100svh - 120px) * 1.5));
+    }
+  }
+
   .block {
     max-width: 560px;
     display: flex;
@@ -65,8 +129,13 @@ import Camera from './Camera.astro';
     gap: 18px;
   }
 
-  /* The photographs' intro sits to the right on a wide screen, so the two
-     blocks read as a pair, not a stack. */
+  .pictures {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Between phone and wide screens, the photographs' intro sits to the
+     right, so the two blocks read as a pair, not a stack. */
   .photos {
     align-self: flex-end;
     /* The camera's canvas keeps empty room above the camera for its turn, so
