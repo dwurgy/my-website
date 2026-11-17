@@ -229,7 +229,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-13, work index on iPhone:** Safari drew the row rule through wrapped names ("Utu Weather"); rows now bottom-align on phones. David confirmed it on his phone; merged to `main` (David said to).
 - **2026-11-16, music player:** a classic click-wheel look (replacing the CD player and the knob player). Merged to `main` on 2026-11-17 because David said to push it to production. Secrets set on production 2026-11-17; the token works and Apple accepts it. Five songs picked the same day and the temporary `/api/music/songs` page removed. Next: David checks playback on his laptop and iPhone.
 - **2026-11-17, Off the clock spacing and previews only:** the camera no longer overlaps the photographs text below 1100px, the gap above the player is smaller on phones, and the "Sign in for full songs" link is gone (previews only). Merged to `main` (David said to).
-- **2026-11-17, theme and wheel fixes:** the theme button is gone (the site follows the system setting only); the wheel no longer half-disappears when pressed; Apple's "The operation was aborted." box no longer pops up when skipping quickly. Next: David checks on his phone.
+- **2026-11-17, theme and wheel fixes:** the theme button is gone (the site follows the system setting only); the wheel no longer half-disappears when pressed; Apple's "The operation was aborted." box no longer pops up when skipping quickly. Merged to `main` (David said to). Next: David checks on his phone.
 - **Waiting on David:** see the end of `docs/PLAN.md`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
