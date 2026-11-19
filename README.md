@@ -28,7 +28,7 @@ This site was built that way, and the documents are all here:
 
 Warm paper with ink type, and my own photographs as windows in it. Calm, tactile, and quick.
 
-![The work index: Firn, Utu Weather, Copywriter Lab, and Alfred set large in ink on paper.](docs/images/home-desktop-work.jpg)
+![The work index: Firn, Utu Weather, Deepcall, NW Remarketing, and Copywriter Lab set large in ink on paper.](docs/images/home-desktop-work.jpg)
 
 | | Light | Dark |
 |---|---|---|
