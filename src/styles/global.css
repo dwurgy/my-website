@@ -134,6 +134,42 @@ html:active-view-transition-type(page)::view-transition-new(*) {
   object-position: top;
 }
 
+/* Next project: the pages slide together by the distance the project's name
+   travels (--glide, measured in [slug].astro), like scrolling on into it.
+   One easing for everything, so the name and the pages stay in step. */
+html:active-view-transition-type(glide) {
+  --glide-ease: cubic-bezier(0.45, 0, 0.1, 1);
+}
+
+html:active-view-transition-type(glide)::view-transition-group(*),
+html:active-view-transition-type(glide)::view-transition-old(*),
+html:active-view-transition-type(glide)::view-transition-new(*) {
+  animation-duration: 500ms;
+  animation-timing-function: var(--glide-ease);
+}
+
+html:active-view-transition-type(glide)::view-transition-old(root) {
+  animation-name: glide-out;
+}
+
+html:active-view-transition-type(glide)::view-transition-new(root) {
+  animation-name: glide-in;
+}
+
+@keyframes glide-out {
+  to {
+    transform: translateY(calc(var(--glide) * -1));
+    opacity: 0;
+  }
+}
+
+@keyframes glide-in {
+  from {
+    transform: translateY(var(--glide));
+    opacity: 0;
+  }
+}
+
 /* Switching theme: a short cross-fade of the whole page. */
 ::view-transition-old(root),
 ::view-transition-new(root) {

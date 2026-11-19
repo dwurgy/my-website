@@ -25,6 +25,7 @@ const { facts, links, waiting } = entry.data;
 const index = projects.findIndex((p) => p.slug === entry.id);
 const project = projects[index];
 const next = projects[(index + 1) % projects.length];
+const prev = projects[(index - 1 + projects.length) % projects.length];
 const count = (n: number) => String(n).padStart(2, '0');
 
 // A video's poster goes through the image pipeline like any other image.
@@ -36,7 +37,7 @@ const poster =
 
 <Base title={`${entry.data.title} · David Wurgler`} description={entry.data.lede}>
   <SiteHeader section="work" />
-  <main id="main" class="project">
+  <main id="main" class="project" data-prev={prev.slug}>
     <article class="wrap">
       <div class="top">
         <a class="btn" href="/#work">
@@ -116,14 +117,73 @@ const poster =
   </main>
 </Base>
 
-<script>
-  // Only an arrival from the work index morphs into the main image. Leaving
-  // this page (for the next project, or back) is a plain cross-fade.
-  addEventListener('pageswap', () => {
-    document.querySelector<HTMLElement>('.project .shot')!.style.viewTransitionName = 'none';
+<script is:inline>
+  // Inline, so it is listening before the new page is first shown (a module
+  // script can arrive too late for pagereveal).
+  // Moving between neighbouring projects feels like scrolling on into the
+  // next one: the "Next project" name glides up and becomes the new page's
+  // headline, and both pages slide by exactly the distance it travels, so
+  // they move together like one long page. Back (and forward) plays it in
+  // reverse. Any other arrival or departure keeps the default transition.
+  // Without view transitions (or with reduced motion) this does nothing.
+  const project = document.querySelector('.project');
+  const shot = project.querySelector('.shot');
+  const title = project.querySelector('.title');
+  const nextName = project.querySelector('.next .name');
+  const KEY = 'project-glide';
+
+  const path = (url) => (url ? new URL(url).pathname.replace(/\/$/, '') : '');
+  const here = path(location.href);
+  const nextPath = path(project.querySelector('.next').href);
+  const prevPath = `/work/${project.dataset.prev}`;
+
+  // An element the shared name can come from or land on must be on screen,
+  // or the glide would start or end somewhere you can't see.
+  const visible = (el) => {
+    const r = el.getBoundingClientRect();
+    return r.bottom > 0 && r.top < innerHeight;
+  };
+
+  // The control bar gets its own name so it holds still while the pages move.
+  const bar = document.querySelector('.bar');
+  const glide = (el, vt) => {
+    el.style.viewTransitionName = 'project-title';
+    bar.style.viewTransitionName = 'site-bar';
+    vt.types.add('glide');
+    vt.finished.finally(() => (el.style.viewTransitionName = bar.style.viewTransitionName = ''));
+  };
+
+  addEventListener('pageswap', (e) => {
+    // Only an arrival from the work index morphs into the main image.
+    shot.style.viewTransitionName = 'none';
+    sessionStorage.removeItem(KEY);
+    const vt = e.viewTransition;
+    const to = path(e.activation?.entry?.url);
+    if (!vt || !to) return;
+    const el =
+      to === nextPath ? nextName : to === prevPath && e.activation.navigationType === 'traverse' ? title : null;
+    if (!el || !visible(el)) return;
+    glide(el, vt);
+    sessionStorage.setItem(KEY, JSON.stringify({ from: here, to, top: el.getBoundingClientRect().top }));
   });
+
+  addEventListener('pagereveal', (e) => {
+    const vt = e.viewTransition;
+    const saved = sessionStorage.getItem(KEY);
+    sessionStorage.removeItem(KEY);
+    if (!vt || !saved) return;
+    const { from, to, top } = JSON.parse(saved);
+    if (to !== here) return;
+    const el = from === prevPath ? title : from === nextPath ? nextName : null;
+    if (!el || !visible(el)) return vt.skipTransition();
+    shot.style.viewTransitionName = 'none';
+    vt.finished.finally(() => (shot.style.viewTransitionName = ''));
+    glide(el, vt);
+    document.documentElement.style.setProperty('--glide', `${top - el.getBoundingClientRect().top}px`);
+  });
+
   addEventListener('pageshow', () => {
-    document.querySelector<HTMLElement>('.project .shot')!.style.viewTransitionName = '';
+    shot.style.viewTransitionName = '';
   });
 </script>
 
@@ -283,7 +343,9 @@ const poster =
     transition: color 200ms ease;
   }
 
+  /* Hugs its text, so it has the headline's shape when it glides into it. */
   .next .name {
+    justify-self: start;
     display: inline-block;
     font-size: clamp(44px, 6.6vw, 104px);
     transition: transform 250ms var(--ease-out);
@@ -316,6 +378,21 @@ const poster =
 
     .text :global(p) {
       font-size: 17px;
+    }
+
+    /* The name takes the full width at the headline's size, so it breaks
+       its lines where the next page's headline does and glides cleanly. */
+    .next {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .next .label {
+      grid-row: 1;
+    }
+
+    .next .name {
+      font-size: clamp(64px, 10vw, 168px);
     }
   }
 

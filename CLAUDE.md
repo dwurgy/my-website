@@ -91,12 +91,16 @@ The site has a light theme (paper and ink) and a dark theme (warm night and bone
 
 The rule: **motion follows your hand.** Anything that scroll or the cursor can drive, they drive. The only timed motion is:
 
-- the headline fading up once on load (about 700ms),
-- hovers (about 200ms),
-- page changes (about 300ms, using the View Transitions API),
-- the theme switch (about 240ms, see Dark mode).
+- the headline fading up once on load,
+- hovers,
+- page changes (using the View Transitions API),
+- the theme switch (see Dark mode).
 
 Nothing else runs on a timer.
+
+**Timings are tuned by feel, not set by rule (David, 2026-11-19).** There's no fixed speed limit; each animation gets whatever duration and easing is best for it, and numbers are judged by trying them for real. The figures in this brief are where each one stands now, not limits. Current: headline about 700ms, hovers about 200ms, page changes about 300ms, the theme switch about 240ms, and "Next project" 500ms.
+
+- **Next project (David, 2026-11-19):** clicking it feels like scrolling on into the next project. The name at the bottom glides up and darkens into the next page's headline while both pages slide together by exactly the distance it travels; the control bar holds still. Back and forward play it in reverse. Each project keeps its own page and address. On phones the Next row's name is set at the headline's size and full width, so both break their lines in the same places.
 
 - **Hero (pinned, about 230vh):** the coast photo starts full-bleed and shrinks, matched to scroll, into a print on the right half of the paper: inset 20% top and bottom, 50% left, 40px right, with corners going from 0 to 6px. On phones it ends as a print across the top. The headline exists twice: an ink copy on the paper and a bone copy clipped to the photo's exact shape, so its colour changes right at the photo's edge. The photo also scales from 1.12 to 1.
 - **Work:** a large ink index with no background photo. Hovering a row fades the other rows to about 0.32 opacity, nudges the name 12px right, and shows a 360 × 236 preview of the project that follows the cursor with a slight lag. Keyboard focus shows the same preview beside the row. On touch screens there's no preview; each project's image shows under its name instead. Clicking a row opens its project page, and the preview morphs into the page's main image in about 300ms.
@@ -231,6 +235,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-17, Off the clock spacing and previews only:** the camera no longer overlaps the photographs text below 1100px, the gap above the player is smaller on phones, and the "Sign in for full songs" link is gone (previews only). Merged to `main` (David said to).
 - **2026-11-17, theme and wheel fixes:** the theme button is gone (the site follows the system setting only); the wheel no longer half-disappears when pressed; Apple's "The operation was aborted." box no longer pops up when skipping quickly. Merged to `main` (David said to). Next: David checks on his phone.
 - **2026-11-19, work list:** Firn (iPhone shot, "Mac and iPhone"), Utu (widget set from its brand kit), Deepcall (new), NW Remarketing identity (new), Copywriter Lab last (new screenshot in the NWR look; demo video removed). Alfred removed. Merged to `main` (David said to).
+- **2026-11-19, motion pass, step 1:** "Next project" glides into the next project instead of cross-fading (500ms); timings are now tuned by feel (see Motion). Next: step 2, "All work" returns to the row you came from.
 - **Waiting on David:** see the end of `docs/PLAN.md`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
