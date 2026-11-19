@@ -38,7 +38,7 @@ export const projects: Project[] = [
     line: 'A calm iPhone weather app that tells you the forecast in a plain-English sentence, then shows the numbers.',
     shot: {
       src: utuShot,
-      alt: 'A design mockup of Utu Weather: the app icon and “Weather, without the noise.” beside an iPhone showing 52° and “Soft drizzle until about 3, then the clouds open up for a calm evening,” with two small widgets.',
+      alt: 'A design mockup of Utu Weather’s widgets in its sky and paper styles: small, medium, and large widgets for Salem at 52° with lines like “Drizzle until 3, then calm” and “Umbrella? Until 3, yes,” an hourly row, a four-day forecast, and two lock screen widgets.',
     },
   },
   {
