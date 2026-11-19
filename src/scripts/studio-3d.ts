@@ -36,6 +36,9 @@ export type Studio = ReturnType<typeof createStudio>;
  */
 export function createStudio(canvas: HTMLCanvasElement, requestRender: () => void) {
   const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'low-power' });
+  // Checking each shader for errors makes the page wait for the GPU to finish
+  // compiling. It's only useful while building, so the live site skips it.
+  renderer.debug.checkShaderErrors = import.meta.env.DEV;
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = NeutralToneMapping;

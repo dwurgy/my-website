@@ -73,6 +73,10 @@ export function createCameraModel(
 ): CameraModel {
   // Whether a frame is already asked for (see requestRender).
   let queued = false;
+  // Nothing draws until the shaders are compiled. Compiling them in the
+  // background (see the end of setup) keeps a first draw from stalling the
+  // page mid-scroll, which it did for over half a second without a GPU.
+  let compiled = false;
 
   // Throws where WebGL isn't available; the caller falls back to a print.
   const { renderer, scene, loader, maxAniso, materials } = createStudio(canvas, requestRender);
@@ -300,6 +304,7 @@ export function createCameraModel(
 
   function render(now: number) {
     queued = false;
+    if (!compiled) return;
     let busy = false;
     const dt = lastFrame ? Math.min(64, now - lastFrame) : 16;
 
@@ -378,6 +383,11 @@ export function createCameraModel(
   }
 
   resize();
+  const ready = () => {
+    compiled = true;
+    requestRender();
+  };
+  renderer.compileAsync(scene, view).then(ready, ready);
 
   return {
     setPose(t) {

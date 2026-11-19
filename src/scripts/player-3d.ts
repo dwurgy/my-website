@@ -105,6 +105,10 @@ export function createPlayerModel(
   onLayout: (layout: WheelLayout) => void,
 ): PlayerModel {
   let queued = false;
+  // Nothing draws until the shaders are compiled. Compiling them in the
+  // background (see the end of setup) keeps a first draw from stalling the
+  // page mid-scroll, which it did for over half a second without a GPU.
+  let compiled = false;
   const { renderer, scene, materials } = createStudio(canvas, requestRender);
   const { shadow: shadowMat } = materials;
   // The screen area: one even black, like glass with the display off.
@@ -259,6 +263,7 @@ export function createPlayerModel(
 
   function render(now: number) {
     queued = false;
+    if (!compiled) return;
     let busy = false;
     const dt = lastFrame ? Math.min(0.064, (now - lastFrame) / 1000) : 1 / 60;
 
@@ -320,6 +325,11 @@ export function createPlayerModel(
   }
 
   resize();
+  const ready = () => {
+    compiled = true;
+    requestRender();
+  };
+  renderer.compileAsync(scene, view).then(ready, ready);
   drawScreen(screenCanvas, {
     art: null,
     title: '',
