@@ -3,8 +3,7 @@ import firnShot from '../../assets/work/firn.webp';
 import utuShot from '../../assets/work/utu.webp';
 import deepcallShot from '../../assets/work/deepcall.jpg';
 import nwrShot from '../../assets/work/nwr-identity.webp';
-import copywriterShot from '../../assets/work/copywriter-lab-poster.jpg';
-import copywriterVideo from '../../assets/work/copywriter-lab.mp4?url';
+import copywriterShot from '../../assets/work/copywriter-lab.webp';
 
 export interface Project {
   slug: string;
@@ -69,11 +68,7 @@ export const projects: Project[] = [
     line: 'A part number in. An eBay title that doubles as a quote line, a product description, and weight and dimensions out.',
     shot: {
       src: copywriterShot,
-      alt: 'NW Copywriter Lab: a finished listing for a network switch, with its eBay title, product description, and weight and dimensions each marked done.',
-    },
-    video: {
-      src: copywriterVideo,
-      label: 'Demo of NW Copywriter Lab, 34 seconds, no sound: a part number goes in, and the eBay title, product description, and weight and dimensions are written one by one.',
+      alt: 'NW Copywriter Lab in the NW Remarketing look: the part number Ciena NTK531VAE5 entered, the listing title above a short quote description and the start of a product description, each with a Copy button, and a sidebar with listing progress and the house rules, all checked.',
     },
   },
 ];
