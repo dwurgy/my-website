@@ -1,6 +1,8 @@
 import type { ImageMetadata } from 'astro';
-import firnShot from '../../assets/work/firn.jpg';
+import firnShot from '../../assets/work/firn.webp';
 import utuShot from '../../assets/work/utu.webp';
+import deepcallShot from '../../assets/work/deepcall.jpg';
+import nwrShot from '../../assets/work/nwr-identity.webp';
 import copywriterShot from '../../assets/work/copywriter-lab-poster.jpg';
 import copywriterVideo from '../../assets/work/copywriter-lab.mp4?url';
 
@@ -24,10 +26,10 @@ export const projects: Project[] = [
     slug: 'firn',
     name: 'Firn',
     meta: 'Oct 2026',
-    line: 'A calm Mac browser, built on Safari’s engine. Open source.',
+    line: 'A calm browser for Mac and iPhone, built on Safari’s engine. Open source.',
     shot: {
       src: firnShot,
-      alt: 'Firn on a Mac: a sidebar of tabs and spaces beside a website.',
+      alt: 'Firn for iPhone: three phones showing a page about Crater Lake, a grid of open tabs in a tab group, and a recipe in reader view.',
     },
   },
   {
@@ -37,7 +39,27 @@ export const projects: Project[] = [
     line: 'A calm iPhone weather app that tells you the forecast in a plain-English sentence, then shows the numbers.',
     shot: {
       src: utuShot,
-      alt: 'Four iPhones showing Utu: golden hour, a drizzly afternoon, and a clear night, each with a large temperature and a one-sentence forecast, and the detail sheet for Saturday with parts of the day and a temperature curve.',
+      alt: 'A design mockup of Utu Weather: the app icon and “Weather, without the noise.” beside an iPhone showing 52° and “Soft drizzle until about 3, then the clouds open up for a calm evening,” with two small widgets.',
+    },
+  },
+  {
+    slug: 'deepcall',
+    name: 'Deepcall',
+    meta: 'In development',
+    line: 'A co-op action game about pilots in flying exosuits, set in a drowned world of Nordic fjords and glaciers.',
+    shot: {
+      src: deepcallShot,
+      alt: 'Mood reference for Deepcall: dark mountains above a black shoreline, with a road winding along the water, and the Deepcall wordmark across the sky.',
+    },
+  },
+  {
+    slug: 'nw-remarketing',
+    name: 'NW Remarketing',
+    meta: 'Identity',
+    line: 'A new identity for the company: nwr typed at a terminal, with a Cascade peak hidden in the w.',
+    shot: {
+      src: nwrShot,
+      alt: 'The NW Remarketing logo on near-black: “nwr” with a snowcapped peak in the w and the r on an amber cursor block, beside “NW Remarketing” and the tagline “Infrastructure, in hand.”',
     },
   },
   {
@@ -53,13 +75,5 @@ export const projects: Project[] = [
       src: copywriterVideo,
       label: 'Demo of NW Copywriter Lab, 34 seconds, no sound: a part number goes in, and the eBay title, product description, and weight and dimensions are written one by one.',
     },
-  },
-  {
-    slug: 'alfred',
-    name: 'Alfred',
-    meta: 'In use',
-    line: 'Two AI assistants inside an Odoo ERP. One question instead of a warehouse walk.',
-    // David is supplying a blurred screenshot.
-    placeholder: 'Alfred screenshot',
   },
 ];
