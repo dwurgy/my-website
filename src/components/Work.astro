@@ -67,11 +67,9 @@ import { projects } from '../data/projects';
 </section>
 
 <script is:inline>
-  // Coming back from a project: the project's row is on screen and its main
-  // image shrinks into the preview beside the row (or, on touch screens, the
-  // image under its name), then the preview fades as you carry on. Inline,
-  // so it's listening before the page is first shown. The project page saves
-  // which project it was in `project-return`.
+  // Coming back from a project: the project's row is on screen when the work
+  // list appears. Inline, so it's listening before the page is first shown.
+  // The project page saves which project it was in `project-return`.
   addEventListener('pagereveal', (e) => {
     const slug = sessionStorage.getItem('project-return');
     sessionStorage.removeItem('project-return');
@@ -81,43 +79,24 @@ import { projects } from '../data/projects';
     if (!vt || !row) return;
 
     // Centre the row unless it's already comfortably in view (Back usually
-    // restores the spot you left from).
-    // Drop the #work from the address first, or the browser jumps to the top
-    // of the section after this has put the row in view.
+    // restores the spot you left from). Drop the #work from the address
+    // first, or the browser jumps to the top of the section afterwards.
     if (location.hash === '#work') history.replaceState(history.state, '', location.pathname);
     const box = row.getBoundingClientRect();
     if (box.top < 80 || box.bottom > innerHeight - 40) {
       scrollTo({ top: scrollY + box.top + box.height / 2 - innerHeight / 2, behavior: 'instant' });
     }
 
-    let target;
-    if (matchMedia('(hover: none)').matches) {
-      target = row.parentElement.querySelector('.touch-shot');
-    } else {
-      // The preview, placed beside the row as keyboard focus places it.
-      const preview = work.querySelector('[data-preview]');
-      const shot = preview.querySelector(`[data-slug="${CSS.escape(slug)}"]`);
-      preview.dataset.ready = '';
-      const r = row.getBoundingClientRect();
-      const x = Math.max(16, r.right - preview.offsetWidth - 28);
-      const y = r.top + r.height / 2 - preview.offsetHeight / 2;
-      preview.style.transition = 'none';
-      preview.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      preview.setAttribute('data-on', '');
-      shot.setAttribute('data-on', '');
-      if (shot.loading) shot.loading = 'eager';
-      target = preview;
-      // Once it has landed, fade it like letting go of a hover.
-      vt.finished.finally(() => {
-        preview.style.transition = '';
-        if (work.querySelector('.list[data-hovering]')) return;
-        preview.removeAttribute('data-on');
-      });
-    }
+    // The main image fades out with the rest of the project page; the
+    // preview appears only when the mouse moves onto a row (David,
+    // 2026-11-19). On touch screens, where each image sits under its name in
+    // the list, the main image settles straight into that one.
+    vt.types.add('return');
+    if (!matchMedia('(hover: none)').matches) return;
+    const target = row.parentElement.querySelector('.touch-shot');
     if (!target) return;
     work.dataset.returning = '';
     target.style.viewTransitionName = 'project-shot';
-    vt.types.add('return');
     vt.finished.finally(() => {
       target.style.viewTransitionName = '';
       delete work.dataset.returning;
@@ -219,8 +198,8 @@ import { projects } from '../data/projects';
 
   // Coming back (including from the back/forward cache): start clean.
   addEventListener('pageshow', () => {
-    // Coming back from a project, the preview is part of the transition
-    // (see the inline script above) and tidies itself up afterwards.
+    // Coming back from a project on a touch screen, the image under its name
+    // is part of the transition (see the inline script above).
     if ('returning' in work.dataset) return;
     preview.style.viewTransitionName = '';
     list.querySelectorAll<HTMLElement>('.touch-shot').forEach((s) => (s.style.viewTransitionName = ''));

@@ -163,11 +163,13 @@ const poster =
     if (!vt || !dest) return;
 
     // Back to the work index ("All work", the bar's Work link, or Back): the
-    // main image shrinks into this project's row. The homepage finds the row
-    // from what's saved here. The wordmark still goes to the top.
+    // homepage puts this project's row in view, finding it from what's saved
+    // here. On touch screens the main image settles into the image under the
+    // row's name; with a mouse it fades out with the page. The wordmark still
+    // goes to the top.
     const traverse = e.activation.navigationType === 'traverse';
     if (dest.pathname === '/' && (dest.hash === '#work' || traverse)) {
-      if (visible(shot)) shot.style.viewTransitionName = 'project-shot';
+      if (visible(shot) && matchMedia('(hover: none)').matches) shot.style.viewTransitionName = 'project-shot';
       sessionStorage.setItem('project-return', here.split('/').pop());
       return;
     }
