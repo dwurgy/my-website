@@ -170,6 +170,15 @@ html:active-view-transition-type(glide)::view-transition-new(root) {
   }
 }
 
+/* Back to the work index: the main image shrinks into the project's row a
+   little slower than it grew, so you can follow where it lands. */
+html:active-view-transition-type(return)::view-transition-group(*),
+html:active-view-transition-type(return)::view-transition-old(*),
+html:active-view-transition-type(return)::view-transition-new(*) {
+  animation-duration: 450ms;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.1, 1);
+}
+
 /* Switching theme: a short cross-fade of the whole page. */
 ::view-transition-old(root),
 ::view-transition-new(root) {

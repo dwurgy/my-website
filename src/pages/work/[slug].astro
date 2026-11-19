@@ -157,9 +157,22 @@ const poster =
     // Only an arrival from the work index morphs into the main image.
     shot.style.viewTransitionName = 'none';
     sessionStorage.removeItem(KEY);
+    sessionStorage.removeItem('project-return');
     const vt = e.viewTransition;
-    const to = path(e.activation?.entry?.url);
-    if (!vt || !to) return;
+    const dest = e.activation?.entry?.url ? new URL(e.activation.entry.url) : null;
+    if (!vt || !dest) return;
+
+    // Back to the work index ("All work", the bar's Work link, or Back): the
+    // main image shrinks into this project's row. The homepage finds the row
+    // from what's saved here. The wordmark still goes to the top.
+    const traverse = e.activation.navigationType === 'traverse';
+    if (dest.pathname === '/' && (dest.hash === '#work' || traverse)) {
+      if (visible(shot)) shot.style.viewTransitionName = 'project-shot';
+      sessionStorage.setItem('project-return', here.split('/').pop());
+      return;
+    }
+
+    const to = path(dest.href);
     const el =
       to === nextPath ? nextName : to === prevPath && e.activation.navigationType === 'traverse' ? title : null;
     if (!el || !visible(el)) return;

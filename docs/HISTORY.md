@@ -195,3 +195,9 @@ From David's recording, each "Next project" click was a hard cut back to the top
 Two things that bit: the script has to be inline (a module script ran after `pagereveal`, so the new page never joined in), and the Next name has to hug its text (`justify-self: start`), or its snapshot is the whole row's width and the two copies don't line up. On phones the Next name is now headline-sized and full width so its line breaks match the headline's; all five hops were checked at 390, 820, 1100, and 1440 for matching shapes.
 
 David also lifted the fixed timing limits: durations are tuned by feel per animation (500ms here).
+
+## 2026-11-19: Back to the work list lands on the project's row
+
+Leaving a project for `/#work` (the "All work" button or the bar's Work link) or going Back to the homepage now hands the main image back to the work list. The project page names its main image `project-shot` and saves its slug in `sessionStorage` (`project-return`); an inline script in `Work.astro` (inline for the same reason as the glide: a module script misses `pagereveal`) centres that row if it isn't already in view, places the preview beside it the way keyboard focus does (on touch screens it uses the image under the name), and gives that the same name, so the image shrinks into it. Type `return`, 450ms with the glide's easing. The preview fades once it lands.
+
+Two fixes on the way: the `#work` in the address made the browser jump to the top of the section after the row had been placed, so the script drops the hash first (the address becomes `/`). And the preview's image used to vanish at once while its frame faded over 200ms, leaving an empty dark box for a moment; that also happened on every ordinary hover-out. The last image now stays in the preview while it fades.
