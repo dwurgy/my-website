@@ -1,5 +1,6 @@
 // The camera viewer: the dial's buttons, arrow keys, and a sideways swipe on
-// the camera flip through the photos, wrapping at both ends. The 3D model
+// the camera flip through the photos, wrapping at both ends. With a mouse,
+// dragging the camera turns it a little, like the music player. The 3D model
 // (camera-3d.ts, with three.js) loads only when the viewer comes near, so it
 // never slows the top of the page. Without WebGL, the photos show as a plain
 // print with the same buttons.
@@ -108,6 +109,37 @@ export function setupCamera(root: HTMLElement) {
   });
   scene.addEventListener('pointercancel', () => (tracking = false));
 
+  // Mouse: dragging the body turns the camera a little (the model limits how
+  // far), following the hand like the music player. A drag that starts on a
+  // dial button is left to the button.
+  let drag: { id: number; x: number; y: number; moving: boolean } | null = null;
+  scene.addEventListener('pointerdown', (event) => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    if ((event.target as Element).closest('button')) return;
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, moving: false };
+  });
+  scene.addEventListener('pointermove', (event) => {
+    if (!drag || event.pointerId !== drag.id) return;
+    if (!drag.moving) {
+      if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) <= 5) return;
+      drag.moving = true;
+      scene.setPointerCapture(event.pointerId);
+      scene.classList.add('is-dragging');
+      viewer.model?.grab();
+    }
+    viewer.model?.dragBy(event.clientX - drag.x, event.clientY - drag.y);
+    drag.x = event.clientX;
+    drag.y = event.clientY;
+  });
+  const endDrag = (event: PointerEvent) => {
+    if (!drag || event.pointerId !== drag.id) return;
+    if (drag.moving) viewer.model?.release();
+    drag = null;
+    scene.classList.remove('is-dragging');
+  };
+  scene.addEventListener('pointerup', endDrag);
+  scene.addEventListener('pointercancel', endDrag);
+
   // The buttons follow the drawn dial.
   function place(button: HTMLElement, spot: DialLayout['prev']) {
     button.style.transform = `translate(${spot.x.toFixed(1)}px, ${spot.y.toFixed(1)}px)`;
@@ -128,6 +160,7 @@ export function setupCamera(root: HTMLElement) {
       });
       model.setAngles(angles());
       model.show(index, true);
+      model.setReducedMotion(reducedMotion.matches);
       viewer.model = model;
       setPose(root, viewer.progress);
     } catch {
@@ -146,6 +179,9 @@ export function setupCamera(root: HTMLElement) {
   );
   near.observe(root);
 
-  reducedMotion.addEventListener('change', () => setPose(root, viewer.progress));
+  reducedMotion.addEventListener('change', () => {
+    viewer.model?.setReducedMotion(reducedMotion.matches);
+    setPose(root, viewer.progress);
+  });
   narrow.addEventListener('change', () => viewer.model?.setAngles(angles()));
 }

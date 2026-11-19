@@ -103,6 +103,16 @@ const textures = await Promise.all(
     touch-action: pan-y;
     user-select: none;
     -webkit-user-select: none;
+    /* With a mouse, a drag turns the camera a little. */
+    cursor: grab;
+  }
+
+  .scene.is-dragging {
+    cursor: grabbing;
+  }
+
+  .viewer.is-flat .scene {
+    cursor: auto;
   }
 
   .gl {

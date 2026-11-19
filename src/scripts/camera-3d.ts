@@ -47,11 +47,24 @@ export interface CameraModel {
   press(direction: number): void;
   /** Lights the arrow on one side of the dial (-1 or 1), or neither (0). */
   hover(direction: number): void;
+  /** Drag on the body: turn the camera to follow the hand; release coasts. */
+  grab(): void;
+  dragBy(dx: number, dy: number): void;
+  release(): void;
+  setReducedMotion(reduced: boolean): void;
 }
 
 const FADE_MS = 250;
 const PRESS_MS = 160;
 const HOVER_MS = 200;
+// A drag turns the camera like the music player: following the hand with a
+// slight lag, coasting a little on release, and never more than this far
+// each way, so it's a nudge rather than a spin.
+const FOLLOW = 0.12;
+const COAST = 0.55;
+const DEG_PER_PX = 0.3;
+const MAX_TURN = 35;
+const MAX_TILT = 25;
 
 export function createCameraModel(
   canvas: HTMLCanvasElement,
@@ -235,6 +248,17 @@ export function createCameraModel(
   let litLeft = 0;
   let litRight = 0;
   let lastFrame = 0;
+  // The drag: where the hand has turned it to, and where it's shown so far.
+  let reduced = false;
+  let yawTarget = 0;
+  let tiltTarget = 0;
+  let yaw = 0;
+  let tilt = 0;
+  let coast = 0;
+  let held = false;
+  let lastMove = 0;
+  let lastDx = 0;
+  let lastDt = 16;
 
   function resize() {
     const w = canvas.clientWidth;
@@ -277,13 +301,33 @@ export function createCameraModel(
   function render(now: number) {
     queued = false;
     let busy = false;
+    const dt = lastFrame ? Math.min(64, now - lastFrame) : 16;
+
+    // The drag, eased toward the hand, and the coast after letting go.
+    if (!held && coast && !reduced) {
+      yawTarget = MathUtils.clamp(yawTarget + (coast * dt) / 1000, -MAX_TURN, MAX_TURN);
+      if (Math.abs(yawTarget) === MAX_TURN) coast = 0;
+      coast *= Math.exp(-dt / 1000 / COAST);
+      if (Math.abs(coast) < 0.5) coast = 0;
+      busy = true;
+    }
+    const follow = (shown: number, target: number) => {
+      if (reduced) return target;
+      const next = shown + (target - shown) * (1 - Math.exp(-dt / 1000 / FOLLOW));
+      if (Math.abs(target - next) < 1e-3) return target;
+      busy = true;
+      return next;
+    };
+    yaw = follow(yaw, yawTarget);
+    tilt = follow(tilt, tiltTarget);
 
     const rest = 1 - pose;
     cam.rotation.set(
-      MathUtils.degToRad(rest * angles.lean),
+      MathUtils.degToRad(rest * angles.lean + tilt),
       // Negative: the screen end swings toward you and the grip end shows.
-      MathUtils.degToRad(-rest * angles.turn),
+      MathUtils.degToRad(-rest * angles.turn + yaw),
       0,
+      'YXZ',
     );
     hinge.rotation.x = -MathUtils.degToRad(rest * angles.tilt);
     // Turned, the tilted screen reaches out to the left; shift right to keep
@@ -312,7 +356,6 @@ export function createCameraModel(
     }
 
     // The hovered arrow brightens over 200ms; the other fades back.
-    const dt = lastFrame ? Math.min(64, now - lastFrame) : 16;
     const stepBy = dt / HOVER_MS;
     const towards = (v: number, target: number) =>
       target > v ? Math.min(target, v + stepBy) : Math.max(target, v - stepBy);
@@ -355,6 +398,32 @@ export function createCameraModel(
     hover(direction) {
       if (direction === hoverDir) return;
       hoverDir = direction;
+      requestRender();
+    },
+    grab() {
+      held = true;
+      coast = 0;
+      lastMove = performance.now();
+      lastDx = 0;
+    },
+    dragBy(dx, dy) {
+      const t = performance.now();
+      lastDt = Math.max(8, t - lastMove);
+      lastMove = t;
+      lastDx = dx;
+      yawTarget = MathUtils.clamp(yawTarget + dx * DEG_PER_PX, -MAX_TURN, MAX_TURN);
+      tiltTarget = MathUtils.clamp(tiltTarget + dy * DEG_PER_PX * 0.5, -MAX_TILT, MAX_TILT);
+      requestRender();
+    },
+    release() {
+      held = false;
+      const recent = performance.now() - lastMove < 80;
+      coast = recent && !reduced ? MathUtils.clamp((lastDx * DEG_PER_PX * 1000) / lastDt, -150, 150) : 0;
+      requestRender();
+    },
+    setReducedMotion(next) {
+      reduced = next;
+      if (reduced) coast = 0;
       requestRender();
     },
   };
