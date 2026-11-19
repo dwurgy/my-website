@@ -46,12 +46,18 @@ export const smooth = (t: number) => t * t * (3 - 2 * t);
  * phones innerHeight grows and shrinks as the browser's address bar hides and
  * shows mid-scroll, which made every photo jump; the sticky box is 100svh and
  * holds still.
+ *
+ * `lead` starts the move early, while the section is still scrolling in, as a
+ * share of the sticky box's height. Without it, something scrolling up into a
+ * pin stops dead the moment the pin catches it, then waits for the ease to get
+ * going. With it, the move is already under way when the pin takes over.
  */
-export function progress(section: HTMLElement) {
+export function progress(section: HTMLElement, lead = 0) {
   const box = section.getBoundingClientRect();
   const pinned = section.querySelector<HTMLElement>('.stick')?.offsetHeight ?? innerHeight;
-  const travel = box.height - pinned;
-  return travel <= 0 ? 1 : clamp01(-box.top / travel);
+  const early = lead * pinned;
+  const travel = box.height - pinned + early;
+  return travel <= 0 ? 1 : clamp01((early - box.top) / travel);
 }
 
 /**
@@ -67,12 +73,13 @@ export const cssDriven = CSS.supports('animation-timeline: scroll()');
  * Reads where a pinned section's pin starts and ends, in page pixels, and
  * returns a write that hands them to the CSS as --pin-start and --pin-end.
  * Pixels, not screen heights, so the range holds still when a phone's address
- * bar hides or shows. Writes only when a value changes.
+ * bar hides or shows. Writes only when a value changes. `lead` is as in
+ * progress().
  */
-export function pinRange(section: HTMLElement): Write {
+export function pinRange(section: HTMLElement, lead = 0): Write {
   const top = section.getBoundingClientRect().top + scrollY;
   const pinned = section.querySelector<HTMLElement>('.stick')?.offsetHeight ?? innerHeight;
-  const start = `${Math.round(top)}px`;
+  const start = `${Math.round(Math.max(0, top - lead * pinned))}px`;
   const end = `${Math.round(top + section.offsetHeight - pinned)}px`;
   return () => {
     if (section.style.getPropertyValue('--pin-start') !== start) section.style.setProperty('--pin-start', start);

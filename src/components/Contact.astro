@@ -75,11 +75,14 @@ const links = [
   const hello = document.querySelector<HTMLElement>('.hello')!;
 
   // Scroll sets --print, from 1 (a centred print) to 0 (full-bleed), which
-  // the CSS turns into the photo's shape and zoom.
+  // the CSS turns into the photo's shape and zoom. The print starts growing
+  // while it's still scrolling in (LEAD, half a screen early), so it's already
+  // moving when the pin catches it instead of stopping dead and then starting.
+  const LEAD = 0.5;
   onFrame(() => {
     if (reducedMotion.matches) return () => hello.style.removeProperty('--print');
-    if (cssDriven) return pinRange(hello);
-    const print = 1 - smooth(progress(hello));
+    if (cssDriven) return pinRange(hello, LEAD);
+    const print = 1 - smooth(progress(hello, LEAD));
     return () => hello.style.setProperty('--print', print.toFixed(4));
   });
 
