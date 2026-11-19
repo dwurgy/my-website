@@ -71,11 +71,14 @@ import { projects } from '../data/projects';
   // list appears. Inline, so it's listening before the page is first shown.
   // The project page saves which project it was in `project-return`.
   addEventListener('pagereveal', (e) => {
-    const slug = sessionStorage.getItem('project-return');
+    let saved = null;
+    try {
+      saved = JSON.parse(sessionStorage.getItem('project-return'));
+    } catch {}
     sessionStorage.removeItem('project-return');
     const vt = e.viewTransition;
     const work = document.getElementById('work');
-    const row = slug && work.querySelector(`.row[data-slug="${CSS.escape(slug)}"]`);
+    const row = saved && work.querySelector(`.row[data-slug="${CSS.escape(saved.slug)}"]`);
     if (!vt || !row) return;
 
     // Centre the row unless it's already comfortably in view (Back usually
@@ -85,6 +88,22 @@ import { projects } from '../data/projects';
     const box = row.getBoundingClientRect();
     if (box.top < 80 || box.bottom > innerHeight - 40) {
       scrollTo({ top: scrollY + box.top + box.height / 2 - innerHeight / 2, behavior: 'instant' });
+    }
+
+    // The project's headline glides into the row's name while both pages
+    // slide together by the distance it travels, like scrolling back up to
+    // the list: the "Next project" glide run backwards. Only when the two
+    // have the same shape (on phones a name can wrap in the list but not as
+    // a headline); otherwise it's a plain fade.
+    const name = row.querySelector('.name');
+    const n = name.getBoundingClientRect();
+    if (saved.top !== null && Math.abs(n.width / n.height / saved.shape - 1) < 0.04) {
+      const bar = document.querySelector('.bar');
+      name.style.viewTransitionName = 'project-title';
+      bar.style.viewTransitionName = 'site-bar';
+      document.documentElement.style.setProperty('--glide', `${saved.top - n.top}px`);
+      vt.types.add('glide');
+      vt.finished.finally(() => (name.style.viewTransitionName = bar.style.viewTransitionName = ''));
     }
 
     // The main image fades out with the rest of the project page; the
@@ -294,9 +313,12 @@ import { projects } from '../data/projects';
     border-radius: 4px;
   }
 
+  /* Tracking is set again here so it's worked out at the name's own size
+     (inherited, it would be the 16px parent's), matching the headlines. */
   .name {
     display: inline-block;
     font-size: clamp(44px, 6.6vw, 104px);
+    letter-spacing: var(--headline-tracking);
     transition: transform 250ms var(--ease-out);
   }
 

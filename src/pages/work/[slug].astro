@@ -164,13 +164,20 @@ const poster =
 
     // Back to the work index ("All work", the bar's Work link, or Back): the
     // homepage puts this project's row in view, finding it from what's saved
-    // here. On touch screens the main image settles into the image under the
-    // row's name; with a mouse it fades out with the page. The wordmark still
-    // goes to the top.
+    // here, and the headline glides into the row's name. On touch screens the
+    // main image settles into the image under the name; with a mouse it goes
+    // with the page. The wordmark still goes to the top.
     const traverse = e.activation.navigationType === 'traverse';
     if (dest.pathname === '/' && (dest.hash === '#work' || traverse)) {
       if (visible(shot) && matchMedia('(hover: none)').matches) shot.style.viewTransitionName = 'project-shot';
-      sessionStorage.setItem('project-return', here.split('/').pop());
+      // The headline glides into the project's name in the list, the
+      // "Next project" glide run backwards.
+      const t = title.getBoundingClientRect();
+      if (visible(title)) glide(title, vt);
+      sessionStorage.setItem(
+        'project-return',
+        JSON.stringify({ slug: here.split('/').pop(), top: visible(title) ? t.top : null, shape: t.width / t.height }),
+      );
       return;
     }
 
