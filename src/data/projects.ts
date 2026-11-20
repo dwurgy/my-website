@@ -28,7 +28,7 @@ export const projects: Project[] = [
     line: 'A calm browser for Mac and iPhone, built on Safari’s engine. Open source.',
     shot: {
       src: firnShot,
-      alt: 'Firn for iPhone: three phones showing a page about Crater Lake, a grid of open tabs in a tab group, and a recipe in reader view.',
+      alt: 'Firn for iPhone: a grid of open tabs, a Kinfolk article, and a Wikipedia page about firn with an on-device summary, beside the Firn icon and the line "A calm, native browser."',,
     },
   },
   {
