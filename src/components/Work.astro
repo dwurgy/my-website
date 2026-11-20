@@ -28,6 +28,7 @@ import { projects } from '../data/projects';
                 alt={project.shot.alt}
                 widths={[390, 780, 1170].filter((w) => w <= project.shot!.src.width)}
                 sizes="(max-width: 760px) calc(100vw - 40px), min(100vw - 80px, 1360px)"
+                quality={90}
               />
             )}
           </li>
@@ -56,6 +57,7 @@ import { projects } from '../data/projects';
             alt=""
             widths={[420, 840, 1260]}
             sizes="420px"
+            quality={90}
             data-slug={project.slug}
           />
         ) : (

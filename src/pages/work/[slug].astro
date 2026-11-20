@@ -73,6 +73,7 @@ const poster =
               alt={project.shot.alt}
               widths={[720, 1080, 1440, 2160].filter((w) => w <= project.shot!.src.width * 1.5)}
               sizes="(max-width: 760px) calc(100vw - 32px), min(100vw - 80px, 1360px)"
+              quality={90}
               loading="eager"
             />
           ) : (

@@ -227,3 +227,7 @@ The hero's settle used a full ease in and out (smoothstep), so over the last ~15
 ## 2026-11-20: Sharper work-list previews
 
 David said the work-list images looked low-res. Two causes, both in the laptop hover preview. The preview eases after the cursor and came to rest at fractional pixel positions, so the browser resampled it and softened it; it now snaps to whole device pixels. And the 360 × 236 box is filled with `object-fit: cover`, so a 16:9 image is drawn about 420 wide, while the files were sized for 360 (and 720 on Retina): about 17% stretched. The preview files are now 420, 840, and 1260 wide with `sizes="420px"`. The phone images under each name already loaded big enough (1170 wide for a 350px slot at 3x).
+
+## 2026-11-20: Project images look soft when opened
+
+On a Retina laptop the project page's main image is drawn 1360px wide, which is 2720 real pixels, but the source files are smaller: Copywriter Lab 1210 wide (stretched about 2.25 times), Firn 2000, Utu 2120, Deepcall and NWR 2400. The sources are also already WebP, and Astro re-compressed them at its default quality, so detail was lost twice. Work images now encode at quality 90 (the 2000px Firn file went from 85 KB to 111 KB). The real fix is bigger originals from David, ideally PNG at least 2720 wide; Copywriter Lab most of all.
