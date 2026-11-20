@@ -43,7 +43,9 @@ import { projects } from '../data/projects';
 
   <!-- The preview that follows the cursor. It repeats what the row says, so
        it's hidden from screen readers. It stays unrendered until the section
-       is near, so its images don't load with the top of the page. -->
+       is near, so its images don't load with the top of the page. The box is
+       360 x 236, but a 16:9 image cropped to fill it is drawn about 420 wide,
+       so the files are sized for 420. -->
   <div class="preview" aria-hidden="true" data-preview>
     {
       projects.map((project) =>
@@ -52,8 +54,8 @@ import { projects } from '../data/projects';
             class="shot"
             src={project.shot.src}
             alt=""
-            widths={[360, 720]}
-            sizes="360px"
+            widths={[420, 840, 1260]}
+            sizes="420px"
             data-slug={project.slug}
           />
         ) : (
@@ -247,8 +249,10 @@ import { projects } from '../data/projects';
     x += (targetX - x) * LAG;
     y += (targetY - y) * LAG;
     const settled = Math.abs(targetX - x) < 0.5 && Math.abs(targetY - y) < 0.5;
-    const left = x;
-    const top = y;
+    // Whole device pixels: at an in-between position the browser resamples
+    // the preview, which softens the image.
+    const left = Math.round(x * devicePixelRatio) / devicePixelRatio;
+    const top = Math.round(y * devicePixelRatio) / devicePixelRatio;
     return () => {
       preview.style.transform = `translate3d(${left}px, ${top}px, 0)`;
       if (!settled) requestFrame();

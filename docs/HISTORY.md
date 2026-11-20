@@ -223,3 +223,7 @@ Traced how far the photos move per 40px of scroll across every section boundary 
 ## 2026-11-20: Step 5, the hero to Work pause
 
 The hero's settle used a full ease in and out (smoothstep), so over the last ~150px of the pin the print crept (the left edge moved about 2.5px in the final 40px of scroll) and then the page let go: it read as a pause before Work. The same ease made the first scroll at the top barely move the photo. The settle is now 0.4 straight line plus 0.6 ease, in both the CSS (`--settled`) and the script fallback (`LINEAR`): about 11px of edge movement in the last 40px at 1440, and the photo answers the first scroll. Same pin length and the same finished print. If it still feels long, the next lever is the hero's 230vh height.
+
+## 2026-11-20: Sharper work-list previews
+
+David said the work-list images looked low-res. Two causes, both in the laptop hover preview. The preview eases after the cursor and came to rest at fractional pixel positions, so the browser resampled it and softened it; it now snaps to whole device pixels. And the 360 × 236 box is filled with `object-fit: cover`, so a 16:9 image is drawn about 420 wide, while the files were sized for 360 (and 720 on Retina): about 17% stretched. The preview files are now 420, 840, and 1260 wide with `sizes="420px"`. The phone images under each name already loaded big enough (1170 wide for a 350px slot at 3x).
