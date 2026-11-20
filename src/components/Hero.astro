@@ -48,11 +48,17 @@ const labels = ['David Wurgler', 'Designer who builds software', 'Salem, Oregon'
   // Scroll sets one number, --settled, from 0 (full-bleed) to 1 (a print).
   // The CSS turns it into the photo's shape and zoom.
   const hero = document.querySelector<HTMLElement>('.hero')!;
+  // The settle is part ease, part straight line, so the photo answers the
+  // first bit of scroll and is still moving a little as it lands, instead of
+  // creeping for the last stretch and then sitting still before the page lets
+  // go. Keep in step with --settled in the CSS below.
+  const LINEAR = 0.4;
 
   onFrame(() => {
     if (reducedMotion.matches) return () => hero.style.removeProperty('--settled');
     if (cssDriven) return pinRange(hero);
-    const settled = smooth(progress(hero)).toFixed(4);
+    const t = progress(hero);
+    const settled = (LINEAR * t + (1 - LINEAR) * smooth(t)).toFixed(4);
     return () => hero.style.setProperty('--settled', settled);
   });
 </script>
@@ -186,7 +192,8 @@ const labels = ['David Wurgler', 'Designer who builds software', 'Salem, Oregon'
   @supports (animation-timeline: scroll()) {
     @media (prefers-reduced-motion: no-preference) {
       .hero {
-        --settled: calc(var(--p) * var(--p) * (3 - 2 * var(--p)));
+        /* 0.4 straight line + 0.6 ease, as LINEAR in the script. */
+        --settled: calc(0.4 * var(--p) + 0.6 * var(--p) * var(--p) * (3 - 2 * var(--p)));
         animation-name: pin-progress;
         animation-timing-function: linear;
         animation-fill-mode: both;
