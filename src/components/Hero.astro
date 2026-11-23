@@ -69,6 +69,10 @@ const labels = ['David Wurgler', 'Designer who builds software', 'Salem, Oregon'
      40px right, with its corners rounding as it lands. On phones it lands
      as a print across the top. */
   .hero {
+    /* Below zero inside its own section, so Safari on iPhone doesn't take
+       the pinned, screen-sized box for a fixed header and footer and tint
+       the strips under the clock and the address bar. */
+    isolation: isolate;
     --settled: 0;
     --inset-top: 20%;
     --inset-right: 40px;
@@ -81,6 +85,7 @@ const labels = ['David Wurgler', 'Designer who builds software', 'Salem, Oregon'
   .stick {
     position: sticky;
     top: 0;
+    z-index: -1;
     height: 100vh;
     height: 100svh;
     overflow: hidden;

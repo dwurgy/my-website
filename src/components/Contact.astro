@@ -118,6 +118,10 @@ const links = [
 
 <style>
   .hello {
+    /* Below zero inside its own section, so Safari on iPhone doesn't take
+       the pinned, screen-sized box for a fixed header and footer and tint
+       the strips under the clock and the address bar. */
+    isolation: isolate;
     --print: 1;
     --inset-x: 30%;
     --inset-y: 22%;
@@ -131,6 +135,7 @@ const links = [
   .stick {
     position: sticky;
     top: 0;
+    z-index: -1;
     height: 100vh;
     height: 100svh;
     overflow: hidden;
