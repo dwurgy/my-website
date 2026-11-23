@@ -102,7 +102,10 @@ const links = [
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    width: min(700px, calc(100% - 24px));
+    /* Under 90% of the screen's width: Safari on iPhone treats a fixed bar
+       any wider as a header and paints a solid band under the clock and the
+       address bar, so the page can't scroll beneath them (2026-11-23). */
+    width: min(700px, 86%);
     padding: 6px 6px 6px 22px;
     border: 1px solid var(--bar-border);
     border-radius: var(--radius-pill);
