@@ -87,7 +87,7 @@ body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(-
 }
 /* The five names arrive one after another, the way the sentence did. */
 @media (prefers-reduced-motion: no-preference) {
-  .cascade .things b:not(.still), .cascade .things span, .cascade .also {
+  .cascade .things b:not(.still), .cascade .things span {
     animation: arrive 620ms var(--ease) both;
     animation-delay: calc(var(--wait, 220ms) + var(--i) * 75ms);
   }
@@ -150,11 +150,8 @@ html[data-same-name="back"]::view-transition-new(col) { animation-delay: 380ms; 
 .things b { display: block; width: fit-content; font-weight: inherit; transition: color 200ms; }
 .things:has(a:hover) a:not(:hover) b { color: var(--dim); }
 
-/* A line about the thing under your hand, in the empty half. Its pictures wait on its page. */
-.peek {
-  position: fixed; left: var(--x); top: calc(var(--y) + 3em);
-  width: min(28vw, 17em); pointer-events: none;
-}
+/* A line about the thing under your hand, just under the list. Its pictures wait on its page. */
+.peek { position: relative; max-width: 24em; height: 4.5em; pointer-events: none; }
 .peek figure { position: absolute; left: 0; top: 0; width: 100%; opacity: 0; transition: opacity 200ms; }
 .peek figure.on { opacity: 1; }
 .peek img { width: 100%; border-radius: 3px; }
@@ -259,7 +256,7 @@ figcaption { margin-bottom: 0.5em; display: flex; justify-content: space-between
   <section data-door="things" hidden>
     <h2 class="sr">things</h2>
     <ul class="things" id="thing-list"></ul>
-    <p class="dim also" style="--i: 5">Also, a company’s back office, moved off QuickBooks Desktop and onto Odoo 19 in ten weeks, with zero downtime.</p>
+    <div class="peek" id="peek" aria-hidden="true"></div>
   </section>
 
   <div id="thing-pages"></div>
@@ -272,8 +269,6 @@ figcaption { margin-bottom: 0.5em; display: flex; justify-content: space-between
   </section>
 
 </main>
-
-<div class="peek" id="peek" aria-hidden="true"></div>
 
 <script>
 // The facts, from the brief. Nothing here is invented.
