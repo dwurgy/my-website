@@ -135,22 +135,19 @@ html[data-same-name="back"]::view-transition-new(col) { animation-delay: 380ms; 
 @media (hover: none), (max-width: 819px) { .peek { display: none; } }
 
 /* One thing. */
-.thing img, .frame img { border-radius: 3px; background: color-mix(in srgb, var(--ink) 8%, var(--bg)); }
 .thing dl { display: grid; grid-template-columns: max-content 1fr; gap: 0 1.6em; }
 .thing dt { color: var(--dim); }
 
-/* Photographs: one at a time. */
-.frame { display: block; width: 100%; aspect-ratio: 4 / 3; position: relative; overflow: hidden; border-radius: 3px; cursor: e-resize; }
+/* Pictures: one at a time, with the way to change them written underneath. */
+.frame { width: 100%; position: relative; overflow: hidden; border-radius: 3px; touch-action: pan-y; }
 .frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 0; transition: transform 640ms var(--glide); }
-.frame img + img { transform: translateX(102%); }
+.thing .frame img { object-fit: contain; }
+.frame img:not(.front) { transform: translateX(102%); }
 @media (prefers-reduced-motion: reduce) { .frame img { transition: none; } }
-figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; }
-
-/* The mark: the only sign-off, at the very end. */
-.mark { margin-top: 6em; width: 2.6em; }
-.mark svg { display: block; width: 100%; height: auto; }
-.mark-ridge { fill: var(--dim); }
-.mark-w { fill: var(--ink); }
+figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; color: var(--dim); }
+.ctl { display: flex; gap: 1.2em; }
+.ctl button { color: var(--dim); transition: color 200ms; }
+.ctl button:hover { color: var(--ink); }
 
 .copy { margin-left: 1em; color: var(--dim); transition: color 200ms; }
 .copy:hover { color: var(--ink); }
@@ -202,10 +199,7 @@ figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; }
   <section data-door="pretty" hidden>
     <h2 class="sr">pretty</h2>
     <p>I take pictures.</p>
-    <figure>
-      <button class="frame" type="button" aria-label="Next photograph"><img id="photo-a" alt=""><img id="photo-b" alt=""></button>
-      <figcaption class="dim"><span id="photo-count" aria-live="polite">1 / 7</span></figcaption>
-    </figure>
+    <figure class="reel" id="photos"></figure>
     <p>I sing, write, and produce in a band called My Brothers And I. Our songs have been on Virgin River, Pretty Little Liars, Queen Sugar, and others.</p>
     <p class="out"><a href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a> <a href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">Apple Music</a> <a href="https://www.mybrothersandiband.com/">The band</a></p>
   </section>
@@ -234,6 +228,7 @@ figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; }
 const things = [
   { slug: 'firn', name: 'Firn', img: 'firn', w: 1600, h: 900,
     line: 'A calm browser for Mac and iPhone, built on Safari’s engine. Open source.',
+    more: [['firn-mac', 'Firn on a Mac: a sidebar of tabs and spaces beside a website.']],
     alt: 'Firn for iPhone: a grid of open tabs, a Kinfolk article, and a Wikipedia page about firn with an on-device summary, beside the Firn icon and the line “A calm, native browser.”',
     body: ['Firn is snow that has made it through a whole season: older than fresh snow, not yet glacier ice. The word is from the Swiss German for “last year’s.”',
       'It has vertical tabs, spaces, and split view. It’s a native app, written in Swift on WebKit, the engine behind Safari. I wrote its brief and directed Claude Code through every phase.'],
@@ -241,6 +236,7 @@ const things = [
     links: [['firnbrowser.com', 'https://firnbrowser.com'], ['Source', 'https://github.com/dwurgy/firn']] },
   { slug: 'utu', name: 'Utu Weather', img: 'utu', w: 1600, h: 936,
     line: 'A calm iPhone weather app that tells you the forecast in a plain-English sentence, then shows the numbers.',
+    more: [['utu-phones', 'A design mockup of four iPhones showing Utu: golden hour, a drizzly afternoon, and a clear night, each with a large temperature and a one-sentence forecast, and the detail sheet for Saturday.']],
     alt: 'A design mockup of Utu Weather’s widgets in its sky and paper styles, for Salem at 52°, with lines like “Drizzle until 3, then calm” and “Umbrella? Until 3, yes.”',
     body: ['The name, said OO-too, is Finnish for haze or mist. Utu writes the forecast as a sentence, like “Grey and mild. Showers drift in around 4 and stay through the evening.” The numbers come second.',
       'It has soft, hazy skies, gentle motion, and widgets that answer questions directly: “Umbrella? Yes, after 4.” Weather, without the noise.'],
@@ -290,7 +286,7 @@ $('#thing-pages').innerHTML = things.map((t, i) => {
   return `<section class="thing" data-door="things/${t.slug}" hidden>
     <h2>${t.name}</h2>
     <p class="dim">${t.line}</p>
-    <figure><img src="img/${t.img}-1600.webp" width="${t.w}" height="${t.h}" alt="${esc(t.alt)}" loading="lazy" decoding="async"></figure>
+    <figure class="reel" data-thing="${i}"></figure>
     ${t.body.map((p) => `<p>${p}</p>`).join('')}
     <dl>${t.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
     ${t.links.length ? `<p class="out">${t.links.map(([l, h]) => `<a href="${h}">${l}</a>`).join(' ')}</p>` : ''}
@@ -336,7 +332,7 @@ function go(hash) {
   if (same) document.documentElement.dataset.sameName = to === 'things' ? 'back' : 'in';
   if (from === 'things' && slugOf(to)) {
     name(listName(slugOf(to)), 'thing-name');
-    picture = $(`.peek figure.on[data-peek="${slugOf(to)}"] img`);
+    picture = +($(`[data-door="${to}"] .reel`).dataset.at || 0) === 0 && $(`.peek figure.on[data-peek="${slugOf(to)}"] img`);
     name(picture, 'thing-img');
   }
   const t = document.startViewTransition(async () => {
@@ -345,7 +341,7 @@ function go(hash) {
     // Thing to list: the page's name travels back to its place in the list.
     if (slugOf(from) && to === 'things') name(listName(slugOf(from)), 'thing-name');
     if (picture) {
-      const big = $('.thing:not([hidden]) figure img');
+      const big = $('.thing:not([hidden]) .frame img.front');
       name(big, 'thing-img');
       await Promise.race([big.decode().catch(() => {}), new Promise((r) => setTimeout(r, 400))]);
     }
@@ -378,31 +374,51 @@ document.querySelectorAll('.things a').forEach((a) => {
   a.addEventListener('blur', () => peek(''));
 });
 
-// Photographs: click, or the arrow keys, for the next one.
-let at = 0, front = $('#photo-a'), back = $('#photo-b');
-function show(n, dir) {
-  at = (n + photos.length) % photos.length;
-  const [file, alt] = photos[at];
-  if (!dir) { front.src = `img/${file}.webp`; front.alt = alt; }
-  else {
+// A reel of pictures. Back and Next are written under it; the arrow keys, a swipe,
+// and a click on either half of the picture do the same.
+function reel(fig, items, ratio) {
+  const many = items.length > 1;
+  fig.innerHTML = `<div class="frame" style="aspect-ratio: ${ratio}"><img class="front" src="${items[0][0]}" alt="${esc(items[0][1])}" loading="lazy" decoding="async"><img alt="" decoding="async"></div>`
+    + (many ? `<figcaption><span aria-live="polite">1 / ${items.length}</span><span class="ctl"><button type="button" data-dir="-1">Back</button><button type="button" data-dir="1">Next</button></span></figcaption>` : '');
+  if (!many) return;
+  const frame = $('.frame', fig);
+  let at = 0, [front, back] = frame.children;
+  fig.dataset.at = 0;
+  function show(dir) {
+    at = (at + dir + items.length) % items.length;
+    fig.dataset.at = at;
     // The next one pushes the last one out, the way you'd slide prints across a table.
-    back.src = `img/${file}.webp`; back.alt = alt; front.alt = '';
+    back.src = items[at][0]; back.alt = items[at][1]; front.alt = '';
     back.style.transition = 'none';
     back.style.transform = `translateX(${dir * 102}%)`;
     back.offsetWidth;
     back.style.transition = '';
     back.style.transform = 'none';
     front.style.transform = `translateX(${dir * -102}%)`;
+    front.classList.remove('front'); back.classList.add('front');
     [front, back] = [back, front];
+    $('figcaption span', fig).textContent = `${at + 1} / ${items.length}`;
+    new Image().src = items[(at + dir + items.length) % items.length][0];
   }
-  $('#photo-count').textContent = `${at + 1} / ${photos.length}`;
-  new Image().src = `img/${photos[(at + 1) % photos.length][0]}.webp`;
+  const side = (e) => (e.clientX - frame.getBoundingClientRect().left < frame.offsetWidth / 2 ? -1 : 1);
+  let downX = null, swiped = false;
+  frame.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') frame.style.cursor = side(e) < 0 ? 'w-resize' : 'e-resize'; });
+  frame.addEventListener('pointerdown', (e) => { downX = e.clientX; swiped = false; });
+  frame.addEventListener('pointerup', (e) => {
+    if (downX !== null && Math.abs(e.clientX - downX) > 40) { swiped = true; show(e.clientX < downX ? 1 : -1); }
+    downX = null;
+  });
+  frame.addEventListener('click', (e) => { if (!swiped) show(side(e)); });
+  fig.addEventListener('click', (e) => { const b = e.target.closest('.ctl button'); if (b) show(+b.dataset.dir); });
+  fig.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') show(1);
+    if (e.key === 'ArrowLeft') show(-1);
+  });
 }
-show(0);
-$('.frame').addEventListener('click', () => show(at + 1, 1));
-$('.frame').addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight') show(at + 1, 1);
-  if (e.key === 'ArrowLeft') show(at - 1, -1);
+reel($('#photos'), photos.map(([f, alt]) => [`img/${f}.webp`, alt]), '4 / 3');
+document.querySelectorAll('.reel[data-thing]').forEach((fig) => {
+  const t = things[fig.dataset.thing];
+  reel(fig, [[t.img, t.alt], ...(t.more || [])].map(([f, alt]) => [`img/${f}-1600.webp`, alt]), `${t.w} / ${t.h}`);
 });
 
 $('#copy').addEventListener('click', async (e) => {
