@@ -150,15 +150,15 @@ html[data-same-name="back"]::view-transition-new(col) { animation-delay: 380ms; 
 .things b { display: block; width: fit-content; font-weight: inherit; transition: color 200ms; }
 .things:has(a:hover) a:not(:hover) b { color: var(--dim); }
 
-/* A picture of the thing under your hand, in the empty half. */
+/* A line about the thing under your hand, in the empty half. Its pictures wait on its page. */
 .peek {
-  position: fixed; left: var(--x); top: calc(var(--y) + 4.5em);
-  width: min(30vw, 440px); pointer-events: none;
+  position: fixed; left: var(--x); top: calc(var(--y) + 3em);
+  width: min(28vw, 17em); pointer-events: none;
 }
 .peek figure { position: absolute; left: 0; top: 0; width: 100%; opacity: 0; transition: opacity 200ms; }
 .peek figure.on { opacity: 1; }
 .peek img { width: 100%; border-radius: 3px; }
-.peek figcaption { display: block; color: var(--dim); margin-top: 1em; text-wrap: pretty; }
+.peek figcaption { display: block; color: var(--dim); margin: 0; text-wrap: pretty; }
 /* With a mouse the list is only the names; the rest shows beside the picture. */
 @media (hover: hover) and (min-width: 820px) {
   .things li { margin-bottom: 0; }
@@ -340,7 +340,7 @@ const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, 
 $('#thing-list').innerHTML = things.map((t, i) =>
   `<li style="--i: ${i}"><a href="#things/${t.slug}" data-peek="${t.slug}"><b>${t.name}</b><span>${t.line}</span></a></li>`).join('');
 $('#peek').innerHTML = things.map((t) =>
-  `<figure data-peek="${t.slug}"><img src="img/${t.img}-800.webp" alt="" decoding="async"><figcaption>${t.line}</figcaption></figure>`).join('');
+  `<figure data-peek="${t.slug}"><figcaption>${t.line}</figcaption></figure>`).join('');
 $('#thing-pages').innerHTML = things.map((t, i) => {
   const next = things[(i + 1) % things.length];
   return `<section class="thing" data-door="things/${t.slug}" hidden>
