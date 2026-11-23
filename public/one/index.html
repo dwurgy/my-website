@@ -8,13 +8,15 @@
 <title>David Wurgler</title>
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/averia-serif-libre-light.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* A test page. One sentence, one typeface, one size. Each word is a door. */
+/* Averia Serif Libre Light (Dan Sayers, SIL Open Font License): the average of hundreds of typefaces,
+   so every edge is a little soft. */
 @font-face {
-  font-family: Newsreader;
-  src: url(fonts/newsreader.woff2) format('woff2');
-  font-weight: 200 800;
+  font-family: 'Averia Serif Libre';
+  src: url(fonts/averia-serif-libre-light.woff2) format('woff2');
+  font-weight: 300;
   font-display: block;
 }
 :root {
@@ -36,9 +38,7 @@ html { background: var(--bg); scrollbar-gutter: stable; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font: 400 var(--size)/1.5 Newsreader, Georgia, serif;
-  font-optical-sizing: auto;
-  letter-spacing: -0.003em;
+  font: 300 var(--size)/1.5 'Averia Serif Libre', Georgia, serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   min-height: 100svh;
@@ -213,20 +213,6 @@ figcaption { margin-bottom: 0.5em; display: flex; justify-content: space-between
   .col { margin: 0; width: auto; padding: 1.5em var(--x) 30svh; }
 }
 </style>
-<script>
-// Typeface trial, while David chooses: add ?font=averia (or fell, shippori, gowun, hedvig, brygada) to the address.
-(() => {
-  const trial = { averia: [300, 21], fell: [400, 23], shippori: [400, 20], gowun: [400, 20], hedvig: [400, 20], brygada: [400, 21] };
-  const key = new URLSearchParams(location.search).get('font'), f = trial[key];
-  if (!f) return;
-  const css = document.createElement('style');
-  css.textContent = `@font-face { font-family: Trial; src: url(fonts/trial-${key}.woff2) format('woff2'); font-weight: 100 900; font-display: block; }
-    body { font-family: Trial, Georgia, serif !important; font-weight: ${f[0]} !important; }
-    :root { --size: ${f[1]}px !important; }
-    @media (max-width: 819px) { :root { --size: ${f[1] - 2}px !important; } }`;
-  document.head.append(css);
-})();
-</script>
 </head>
 <body class="arrive">
 
