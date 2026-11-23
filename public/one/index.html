@@ -104,6 +104,9 @@ body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(-
 .thing h2 { width: fit-content; }
 .next a { display: inline-block; }
 ::view-transition-group(line) { animation-duration: 520ms; animation-timing-function: var(--glide); }
+/* The dot travels as its own piece, so leaving Say hi it shrinks back down; it doesn't cross-fade. */
+.line .dot span { view-transition-name: dot; }
+::view-transition-group(dot) { animation-duration: 520ms; animation-timing-function: var(--glide); }
 /* What's leaving fades where it stands; it doesn't slide to where the next thing will be. */
 ::view-transition-old(col-out) { animation: leave 200ms ease-in both; }
 ::view-transition-new(col) { animation: settle 480ms var(--ease) 220ms both; }
