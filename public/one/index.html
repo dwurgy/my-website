@@ -179,7 +179,7 @@ html[data-same-name="back"]::view-transition-new(col) { animation-delay: 380ms; 
   }
   .frame { max-height: 84vh; }
 }
-figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; color: var(--dim); }
+figcaption { margin-bottom: 0.5em; display: flex; justify-content: space-between; color: var(--dim); }
 .ctl { display: flex; gap: 1.2em; }
 .ctl button { color: var(--dim); transition: color 200ms; }
 .ctl button:hover { color: var(--ink); }
@@ -434,8 +434,9 @@ document.querySelectorAll('.things a').forEach((a) => {
 // and a click on either half of the picture do the same.
 function reel(fig, items) {
   const many = items.length > 1;
-  fig.innerHTML = `<div class="frame" style="aspect-ratio: ${items[0][2]}"><img class="front" src="${items[0][0]}" alt="${esc(items[0][1])}" loading="lazy" decoding="async"><img alt="" decoding="async"></div>`
-    + (many ? `<figcaption><span aria-live="polite">1 / ${items.length}</span><span class="ctl"><button type="button" data-dir="-1">Back</button><button type="button" data-dir="1">Next</button></span></figcaption>` : '');
+  // The count and the two words sit above the picture, so they hold still while it changes shape.
+  fig.innerHTML = (many ? `<figcaption><span aria-live="polite">1 / ${items.length}</span><span class="ctl"><button type="button" data-dir="-1">Back</button><button type="button" data-dir="1">Next</button></span></figcaption>` : '')
+    + `<div class="frame" style="aspect-ratio: ${items[0][2]}"><img class="front" src="${items[0][0]}" alt="${esc(items[0][1])}" loading="lazy" decoding="async"><img alt="" decoding="async"></div>`;
   if (!many) return;
   const frame = $('.frame', fig);
   let at = 0, [front, back] = frame.children;
