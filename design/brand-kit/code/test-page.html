@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<title>David Wurgler</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/averia-serif-libre-light.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* A test page. One sentence, one typeface, one size. Each word is a door. */
+/* Averia Serif Libre Light (Dan Sayers, SIL Open Font License): the average of hundreds of typefaces,
+   so every edge is a little soft. */
+@font-face {
+  font-family: 'Averia Serif Libre';
+  src: url(fonts/averia-serif-libre-light.woff2) format('woff2');
+  font-weight: 300;
+  font-display: block;
+}
+:root {
+  --bg: #eff0ee;
+  --ink: #0e0f10;
+  --dim: #696b6a;
+  --dot: #e5482d;
+  --x: 9vw;      /* where the sentence starts */
+  --y: 44vh;     /* how far down it sits */
+  --size: 21px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --glide: cubic-bezier(0.6, 0, 0.2, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0e0f10; --ink: #e9eae7; --dim: #8e908e; --dot: #f0573b; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); scrollbar-gutter: stable; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 300 var(--size)/1.5 'Averia Serif Libre', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100svh;
+}
+::selection { background: var(--ink); color: var(--bg); }
+h1, h2 { font: inherit; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; letter-spacing: inherit; }
+:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
+img { display: block; max-width: 100%; height: auto; }
+
+/* The sentence. It never leaves the screen. */
+.line { position: fixed; left: var(--x); top: var(--y); z-index: 2; white-space: nowrap; }
+/* Each word can be hit from well outside its letters, with no dead gaps between words. */
+.line a { transition: color 200ms; padding: 0.9em 0.13em; margin: -0.9em -0.13em; }
+.line a:first-child { padding-left: 0.9em; margin-left: -0.9em; }
+/* The full stop is a drawn dot, a little bigger than the typeface's own, and it swells under the hand. */
+.line .dot { padding: 0.9em 1em 0.9em 0.1em; margin: -0.9em 0 -0.9em 0; }
+.line .dot span {
+  display: inline-block; width: 0.25em; height: 0.25em;
+  transform-origin: 0 100%; transition: transform 320ms var(--ease);
+}
+/* The dot is never quite still: its edge slowly wobbles, like a drop of ink that hasn't set. */
+.line .dot span::before {
+  content: ''; display: block; width: 100%; height: 100%; background: var(--dot); border-radius: 50%;
+  animation: warble 5.2s ease-in-out infinite, turn 19s linear infinite;
+}
+.line .dot:hover span::before { animation-duration: 2.4s, 9s; }
+@keyframes warble {
+  0%, 100% { border-radius: 50%; scale: 1 1; }
+  20% { border-radius: 62% 38% 56% 44% / 44% 58% 42% 56%; scale: 1.12 0.9; }
+  45% { border-radius: 40% 60% 38% 62% / 60% 42% 58% 40%; scale: 0.92 1.1; }
+  70% { border-radius: 57% 43% 64% 36% / 38% 60% 40% 62%; scale: 1.08 0.94; }
+}
+@keyframes turn { to { rotate: 360deg; } }
+.line .dot:hover span, .line .dot:focus-visible span, .line .dot[aria-current] span { transform: scale(1.9); }
+@media (prefers-reduced-motion: reduce) { .line .dot span { transition: none; } .line .dot span::before { animation: none; } }
+.line h1:has(a:hover) a:not(:hover):not(.dot),
+body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(--dim); }
+@media (prefers-reduced-motion: no-preference) {
+  body.arrive .line a:not(.dot) { animation: arrive 700ms var(--ease) both; }
+  body.arrive .line a:nth-child(2) { animation-delay: 110ms; }
+  body.arrive .line a:nth-child(3) { animation-delay: 220ms; }
+  body.arrive .line a:nth-child(4) { animation-delay: 330ms; }
+  body.arrive .line .dot { animation: fade 500ms 700ms both; }
+}
+/* The five names arrive one after another, the way the sentence did. */
+@media (prefers-reduced-motion: no-preference) {
+  .cascade .things b:not(.still), .cascade .things span {
+    animation: arrive 620ms var(--ease) both;
+    animation-delay: calc(var(--wait, 220ms) + var(--i) * 75ms);
+  }
+}
+html[data-same-name="back"] .cascade { --wait: 400ms; }
+@keyframes arrive { from { color: var(--bg); } 45% { color: var(--dim); } }
+@keyframes fade { from { opacity: 0; } }
+
+/* What's behind a door. It starts on the sentence's own line. */
+.col {
+  margin-left: 50vw;
+  width: calc(50vw - var(--x));
+  padding: var(--y) 0 34vh;
+}
+.col section { max-width: 27em; }
+.col section[hidden] { display: none; }
+
+/* Moving between doors. The sentence holds (or, on a phone, glides to the top);
+   what was open lifts away as the next thing settles in under it. */
+.line { view-transition-name: line; }
+.col section:not([hidden]) { view-transition-name: col; }
+.thing h2 { width: fit-content; }
+.next a { display: inline-block; }
+::view-transition-group(line) { animation-duration: 520ms; animation-timing-function: var(--glide); }
+/* The dot travels as its own piece, so leaving Say hi it shrinks back down; it doesn't cross-fade. */
+.line .dot span { view-transition-name: dot; }
+::view-transition-group(dot) { animation-duration: 520ms; animation-timing-function: var(--glide); }
+/* What's leaving fades where it stands; it doesn't slide to where the next thing will be. */
+::view-transition-old(col-out) { animation: leave 200ms ease-in both; }
+::view-transition-new(col) { animation: settle 480ms var(--ease) 220ms both; }
+/* A thing's name travels from the list to the top of its page, and its picture crosses over with it. */
+::view-transition-group(thing-name),
+::view-transition-group(thing-img) { animation-duration: 500ms; animation-timing-function: var(--glide); }
+::view-transition-old(thing-img), ::view-transition-new(thing-img) { height: 100%; }
+/* Between the list and a page the name is the same word, so one copy makes the trip, not two cross-fading. */
+html[data-same-name]::view-transition-old(thing-name) { display: none; }
+html[data-same-name]::view-transition-new(thing-name) { animation: none; }
+/* Coming back, the name gets home before the rest of the list appears, so it never crosses another name. */
+html[data-same-name="back"]::view-transition-new(col) { animation-delay: 380ms; }
+@keyframes leave { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes settle { from { opacity: 0; transform: translateY(14px); } }
+.col p, .col ul, .col dl, .col figure { margin-bottom: 1.5em; }
+.col p { text-wrap: pretty; hanging-punctuation: first; }
+.col ul { list-style: none; }
+.dim { color: var(--dim); }
+.col p a, .col dd a, .out a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: var(--dim);
+  transition: text-decoration-color 200ms;
+}
+.col p a:hover, .col dd a:hover, .out a:hover { text-decoration-color: var(--ink); }
+.out { display: flex; flex-wrap: wrap; gap: 0 1.4em; }
+
+/* The list of things. */
+.things li { margin-bottom: 1.5em; }
+.things a { display: block; }
+.things a span { display: block; color: var(--dim); }
+.things b { display: block; width: fit-content; font-weight: inherit; transition: color 200ms; }
+.things:has(a:hover) a:not(:hover) b { color: var(--dim); }
+
+/* A line about the thing under your hand, just under the list. Its pictures wait on its page. */
+.peek { position: relative; max-width: 24em; height: 4.5em; pointer-events: none; }
+.peek figure { position: absolute; left: 0; top: 0; width: 100%; opacity: 0; transition: opacity 200ms; }
+.peek figure.on { opacity: 1; }
+.peek img { width: 100%; border-radius: 3px; }
+.peek figcaption { display: block; color: var(--dim); margin: 0; text-wrap: pretty; }
+/* With a mouse the list is only the names; the rest shows beside the picture. */
+@media (hover: hover) and (min-width: 820px) {
+  .things li { margin-bottom: 0; }
+  .things a span { display: none; }
+  .things { margin-bottom: 1.5em; }
+}
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (hover: none), (max-width: 819px) { .peek { display: none; } }
+
+/* One thing. */
+.thing dl { display: grid; grid-template-columns: max-content 1fr; gap: 0 1.6em; }
+.thing dt { color: var(--dim); }
+
+/* Pictures: one at a time, with the way to change them written underneath. */
+.frame { width: 100%; position: relative; overflow: hidden; border-radius: 3px; touch-action: pan-y; transition: aspect-ratio 640ms var(--glide); }
+.frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 0; transition: transform 640ms var(--glide); }
+.thing .frame img { object-fit: contain; }
+.frame img:not(.front) { transform: translateX(102%); }
+@media (prefers-reduced-motion: reduce) { .frame, .frame img { transition: none; } }
+/* On a wide screen the pictures are bigger than the text: they reach back into the empty half,
+   stopping short of the sentence, while the words keep their narrow column. */
+@media (min-width: 820px) {
+  .reel {
+    --reach: calc(50vw - max(30vw, var(--x) + 14em));
+    width: calc(50vw - var(--x) + var(--reach)); margin-left: calc(-1 * var(--reach));
+  }
+  .frame { max-height: 84vh; }
+}
+figcaption { margin-bottom: 0.5em; display: flex; justify-content: space-between; color: var(--dim); }
+.ctl { display: flex; gap: 1.2em; }
+.ctl button { color: var(--dim); transition: color 200ms; }
+.ctl button:hover { color: var(--ink); }
+
+/* The mark: the only sign-off, at the very end. */
+.mark { margin-top: 6em; width: 2.6em; }
+.mark svg { display: block; width: 100%; height: auto; }
+.mark-ridge { fill: var(--dim); }
+.mark-w { fill: var(--ink); }
+
+.copy { margin-left: 1em; color: var(--dim); transition: color 200ms; }
+.copy:hover { color: var(--ink); }
+
+/* Phones: the sentence waits lower down, then rises to the top when a door opens. */
+@media (max-width: 819px) {
+  :root { --x: 24px; --size: 19px; }
+  .line {
+    position: sticky; left: auto; top: 0; padding: 22px var(--x) 18px;
+    background: var(--bg);
+    transform: translateY(38svh);
+  }
+  body[data-open] .line { transform: none; }
+  .cascade { --wait: 340ms; }
+  /* Let the sentence reach the top before what's under it arrives. */
+  ::view-transition-new(col) { animation-delay: 340ms; }
+  .col { margin: 0; width: auto; padding: 1.5em var(--x) 30svh; }
+}
+</style>
+</head>
+<body class="arrive">
+
+<header class="line">
+  <h1><a href="#i">I</a> <a href="#make">make</a> <a href="#pretty">pretty</a> <a href="#things">things</a><a href="#hi" class="dot" aria-label="Say hi"><span></span></a></h1>
+</header>
+
+<main class="col">
+
+  <section data-door="i" hidden>
+    <h2 class="sr">I</h2>
+    <p>I’m David Wurgler. I design and build software, and I live in Salem, Oregon, with my wife and our two boys.</p>
+    <p>I make my apps with Claude, an AI from Anthropic, as my coding partner. I decide what each one is and how it should feel: the design, the details, the way it behaves. Claude and I write the code together and catch each other’s mistakes.</p>
+    <p>I build the things I wish already existed: quiet, well-made tools that respect your time and your privacy.</p>
+    <p><a href="#hi">Say hi</a></p>
+  </section>
+
+  <section data-door="make" hidden>
+    <h2 class="sr">make</h2>
+    <p>I don’t write most of the code. I write the brief.</p>
+    <p>Every project starts with a document: who it’s for, the rules the agent can’t break, and a done test for each step. Then I direct Claude Code through it in pieces small enough to check.</p>
+    <ul class="dim" aria-label="Rules from Firn’s brief">
+      <li>Work in small, testable steps.</li>
+      <li>No new dependencies without asking.</li>
+      <li>Never weaken a security default.</li>
+      <li>Each phase ends with a done test.</li>
+    </ul>
+    <p>I care about how it feels, not just how it looks. Good software should be pretty to look at and easy to use. Then it should get out of your way.</p>
+    <p>This site was made the same way. <a href="https://github.com/dwurgy/my-website">Read the source</a></p>
+  </section>
+
+  <section data-door="pretty" hidden>
+    <h2 class="sr">pretty</h2>
+    <p>I take pictures.</p>
+    <figure class="reel" id="photos"></figure>
+    <p>I make music.</p>
+    <p>I sing, write, and produce in a band called My Brothers And I. Our songs have been on Virgin River, Pretty Little Liars, Love Island, and others.</p>
+    <p class="out"><a href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a> <a href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">Apple Music</a> <a href="https://www.mybrothersandiband.com/">The band</a></p>
+  </section>
+
+  <section data-door="things" hidden>
+    <h2 class="sr">things</h2>
+    <ul class="things" id="thing-list"></ul>
+    <div class="peek" id="peek" aria-hidden="true"></div>
+  </section>
+
+  <div id="thing-pages"></div>
+
+  <section data-door="hi" hidden>
+    <h2 class="sr">Say hi</h2>
+    <p><span id="email">hello@davidwurgler.com</span><button class="copy" type="button" id="copy">Copy</button></p>
+    <p class="out"><a href="https://www.linkedin.com/in/david-joel-wurgler">LinkedIn</a> <a href="https://github.com/dwurgy">GitHub</a> <a href="https://www.threads.com/@dwurgy">Threads</a></p>
+    <div class="mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="2.59 20.26 94.82 68.62" aria-hidden="true"><path class="mark-ridge" d="M4.43 44.07 L4.89 43.58 L5.35 43.10 L5.81 42.62 L6.27 42.13 L6.73 41.65 L7.19 41.17 L7.65 40.68 L8.11 40.20 L8.57 39.72 L9.03 39.23 L9.49 38.75 L9.95 38.27 L10.41 37.78 L10.88 37.30 L11.34 36.82 L11.80 36.33 L12.26 35.85 L12.72 35.37 L13.18 34.88 L13.64 34.40 L14.10 33.92 L14.56 33.43 L15.02 32.95 L15.48 32.47 L15.94 31.98 L16.40 31.50 L16.86 31.02 L17.32 30.53 L17.78 30.05 L18.24 29.57 L18.70 29.08 L19.16 28.60 L19.62 28.12 L20.08 27.63 L20.54 27.15 L21.00 26.67 L21.46 26.18 L21.92 25.70 L22.38 25.22 L22.84 24.73 L23.30 24.25 L23.76 23.77 L24.00 23.52 Q30.21 17.00 36.42 23.52 L36.49 23.60 L36.84 23.97 L37.19 24.33 L37.54 24.70 L37.89 25.07 L38.24 25.43 L38.59 25.80 L38.94 26.17 L39.29 26.53 L39.64 26.90 L39.99 27.27 L40.34 27.63 L40.68 28.00 L41.03 28.37 L41.38 28.73 L41.73 29.10 L42.08 29.47 L42.43 29.83 L42.78 30.20 L43.13 30.57 L43.48 30.93 L43.83 31.30 L44.18 31.67 L44.53 32.03 L44.88 32.40 L45.22 32.77 L45.57 33.13 L45.64 33.21 Q51.16 39.00 57.41 34.00 L57.72 33.75 L58.04 33.50 L58.35 33.25 L58.66 33.00 L58.97 32.75 L59.29 32.50 L59.60 32.25 L59.91 32.00 L60.22 31.75 L60.54 31.50 L60.85 31.25 L61.16 31.00 L61.47 30.75 L61.79 30.50 L62.10 30.25 L62.41 30.00 L62.72 29.75 L63.04 29.50 L63.35 29.25 L63.66 29.00 L63.94 28.78 Q69.91 24.00 75.88 28.78 L76.33 29.13 L76.79 29.50 L77.24 29.87 L77.70 30.23 L78.16 30.60 L78.62 30.97 L79.08 31.33 L79.54 31.70 L79.99 32.07 L80.45 32.43 L80.91 32.80 L81.37 33.17 L81.83 33.53 L82.29 33.90 L82.74 34.27 L83.20 34.63 L83.66 35.00 L84.12 35.37 L84.58 35.73 L85.04 36.10 L85.49 36.47 L85.95 36.83 L86.41 37.20 L86.87 37.57 L87.33 37.93 L87.79 38.30 L88.24 38.67 L88.70 39.03 L89.16 39.40 L89.62 39.77 L90.08 40.13 L90.54 40.50 L90.99 40.87 L91.45 41.23 L91.91 41.60 L92.37 41.97 L92.83 42.33 L93.29 42.70 L93.74 43.07 L94.20 43.43 L94.66 43.80 L95.12 44.17 L95.58 44.53 L95.69 44.62 C96.26 45.08 95.94 46.00 95.21 46.00 L4.79 46.00 C3.96 46.00 3.54 45.01 4.11 44.41 Z"/><path class="mark-w" d="M3.97 55.96 L4.43 56.61 L4.89 57.26 L5.35 57.92 L5.81 58.57 L6.27 59.22 L6.73 59.87 L7.19 60.53 L7.65 61.18 L8.11 61.83 L8.57 62.48 L9.03 63.13 L9.49 63.79 L9.95 64.44 L10.41 65.09 L10.88 65.74 L11.34 66.40 L11.80 67.05 L12.26 67.70 L12.72 68.35 L13.18 69.01 L13.64 69.66 L14.10 70.31 L14.56 70.97 L15.02 71.62 L15.48 72.27 L15.94 72.92 L16.40 73.58 L16.86 74.23 L17.32 74.88 L17.78 75.53 L18.24 76.19 L18.70 76.84 L19.16 77.49 L19.62 78.14 L20.08 78.80 L20.54 79.45 L21.00 80.10 L21.46 80.75 L21.92 81.41 L22.38 82.06 L22.84 82.71 L23.30 83.36 L23.76 84.02 L24.18 84.61 Q30.21 93.15 36.24 84.61 L36.49 84.24 L36.84 83.75 L37.19 83.25 L37.54 82.76 L37.89 82.26 L38.24 81.77 L38.59 81.27 L38.94 80.77 L39.29 80.28 L39.64 79.79 L39.99 79.29 L40.34 78.80 L40.68 78.30 L41.03 77.81 L41.38 77.31 L41.73 76.81 L42.08 76.32 L42.43 75.83 L42.78 75.33 L43.13 74.84 L43.48 74.34 L43.83 73.84 L44.18 73.35 L44.53 72.86 L44.88 72.36 L45.22 71.87 L45.57 71.37 L45.80 71.05 Q51.16 63.45 57.48 70.27 L57.72 70.54 L58.04 70.87 L58.35 71.21 L58.66 71.55 L58.97 71.89 L59.29 72.22 L59.60 72.56 L59.91 72.90 L60.22 73.24 L60.54 73.58 L60.85 73.91 L61.16 74.25 L61.47 74.59 L61.79 74.92 L62.10 75.26 L62.41 75.60 L62.72 75.94 L63.04 76.28 L63.35 76.61 L63.66 76.95 L63.87 77.18 Q69.91 83.70 75.95 77.18 L76.33 76.77 L76.79 76.28 L77.24 75.78 L77.70 75.28 L78.16 74.79 L78.62 74.30 L79.08 73.80 L79.54 73.30 L79.99 72.81 L80.45 72.32 L80.91 71.82 L81.37 71.32 L81.83 70.83 L82.29 70.34 L82.74 69.84 L83.20 69.34 L83.66 68.85 L84.12 68.36 L84.58 67.86 L85.04 67.36 L85.49 66.87 L85.95 66.38 L86.41 65.88 L86.87 65.38 L87.33 64.89 L87.79 64.39 L88.24 63.90 L88.70 63.41 L89.16 62.91 L89.62 62.41 L90.08 61.92 L90.54 61.42 L90.99 60.93 L91.45 60.43 L91.91 59.94 L92.37 59.45 L92.83 58.95 L93.29 58.45 L93.74 57.96 L94.20 57.47 L94.66 56.97 L95.12 56.47 L95.58 55.98 L95.92 55.62 C96.49 55.00 96.05 54.00 95.21 54.00 L4.79 54.00 C3.87 54.00 3.32 55.04 3.86 55.80 Z"/></svg></div>
+  </section>
+
+</main>
+
+<script>
+// The facts, from the brief. Nothing here is invented.
+const things = [
+  { slug: 'firn', name: 'Firn', img: 'firn', w: 1600, h: 900,
+    line: 'A calm browser for Mac and iPhone, built on Safari’s engine. Open source.',
+    more: [
+      ['firn-mac', 'Firn on a Mac: a sidebar with four pinned sites, a “Weekend cooking” group of tabs, and the Snow Peak site open beside it.', 1600, 1043],
+      ['firn-mac-sisters', 'Firn on a Mac in a space called Trip: a “Sisters” group of tabs in the sidebar, and the Sisters Coffee site open beside it.', 1600, 1043],
+      ['firn-iphone-pair', 'Two images of Firn on iPhone. “Every space is its own browser.”: a grid of open tabs in a space called Work. “Read without the clutter.”: a Wikipedia article about firn in reader view, with a Summarize button.', 1400, 1458],
+    ],
+    alt: 'Firn for iPhone: a grid of open tabs, a Kinfolk article, and a Wikipedia page about firn with an on-device summary, beside the Firn icon and the line “A calm, native browser.”',
+    body: ['Firn is snow that has made it through a whole season: older than fresh snow, not yet glacier ice. The word is from the Swiss German for “last year’s.”',
+      'It has vertical tabs, spaces, and split view. It’s a native app, written in Swift on WebKit, the engine behind Safari. I wrote its brief and directed Claude Code through every phase.'],
+    facts: [['Released', 'October 2026'], ['Runs on', 'Mac and iPhone'], ['Source', 'Open, on GitHub']],
+    links: [['firnbrowser.com', 'https://firnbrowser.com'], ['Source', 'https://github.com/dwurgy/firn']] },
+  { slug: 'utu', name: 'Utu Weather', img: 'utu-hero', w: 1600, h: 900,
+    line: 'A calm iPhone weather app that tells you the forecast in a plain-English sentence, then shows the numbers.',
+    more: [
+      ['utu', 'A design mockup of Utu Weather’s widgets in its sky and paper styles, for Salem at 52°, with lines like “Drizzle until 3, then calm” and “Umbrella? Until 3, yes.”', 1600, 936],
+      ['utu-phones', 'A design mockup of four iPhones showing Utu: golden hour, a drizzly afternoon, and a clear night, each with a large temperature and a one-sentence forecast, and the detail sheet for Saturday.', 1600, 1000],
+      ['utu-lockup', 'The Utu app icon, a sun setting behind soft hills, beside the handwritten “utu” wordmark.', 1600, 800],
+    ],
+    alt: 'A design mockup for Utu Weather: its icon and wordmark, the line “Weather, without the noise.”, an iPhone showing 52° in Salem and “Soft drizzle until about 3, then the clouds open up for a calm evening.”, and two widgets, one reading “Umbrella? Until 3, yes.”',
+    body: ['The name, said OO-too, is Finnish for haze or mist. Utu writes the forecast as a sentence, like “Grey and mild. Showers drift in around 4 and stay through the evening.” The numbers come second.',
+      'It has soft, hazy skies, gentle motion, and widgets that answer questions directly: “Umbrella? Yes, after 4.” Weather, without the noise.'],
+    facts: [['Status', 'In development, not out yet'], ['Built with', 'SwiftUI, WeatherKit, and WidgetKit'], ['Images', 'Design mockups']],
+    links: [['utuweather.com', 'https://utuweather.com']] },
+  { slug: 'deepcall', name: 'Deepcall', img: 'deepcall', w: 1600, h: 900,
+    line: 'A co-op action game about pilots in flying exosuits, set in a drowned world of Nordic fjords and glaciers.',
+    alt: 'Mood reference for Deepcall: dark mountains above a black shoreline, with a road winding along the water, and the Deepcall wordmark across the sky.',
+    body: ['You fly freely across one open world, liberate outposts, and hunt the giants that survived the flood. You can play it solo or with a friend.',
+      'I’m building it on my own with Claude Code. The current milestone is the flight prototype: hover, flight, heat, and two-player networking. The name is from Psalm 42:7, “Deep calls to deep.”'],
+    facts: [['Status', 'Early development'], ['Built with', 'Unreal Engine 5.8 and C++'], ['Image', 'Mood reference, photo by Andre Filipe on Unsplash']],
+    links: [] },
+  { slug: 'nw-remarketing', name: 'NW Remarketing', img: 'nwr-identity', w: 1600, h: 1000,
+    line: 'A new identity for the company: nwr typed at a terminal, with a Cascade peak hidden in the w.',
+    alt: 'The NW Remarketing logo on near-black: “nwr” with a snowcapped peak in the w and the r on an amber cursor block, beside the tagline “Infrastructure, in hand.”',
+    body: ['The mark is the word nwr typed at a terminal, with the cursor resting on the r and a snowcapped Cascade peak hidden in the w. The amber comes from old amber-phosphor terminal screens.'],
+    facts: [['Work', 'Brand identity'], ['Tagline', 'Infrastructure, in hand.'], ['Used on', 'Invoices, the eBay store, email, and the website']],
+    links: [] },
+  { slug: 'copywriter-lab', name: 'Copywriter Lab', img: 'copywriter-lab', w: 1210, h: 848,
+    line: 'A part number in. An eBay title that doubles as a quote line, a product description, and weight and dimensions out.',
+    alt: 'NW Copywriter Lab: a part number entered, the listing title above a short quote description and the start of a product description, each with a Copy button.',
+    body: ['An internal tool that turns a part number into an eBay title that doubles as a quote line, a product description, and weight and dimensions, and it saves the spec data for store filters.',
+      'I prototyped it in Google AI Studio, rebuilt it with Claude, and deployed it on Cloudflare. It went from idea to production in three days.'],
+    facts: [['Idea to production', '3 days'], ['Runs on', 'Cloudflare']],
+    links: [] },
+];
+const photos = [
+  ['lodge-dusk', 'A glass-fronted lodge under tall pines at dusk.'],
+  ['flowers-table', 'Orange lilies in a red vase, lit by low sun beside a dark wooden chair.'],
+  ['pavilion-peak', 'A timber pavilion framing a mountain peak beyond a pool.'],
+  ['wheelbarrow-driveway', 'A small boy in a trucker cap shovelling dirt into a red wheelbarrow in a driveway.'],
+  ['firs-house', 'Two old firs in front of a house and a dark car.'],
+  ['ice-cream', 'A smiling boy holding an ice cream cone at a red table by the window.'],
+  ['lake-dusk-moon', 'Mountains at dusk over still water, a sliver of moon above.'],
+];
+
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+
+// Build the list, each thing's page, and the pictures that follow the hand.
+$('#thing-list').innerHTML = things.map((t, i) =>
+  `<li style="--i: ${i}"><a href="#things/${t.slug}" data-peek="${t.slug}"><b>${t.name}</b><span>${t.line}</span></a></li>`).join('');
+$('#peek').innerHTML = things.map((t) =>
+  `<figure data-peek="${t.slug}"><figcaption>${t.line}</figcaption></figure>`).join('');
+$('#thing-pages').innerHTML = things.map((t, i) => {
+  const next = things[(i + 1) % things.length];
+  return `<section class="thing" data-door="things/${t.slug}" hidden>
+    <h2>${t.name}</h2>
+    <p class="dim">${t.line}</p>
+    <figure class="reel" data-thing="${i}"></figure>
+    ${t.body.map((p) => `<p>${p}</p>`).join('')}
+    <dl>${t.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+    ${t.links.length ? `<p class="out">${t.links.map(([l, h]) => `<a href="${h}">${l}</a>`).join(' ')}</p>` : ''}
+    <p class="next"><span class="dim">Next,</span> <a href="#things/${next.slug}">${next.name}</a></p>
+  </section>`;
+}).join('');
+
+// Doors. The address remembers which one is open, so Back works.
+const sections = [...document.querySelectorAll('[data-door]')];
+const words = [...document.querySelectorAll('.line a')];
+const calm = matchMedia('(prefers-reduced-motion: reduce)');
+const door = () => decodeURIComponent(location.hash.slice(1));
+const slugOf = (d) => (d.startsWith('things/') ? d.slice(7) : '');
+const listName = (slug) => $(`.things a[data-peek="${slug}"] b`);
+let shown = '';
+function render() {
+  const d = door();
+  const known = sections.some((s) => s.dataset.door === d);
+  sections.forEach((s) => { s.hidden = s.dataset.door !== d; });
+  const word = known ? d.split('/')[0] : '';
+  words.forEach((a) => {
+    if (a.hash === '#' + word) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
+  if (known) document.body.dataset.open = word; else delete document.body.dataset.open;
+  scrollTo(0, 0);
+  peek('');
+  // Opening the list sets its names arriving in turn.
+  const list = $('[data-door="things"]');
+  document.querySelectorAll('.things b.still').forEach((b) => b.classList.remove('still'));
+  clearTimeout(render.t);
+  list.classList.toggle('cascade', d === 'things' && shown !== 'things');
+  render.t = setTimeout(() => list.classList.remove('cascade'), 1800);
+  shown = known ? d : '';
+}
+// Change doors. `hash` is where to go; leave it out when the address has already changed (Back).
+function go(hash) {
+  const from = shown;
+  const to = hash === undefined ? door() : hash.slice(1);
+  const update = () => { if (hash !== undefined) history.pushState(null, '', hash || location.pathname + location.search); render(); };
+  if (!document.startViewTransition || calm.matches) return update();
+
+  const named = [];
+  const name = (el, n) => { if (el) { el.style.viewTransitionName = n; named.push(el); } };
+  const clear = () => named.splice(0).forEach((el) => { el.style.viewTransitionName = ''; });
+  // List to thing: the name under the hand, and its picture if it's showing, travel to the page.
+  // The same word makes the trip: a name from the list to its page's title, a title back
+  // to the list, or the name after "Next," up to the top of the next page.
+  const title = (d) => $(`[data-door="${d}"] h2`);
+  const nextLink = slugOf(from) && slugOf(to) && $(`[data-door="${from}"] .next a[href="#${to}"]`);
+  const move = from === 'things' && slugOf(to) ? 'in' : slugOf(from) && to === 'things' ? 'back' : nextLink ? 'in' : '';
+  name($('.col section:not([hidden])'), 'col-out');
+  let picture = null;
+  if (move) document.documentElement.dataset.sameName = move;
+  if (from === 'things' && slugOf(to)) {
+    name(listName(slugOf(to)), 'thing-name');
+    picture = +($(`[data-door="${to}"] .reel`).dataset.at || 0) === 0 && $(`.peek figure.on[data-peek="${slugOf(to)}"] img`);
+    name(picture, 'thing-img');
+  } else if (move === 'back') name(title(from), 'thing-name');
+  else if (nextLink) name(nextLink, 'thing-name');
+  const t = document.startViewTransition(async () => {
+    clear();
+    update();
+    if (move === 'back') { const home = listName(slugOf(from)); home.classList.add('still'); name(home, 'thing-name'); }
+    else if (move) name(title(to), 'thing-name');
+    if (picture) {
+      const big = $('.thing:not([hidden]) .frame img.front');
+      name(big, 'thing-img');
+      await Promise.race([big.decode().catch(() => {}), new Promise((r) => setTimeout(r, 400))]);
+    }
+  });
+  t.finished.finally(() => { clear(); delete document.documentElement.dataset.sameName; });
+}
+// The open word closes its own door; inside a thing, it goes back to the list.
+addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+  e.preventDefault();
+  go(location.hash === a.hash && a.closest('.line') ? '' : a.hash);
+});
+addEventListener('popstate', () => go());
+addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape' || !location.hash) return;
+  const parts = location.hash.split('/');
+  go(parts.length > 1 ? parts[0] : '');
+});
+setTimeout(() => document.body.classList.remove('arrive'), 1400);
+
+// The picture of the thing under your hand.
+function peek(slug) {
+  document.querySelectorAll('.peek figure').forEach((f) => f.classList.toggle('on', f.dataset.peek === slug));
+}
+document.querySelectorAll('.things a').forEach((a) => {
+  a.addEventListener('pointerenter', () => { peek(a.dataset.peek); new Image().src = $(`[data-door="things/${a.dataset.peek}"] img`).src; });
+  a.addEventListener('pointerleave', () => peek(''));
+  a.addEventListener('focus', () => peek(a.dataset.peek));
+  a.addEventListener('blur', () => peek(''));
+});
+
+// A reel of pictures. Back and Next are written under it; the arrow keys, a swipe,
+// and a click on either half of the picture do the same.
+function reel(fig, items) {
+  const many = items.length > 1;
+  // The count and the two words sit above the picture, so they hold still while it changes shape.
+  fig.innerHTML = (many ? `<figcaption><span aria-live="polite">1 / ${items.length}</span><span class="ctl"><button type="button" data-dir="-1">Back</button><button type="button" data-dir="1">Next</button></span></figcaption>` : '')
+    + `<div class="frame" style="aspect-ratio: ${items[0][2]}"><img class="front" src="${items[0][0]}" alt="${esc(items[0][1])}" loading="lazy" decoding="async"><img alt="" decoding="async"></div>`;
+  if (!many) return;
+  const frame = $('.frame', fig);
+  let at = 0, [front, back] = frame.children;
+  fig.dataset.at = 0;
+  function show(dir) {
+    at = (at + dir + items.length) % items.length;
+    fig.dataset.at = at;
+    // The next one pushes the last one out, the way you'd slide prints across a table.
+    back.src = items[at][0]; back.alt = items[at][1]; front.alt = '';
+    frame.style.aspectRatio = items[at][2];
+    back.style.transition = 'none';
+    back.style.transform = `translateX(${dir * 102}%)`;
+    back.offsetWidth;
+    back.style.transition = '';
+    back.style.transform = 'none';
+    front.style.transform = `translateX(${dir * -102}%)`;
+    front.classList.remove('front'); back.classList.add('front');
+    [front, back] = [back, front];
+    $('figcaption span', fig).textContent = `${at + 1} / ${items.length}`;
+    new Image().src = items[(at + dir + items.length) % items.length][0];
+  }
+  const side = (e) => (e.clientX - frame.getBoundingClientRect().left < frame.offsetWidth / 2 ? -1 : 1);
+  let downX = null, swiped = false;
+  frame.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') frame.style.cursor = side(e) < 0 ? 'w-resize' : 'e-resize'; });
+  frame.addEventListener('pointerdown', (e) => { downX = e.clientX; swiped = false; });
+  frame.addEventListener('pointerup', (e) => {
+    if (downX !== null && Math.abs(e.clientX - downX) > 40) { swiped = true; show(e.clientX < downX ? 1 : -1); }
+    downX = null;
+  });
+  frame.addEventListener('click', (e) => { if (!swiped) show(side(e)); });
+  fig.addEventListener('click', (e) => { const b = e.target.closest('.ctl button'); if (b) show(+b.dataset.dir); });
+  fig.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') show(1);
+    if (e.key === 'ArrowLeft') show(-1);
+  });
+}
+reel($('#photos'), photos.map(([f, alt]) => [`img/${f}.webp`, alt, '4 / 3']));
+document.querySelectorAll('.reel[data-thing]').forEach((fig) => {
+  const t = things[fig.dataset.thing];
+  reel(fig, [[t.img, t.alt, t.w, t.h], ...(t.more || [])].map(([f, alt, w, h]) => [`img/${f}-1600.webp`, alt, `${w} / ${h}`]));
+});
+
+$('#copy').addEventListener('click', async (e) => {
+  try { await navigator.clipboard.writeText($('#email').textContent); e.target.textContent = 'Copied'; }
+  catch { e.target.textContent = 'Select it instead'; }
+  setTimeout(() => { e.target.textContent = 'Copy'; }, 1600);
+});
+
+render();
+</script>
+</body>
+</html>

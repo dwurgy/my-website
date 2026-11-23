@@ -1,0 +1,26 @@
+/* David Wurgler: brand tokens. One typeface, one size, two tones, one dot. */
+@font-face {
+  font-family: 'Averia Serif Libre';
+  src: url(../fonts/AveriaSerifLibre-Light.woff2) format('woff2');
+  font-weight: 300;
+  font-display: block;
+}
+:root {
+  --bg: #eff0ee;   /* snow */
+  --ink: #0e0f10;  /* ink */
+  --dim: #696b6a;  /* stone: secondary text, and anything not chosen */
+  --dot: #e5482d;  /* ember: the full stop, and nothing else */
+  --size: 21px;    /* every piece of text, everywhere (19px on phones) */
+  --leading: 1.5;
+  --radius: 3px;   /* pictures only */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);  /* things settling in */
+  --glide: cubic-bezier(0.6, 0, 0.2, 1);      /* things travelling */
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0e0f10; --ink: #e9eae7; --dim: #8e908e; --dot: #f0573b; }
+}
+body {
+  background: var(--bg); color: var(--ink);
+  font: 300 var(--size)/var(--leading) 'Averia Serif Libre', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+}
