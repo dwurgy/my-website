@@ -26,12 +26,13 @@
   --y: 44vh;     /* how far down it sits */
   --size: 21px;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --glide: cubic-bezier(0.6, 0, 0.2, 1);
 }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #0e0f10; --ink: #e9eae7; --dim: #8e908e; --dot: #f0573b; }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { background: var(--bg); }
+html { background: var(--bg); scrollbar-gutter: stable; }
 body {
   background: var(--bg);
   color: var(--ink);
@@ -73,10 +74,22 @@ body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(-
 }
 .col section { max-width: 27em; }
 .col section[hidden] { display: none; }
-@media (prefers-reduced-motion: no-preference) {
-  .col section { animation: open 320ms var(--ease) both; }
-}
-@keyframes open { from { opacity: 0; transform: translateY(8px); } }
+
+/* Moving between doors. The sentence holds (or, on a phone, glides to the top);
+   what was open lifts away as the next thing settles in under it. */
+.line { view-transition-name: line; }
+.col section:not([hidden]) { view-transition-name: col; }
+.thing:not([hidden]) h2 { view-transition-name: thing-name; }
+.thing h2 { width: fit-content; }
+::view-transition-group(line) { animation-duration: 520ms; animation-timing-function: var(--glide); }
+::view-transition-old(col) { animation: leave 200ms ease-in both; }
+::view-transition-new(col) { animation: settle 520ms var(--ease) 120ms both; }
+/* A thing's name travels from the list to the top of its page, and its picture crosses over with it. */
+::view-transition-group(thing-name),
+::view-transition-group(thing-img) { animation-duration: 560ms; animation-timing-function: var(--glide); }
+::view-transition-old(thing-img), ::view-transition-new(thing-img) { height: 100%; }
+@keyframes leave { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes settle { from { opacity: 0; transform: translateY(14px); } }
 .col p, .col ul, .col dl, .col figure { margin-bottom: 1.5em; }
 .col p { text-wrap: pretty; hanging-punctuation: first; }
 .col ul { list-style: none; }
@@ -122,9 +135,9 @@ body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(-
 .thing dt { color: var(--dim); }
 
 /* Photographs: one at a time. */
-.frame { display: block; width: 100%; aspect-ratio: 4 / 3; position: relative; cursor: e-resize; }
-.frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 250ms; }
-.frame img.out-of-view { opacity: 0; }
+.frame { display: block; width: 100%; aspect-ratio: 4 / 3; position: relative; overflow: hidden; border-radius: 3px; cursor: e-resize; }
+.frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 0; transition: transform 640ms var(--glide); }
+.frame img + img { transform: translateX(102%); }
 @media (prefers-reduced-motion: reduce) { .frame img { transition: none; } }
 figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; }
 
@@ -144,11 +157,11 @@ figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; }
     position: sticky; left: auto; top: 0; padding: 22px var(--x) 18px;
     background: var(--bg);
     transform: translateY(38svh);
-    transition: transform 480ms var(--ease);
   }
   body[data-open] .line { transform: none; }
+  /* Let the sentence reach the top before what's under it arrives. */
+  ::view-transition-new(col) { animation-delay: 340ms; }
   .col { margin: 0; width: auto; padding: 1.5em var(--x) 30svh; }
-  @media (prefers-reduced-motion: reduce) { .line { transition: none; } }
 }
 </style>
 </head>
@@ -177,7 +190,7 @@ figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; }
       <li>Never weaken a security default.</li>
       <li>Each phase ends with a done test.</li>
     </ul>
-    <p>I care about how it feels, not just how it looks. Good software should be pretty to look at, easy to use, and fun.</p>
+    <p>I care about how it feels, not just how it looks. Good software should be pretty to look at and easy to use. Then it should get out of your way.</p>
     <p>This site was made the same way. <a href="https://github.com/dwurgy/my-website">Read the source</a></p>
   </section>
 
@@ -185,7 +198,7 @@ figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; }
     <h2 class="sr">pretty</h2>
     <p>I take pictures.</p>
     <figure>
-      <button class="frame" type="button" aria-label="Next photograph"><img id="photo-a" alt=""><img id="photo-b" class="out-of-view" alt=""></button>
+      <button class="frame" type="button" aria-label="Next photograph"><img id="photo-a" alt=""><img id="photo-b" alt=""></button>
       <figcaption class="dim"><span id="photo-count" aria-live="polite">1 / 7</span></figcaption>
     </figure>
     <p>I sing, write, and produce in a band called My Brothers And I. Our songs have been on Virgin River, Pretty Little Liars, Queen Sugar, and others.</p>
@@ -203,7 +216,7 @@ figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; }
   <section data-door="hi" hidden>
     <h2 class="sr">Say hi</h2>
     <p><span id="email">hello@davidwurgler.com</span><button class="copy" type="button" id="copy">Copy</button></p>
-    <p class="out"><a href="https://www.linkedin.com/in/david-joel-wurgler">LinkedIn</a> <a href="https://github.com/dwurgy">GitHub</a> <a href="https://www.instagram.com/dwurgy/">Instagram</a></p>
+    <p class="out"><a href="https://www.linkedin.com/in/david-joel-wurgler">LinkedIn</a> <a href="https://github.com/dwurgy">GitHub</a> <a href="https://www.threads.com/@dwurgy">Threads</a></p>
     <div class="mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="2.59 20.26 94.82 68.62" aria-hidden="true"><path class="mark-ridge" d="M4.43 44.07 L4.89 43.58 L5.35 43.10 L5.81 42.62 L6.27 42.13 L6.73 41.65 L7.19 41.17 L7.65 40.68 L8.11 40.20 L8.57 39.72 L9.03 39.23 L9.49 38.75 L9.95 38.27 L10.41 37.78 L10.88 37.30 L11.34 36.82 L11.80 36.33 L12.26 35.85 L12.72 35.37 L13.18 34.88 L13.64 34.40 L14.10 33.92 L14.56 33.43 L15.02 32.95 L15.48 32.47 L15.94 31.98 L16.40 31.50 L16.86 31.02 L17.32 30.53 L17.78 30.05 L18.24 29.57 L18.70 29.08 L19.16 28.60 L19.62 28.12 L20.08 27.63 L20.54 27.15 L21.00 26.67 L21.46 26.18 L21.92 25.70 L22.38 25.22 L22.84 24.73 L23.30 24.25 L23.76 23.77 L24.00 23.52 Q30.21 17.00 36.42 23.52 L36.49 23.60 L36.84 23.97 L37.19 24.33 L37.54 24.70 L37.89 25.07 L38.24 25.43 L38.59 25.80 L38.94 26.17 L39.29 26.53 L39.64 26.90 L39.99 27.27 L40.34 27.63 L40.68 28.00 L41.03 28.37 L41.38 28.73 L41.73 29.10 L42.08 29.47 L42.43 29.83 L42.78 30.20 L43.13 30.57 L43.48 30.93 L43.83 31.30 L44.18 31.67 L44.53 32.03 L44.88 32.40 L45.22 32.77 L45.57 33.13 L45.64 33.21 Q51.16 39.00 57.41 34.00 L57.72 33.75 L58.04 33.50 L58.35 33.25 L58.66 33.00 L58.97 32.75 L59.29 32.50 L59.60 32.25 L59.91 32.00 L60.22 31.75 L60.54 31.50 L60.85 31.25 L61.16 31.00 L61.47 30.75 L61.79 30.50 L62.10 30.25 L62.41 30.00 L62.72 29.75 L63.04 29.50 L63.35 29.25 L63.66 29.00 L63.94 28.78 Q69.91 24.00 75.88 28.78 L76.33 29.13 L76.79 29.50 L77.24 29.87 L77.70 30.23 L78.16 30.60 L78.62 30.97 L79.08 31.33 L79.54 31.70 L79.99 32.07 L80.45 32.43 L80.91 32.80 L81.37 33.17 L81.83 33.53 L82.29 33.90 L82.74 34.27 L83.20 34.63 L83.66 35.00 L84.12 35.37 L84.58 35.73 L85.04 36.10 L85.49 36.47 L85.95 36.83 L86.41 37.20 L86.87 37.57 L87.33 37.93 L87.79 38.30 L88.24 38.67 L88.70 39.03 L89.16 39.40 L89.62 39.77 L90.08 40.13 L90.54 40.50 L90.99 40.87 L91.45 41.23 L91.91 41.60 L92.37 41.97 L92.83 42.33 L93.29 42.70 L93.74 43.07 L94.20 43.43 L94.66 43.80 L95.12 44.17 L95.58 44.53 L95.69 44.62 C96.26 45.08 95.94 46.00 95.21 46.00 L4.79 46.00 C3.96 46.00 3.54 45.01 4.11 44.41 Z"/><path class="mark-w" d="M3.97 55.96 L4.43 56.61 L4.89 57.26 L5.35 57.92 L5.81 58.57 L6.27 59.22 L6.73 59.87 L7.19 60.53 L7.65 61.18 L8.11 61.83 L8.57 62.48 L9.03 63.13 L9.49 63.79 L9.95 64.44 L10.41 65.09 L10.88 65.74 L11.34 66.40 L11.80 67.05 L12.26 67.70 L12.72 68.35 L13.18 69.01 L13.64 69.66 L14.10 70.31 L14.56 70.97 L15.02 71.62 L15.48 72.27 L15.94 72.92 L16.40 73.58 L16.86 74.23 L17.32 74.88 L17.78 75.53 L18.24 76.19 L18.70 76.84 L19.16 77.49 L19.62 78.14 L20.08 78.80 L20.54 79.45 L21.00 80.10 L21.46 80.75 L21.92 81.41 L22.38 82.06 L22.84 82.71 L23.30 83.36 L23.76 84.02 L24.18 84.61 Q30.21 93.15 36.24 84.61 L36.49 84.24 L36.84 83.75 L37.19 83.25 L37.54 82.76 L37.89 82.26 L38.24 81.77 L38.59 81.27 L38.94 80.77 L39.29 80.28 L39.64 79.79 L39.99 79.29 L40.34 78.80 L40.68 78.30 L41.03 77.81 L41.38 77.31 L41.73 76.81 L42.08 76.32 L42.43 75.83 L42.78 75.33 L43.13 74.84 L43.48 74.34 L43.83 73.84 L44.18 73.35 L44.53 72.86 L44.88 72.36 L45.22 71.87 L45.57 71.37 L45.80 71.05 Q51.16 63.45 57.48 70.27 L57.72 70.54 L58.04 70.87 L58.35 71.21 L58.66 71.55 L58.97 71.89 L59.29 72.22 L59.60 72.56 L59.91 72.90 L60.22 73.24 L60.54 73.58 L60.85 73.91 L61.16 74.25 L61.47 74.59 L61.79 74.92 L62.10 75.26 L62.41 75.60 L62.72 75.94 L63.04 76.28 L63.35 76.61 L63.66 76.95 L63.87 77.18 Q69.91 83.70 75.95 77.18 L76.33 76.77 L76.79 76.28 L77.24 75.78 L77.70 75.28 L78.16 74.79 L78.62 74.30 L79.08 73.80 L79.54 73.30 L79.99 72.81 L80.45 72.32 L80.91 71.82 L81.37 71.32 L81.83 70.83 L82.29 70.34 L82.74 69.84 L83.20 69.34 L83.66 68.85 L84.12 68.36 L84.58 67.86 L85.04 67.36 L85.49 66.87 L85.95 66.38 L86.41 65.88 L86.87 65.38 L87.33 64.89 L87.79 64.39 L88.24 63.90 L88.70 63.41 L89.16 62.91 L89.62 62.41 L90.08 61.92 L90.54 61.42 L90.99 60.93 L91.45 60.43 L91.91 59.94 L92.37 59.45 L92.83 58.95 L93.29 58.45 L93.74 57.96 L94.20 57.47 L94.66 56.97 L95.12 56.47 L95.58 55.98 L95.92 55.62 C96.49 55.00 96.05 54.00 95.21 54.00 L4.79 54.00 C3.87 54.00 3.32 55.04 3.86 55.80 Z"/></svg></div>
   </section>
 
@@ -283,11 +296,16 @@ $('#thing-pages').innerHTML = things.map((t, i) => {
 // Doors. The address remembers which one is open, so Back works.
 const sections = [...document.querySelectorAll('[data-door]')];
 const words = [...document.querySelectorAll('.line a')];
+const calm = matchMedia('(prefers-reduced-motion: reduce)');
+const door = () => decodeURIComponent(location.hash.slice(1));
+const slugOf = (d) => (d.startsWith('things/') ? d.slice(7) : '');
+const listName = (slug) => $(`.things a[data-peek="${slug}"] b`);
+let shown = '';
 function render() {
-  const door = decodeURIComponent(location.hash.slice(1));
-  const known = sections.some((s) => s.dataset.door === door);
-  sections.forEach((s) => { s.hidden = s.dataset.door !== door; });
-  const word = known ? door.split('/')[0] : '';
+  const d = door();
+  const known = sections.some((s) => s.dataset.door === d);
+  sections.forEach((s) => { s.hidden = s.dataset.door !== d; });
+  const word = known ? d.split('/')[0] : '';
   words.forEach((a) => {
     if (a.hash === '#' + word) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
@@ -295,17 +313,46 @@ function render() {
   if (known) document.body.dataset.open = word; else delete document.body.dataset.open;
   scrollTo(0, 0);
   peek('');
+  shown = known ? d : '';
 }
+// Change doors. `hash` is where to go; leave it out when the address has already changed (Back).
 function go(hash) {
-  history.pushState(null, '', hash || location.pathname);
-  render();
+  const from = shown;
+  const to = hash === undefined ? door() : hash.slice(1);
+  const update = () => { if (hash !== undefined) history.pushState(null, '', hash || location.pathname); render(); };
+  if (!document.startViewTransition || calm.matches) return update();
+
+  const named = [];
+  const name = (el, n) => { if (el) { el.style.viewTransitionName = n; named.push(el); } };
+  const clear = () => named.splice(0).forEach((el) => { el.style.viewTransitionName = ''; });
+  // List to thing: the name under the hand, and its picture if it's showing, travel to the page.
+  let picture = null;
+  if (from === 'things' && slugOf(to)) {
+    name(listName(slugOf(to)), 'thing-name');
+    picture = $(`.peek figure.on[data-peek="${slugOf(to)}"] img`);
+    name(picture, 'thing-img');
+  }
+  const t = document.startViewTransition(async () => {
+    clear();
+    update();
+    // Thing to list: the page's name travels back to its place in the list.
+    if (slugOf(from) && to === 'things') name(listName(slugOf(from)), 'thing-name');
+    if (picture) {
+      const big = $('.thing:not([hidden]) figure img');
+      name(big, 'thing-img');
+      await Promise.race([big.decode().catch(() => {}), new Promise((r) => setTimeout(r, 400))]);
+    }
+  });
+  t.finished.finally(clear);
 }
 // The open word closes its own door; inside a thing, it goes back to the list.
-words.forEach((a) => a.addEventListener('click', (e) => {
-  if (location.hash === a.hash) { e.preventDefault(); go(''); }
-}));
-addEventListener('hashchange', render);
-addEventListener('popstate', render);
+addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+  e.preventDefault();
+  go(location.hash === a.hash && a.closest('.line') ? '' : a.hash);
+});
+addEventListener('popstate', () => go());
 addEventListener('keydown', (e) => {
   if (e.key !== 'Escape' || !location.hash) return;
   const parts = location.hash.split('/');
@@ -318,7 +365,7 @@ function peek(slug) {
   document.querySelectorAll('.peek figure').forEach((f) => f.classList.toggle('on', f.dataset.peek === slug));
 }
 document.querySelectorAll('.things a').forEach((a) => {
-  a.addEventListener('pointerenter', () => peek(a.dataset.peek));
+  a.addEventListener('pointerenter', () => { peek(a.dataset.peek); new Image().src = $(`[data-door="things/${a.dataset.peek}"] img`).src; });
   a.addEventListener('pointerleave', () => peek(''));
   a.addEventListener('focus', () => peek(a.dataset.peek));
   a.addEventListener('blur', () => peek(''));
@@ -326,23 +373,29 @@ document.querySelectorAll('.things a').forEach((a) => {
 
 // Photographs: click, or the arrow keys, for the next one.
 let at = 0, front = $('#photo-a'), back = $('#photo-b');
-function show(n, first) {
+function show(n, dir) {
   at = (n + photos.length) % photos.length;
   const [file, alt] = photos[at];
-  if (first) { front.src = `img/${file}.webp`; front.alt = alt; }
+  if (!dir) { front.src = `img/${file}.webp`; front.alt = alt; }
   else {
-    back.src = `img/${file}.webp`; back.alt = alt;
-    back.classList.remove('out-of-view'); front.classList.add('out-of-view');
+    // The next one pushes the last one out, the way you'd slide prints across a table.
+    back.src = `img/${file}.webp`; back.alt = alt; front.alt = '';
+    back.style.transition = 'none';
+    back.style.transform = `translateX(${dir * 102}%)`;
+    back.offsetWidth;
+    back.style.transition = '';
+    back.style.transform = 'none';
+    front.style.transform = `translateX(${dir * -102}%)`;
     [front, back] = [back, front];
   }
   $('#photo-count').textContent = `${at + 1} / ${photos.length}`;
   new Image().src = `img/${photos[(at + 1) % photos.length][0]}.webp`;
 }
-show(0, true);
-$('.frame').addEventListener('click', () => show(at + 1));
+show(0);
+$('.frame').addEventListener('click', () => show(at + 1, 1));
 $('.frame').addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight') show(at + 1);
-  if (e.key === 'ArrowLeft') show(at - 1);
+  if (e.key === 'ArrowRight') show(at + 1, 1);
+  if (e.key === 'ArrowLeft') show(at - 1, -1);
 });
 
 $('#copy').addEventListener('click', async (e) => {
