@@ -85,6 +85,14 @@ body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(-
   body.arrive .line a:nth-child(4) { animation-delay: 330ms; }
   body.arrive .line .dot { animation: fade 500ms 700ms both; }
 }
+/* The five names arrive one after another, the way the sentence did. */
+@media (prefers-reduced-motion: no-preference) {
+  .cascade .things b:not(.still), .cascade .things span, .cascade .also {
+    animation: arrive 620ms var(--ease) both;
+    animation-delay: calc(var(--wait, 220ms) + var(--i) * 75ms);
+  }
+}
+html[data-same-name="back"] .cascade { --wait: 400ms; }
 @keyframes arrive { from { color: var(--bg); } 45% { color: var(--dim); } }
 @keyframes fade { from { opacity: 0; } }
 
@@ -202,6 +210,7 @@ figcaption { margin-bottom: 0.5em; display: flex; justify-content: space-between
     transform: translateY(38svh);
   }
   body[data-open] .line { transform: none; }
+  .cascade { --wait: 340ms; }
   /* Let the sentence reach the top before what's under it arrives. */
   ::view-transition-new(col) { animation-delay: 340ms; }
   .col { margin: 0; width: auto; padding: 1.5em var(--x) 30svh; }
@@ -250,7 +259,7 @@ figcaption { margin-bottom: 0.5em; display: flex; justify-content: space-between
   <section data-door="things" hidden>
     <h2 class="sr">things</h2>
     <ul class="things" id="thing-list"></ul>
-    <p class="dim">Also, a company’s back office, moved off QuickBooks Desktop and onto Odoo 19 in ten weeks, with zero downtime.</p>
+    <p class="dim also" style="--i: 5">Also, a company’s back office, moved off QuickBooks Desktop and onto Odoo 19 in ten weeks, with zero downtime.</p>
   </section>
 
   <div id="thing-pages"></div>
@@ -328,8 +337,8 @@ const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
 // Build the list, each thing's page, and the pictures that follow the hand.
-$('#thing-list').innerHTML = things.map((t) =>
-  `<li><a href="#things/${t.slug}" data-peek="${t.slug}"><b>${t.name}</b><span>${t.line}</span></a></li>`).join('');
+$('#thing-list').innerHTML = things.map((t, i) =>
+  `<li style="--i: ${i}"><a href="#things/${t.slug}" data-peek="${t.slug}"><b>${t.name}</b><span>${t.line}</span></a></li>`).join('');
 $('#peek').innerHTML = things.map((t) =>
   `<figure data-peek="${t.slug}"><img src="img/${t.img}-800.webp" alt="" decoding="async"><figcaption>${t.line}</figcaption></figure>`).join('');
 $('#thing-pages').innerHTML = things.map((t, i) => {
@@ -365,6 +374,12 @@ function render() {
   if (known) document.body.dataset.open = word; else delete document.body.dataset.open;
   scrollTo(0, 0);
   peek('');
+  // Opening the list sets its names arriving in turn.
+  const list = $('[data-door="things"]');
+  document.querySelectorAll('.things b.still').forEach((b) => b.classList.remove('still'));
+  clearTimeout(render.t);
+  list.classList.toggle('cascade', d === 'things' && shown !== 'things');
+  render.t = setTimeout(() => list.classList.remove('cascade'), 1800);
   shown = known ? d : '';
 }
 // Change doors. `hash` is where to go; leave it out when the address has already changed (Back).
@@ -395,7 +410,7 @@ function go(hash) {
   const t = document.startViewTransition(async () => {
     clear();
     update();
-    if (move === 'back') name(listName(slugOf(from)), 'thing-name');
+    if (move === 'back') { const home = listName(slugOf(from)); home.classList.add('still'); name(home, 'thing-name'); }
     else if (move) name(title(to), 'thing-name');
     if (picture) {
       const big = $('.thing:not([hidden]) .frame img.front');
