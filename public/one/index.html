@@ -213,6 +213,20 @@ figcaption { margin-bottom: 0.5em; display: flex; justify-content: space-between
   .col { margin: 0; width: auto; padding: 1.5em var(--x) 30svh; }
 }
 </style>
+<script>
+// Typeface trial, while David chooses: add ?font=averia (or fell, shippori, gowun, hedvig, brygada) to the address.
+(() => {
+  const trial = { averia: [300, 21], fell: [400, 23], shippori: [400, 20], gowun: [400, 20], hedvig: [400, 20], brygada: [400, 21] };
+  const key = new URLSearchParams(location.search).get('font'), f = trial[key];
+  if (!f) return;
+  const css = document.createElement('style');
+  css.textContent = `@font-face { font-family: Trial; src: url(fonts/trial-${key}.woff2) format('woff2'); font-weight: 100 900; font-display: block; }
+    body { font-family: Trial, Georgia, serif !important; font-weight: ${f[0]} !important; }
+    :root { --size: ${f[1]}px !important; }
+    @media (max-width: 819px) { :root { --size: ${f[1] - 2}px !important; } }`;
+  document.head.append(css);
+})();
+</script>
 </head>
 <body class="arrive">
 
@@ -381,7 +395,7 @@ function render() {
 function go(hash) {
   const from = shown;
   const to = hash === undefined ? door() : hash.slice(1);
-  const update = () => { if (hash !== undefined) history.pushState(null, '', hash || location.pathname); render(); };
+  const update = () => { if (hash !== undefined) history.pushState(null, '', hash || location.pathname + location.search); render(); };
   if (!document.startViewTransition || calm.matches) return update();
 
   const named = [];
