@@ -52,8 +52,17 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* The sentence. It never leaves the screen. */
 .line { position: fixed; left: var(--x); top: var(--y); z-index: 2; white-space: nowrap; }
-.line a { transition: color 200ms; }
-.line .dot { color: var(--dot); padding: 0.4em 0.7em 0.4em 0; margin: -0.4em 0; }
+/* Each word can be hit from well outside its letters, with no dead gaps between words. */
+.line a { transition: color 200ms; padding: 0.9em 0.13em; margin: -0.9em -0.13em; }
+.line a:first-child { padding-left: 0.9em; margin-left: -0.9em; }
+/* The full stop is a drawn dot, a little bigger than the typeface's own, and it swells under the hand. */
+.line .dot { padding: 0.9em 1em 0.9em 0.07em; margin: -0.9em 0 -0.9em 0; }
+.line .dot span {
+  display: inline-block; width: 0.21em; height: 0.21em; border-radius: 50%; background: var(--dot);
+  transform-origin: 20% 100%; transition: transform 320ms var(--ease);
+}
+.line .dot:hover span, .line .dot:focus-visible span, .line .dot[aria-current] span { transform: scale(1.9); }
+@media (prefers-reduced-motion: reduce) { .line .dot span { transition: none; } }
 .line h1:has(a:hover) a:not(:hover):not(.dot),
 body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(--dim); }
 @media (prefers-reduced-motion: no-preference) {
@@ -171,7 +180,7 @@ figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; c
 <body class="arrive">
 
 <header class="line">
-  <h1><a href="#i">I</a> <a href="#make">make</a> <a href="#pretty">pretty</a> <a href="#things">things</a><a href="#hi" class="dot" aria-label="Say hi">.</a></h1>
+  <h1><a href="#i">I</a> <a href="#make">make</a> <a href="#pretty">pretty</a> <a href="#things">things</a><a href="#hi" class="dot" aria-label="Say hi"><span></span></a></h1>
 </header>
 
 <main class="col">
@@ -181,6 +190,7 @@ figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; c
     <p>I’m David Wurgler. I design and build software, and I live in Salem, Oregon, with my wife and our two boys.</p>
     <p>I make my apps with Claude, an AI from Anthropic, as my coding partner. I decide what each one is and how it should feel: the design, the details, the way it behaves. Claude and I write the code together and catch each other’s mistakes.</p>
     <p>I build the things I wish already existed: quiet, well-made tools that respect your time and your privacy.</p>
+    <p><a href="#hi">Say hi</a></p>
   </section>
 
   <section data-door="make" hidden>
