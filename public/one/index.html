@@ -83,11 +83,16 @@ body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(-
 .thing h2 { width: fit-content; }
 ::view-transition-group(line) { animation-duration: 520ms; animation-timing-function: var(--glide); }
 ::view-transition-old(col) { animation: leave 200ms ease-in both; }
-::view-transition-new(col) { animation: settle 520ms var(--ease) 120ms both; }
+::view-transition-new(col) { animation: settle 480ms var(--ease) 220ms both; }
 /* A thing's name travels from the list to the top of its page, and its picture crosses over with it. */
 ::view-transition-group(thing-name),
-::view-transition-group(thing-img) { animation-duration: 560ms; animation-timing-function: var(--glide); }
+::view-transition-group(thing-img) { animation-duration: 500ms; animation-timing-function: var(--glide); }
 ::view-transition-old(thing-img), ::view-transition-new(thing-img) { height: 100%; }
+/* Between the list and a page the name is the same word, so one copy makes the trip, not two cross-fading. */
+html[data-same-name]::view-transition-old(thing-name) { display: none; }
+html[data-same-name]::view-transition-new(thing-name) { animation: none; }
+/* Coming back, the name gets home before the rest of the list appears, so it never crosses another name. */
+html[data-same-name="back"]::view-transition-new(col) { animation-delay: 380ms; }
 @keyframes leave { to { opacity: 0; transform: translateY(-6px); } }
 @keyframes settle { from { opacity: 0; transform: translateY(14px); } }
 .col p, .col ul, .col dl, .col figure { margin-bottom: 1.5em; }
@@ -108,7 +113,7 @@ body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(-
 .things li { margin-bottom: 1.5em; }
 .things a { display: block; }
 .things a span { display: block; color: var(--dim); }
-.things b { font-weight: inherit; transition: color 200ms; }
+.things b { display: block; width: fit-content; font-weight: inherit; transition: color 200ms; }
 .things:has(a:hover) a:not(:hover) b { color: var(--dim); }
 
 /* A picture of the thing under your hand, in the empty half. */
@@ -327,6 +332,8 @@ function go(hash) {
   const clear = () => named.splice(0).forEach((el) => { el.style.viewTransitionName = ''; });
   // List to thing: the name under the hand, and its picture if it's showing, travel to the page.
   let picture = null;
+  const same = (from === 'things' && slugOf(to)) || (slugOf(from) && to === 'things');
+  if (same) document.documentElement.dataset.sameName = to === 'things' ? 'back' : 'in';
   if (from === 'things' && slugOf(to)) {
     name(listName(slugOf(to)), 'thing-name');
     picture = $(`.peek figure.on[data-peek="${slugOf(to)}"] img`);
@@ -343,7 +350,7 @@ function go(hash) {
       await Promise.race([big.decode().catch(() => {}), new Promise((r) => setTimeout(r, 400))]);
     }
   });
-  t.finished.finally(clear);
+  t.finished.finally(() => { clear(); delete document.documentElement.dataset.sameName; });
 }
 // The open word closes its own door; inside a thing, it goes back to the list.
 addEventListener('click', (e) => {
