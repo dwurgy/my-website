@@ -79,10 +79,11 @@ body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(-
    what was open lifts away as the next thing settles in under it. */
 .line { view-transition-name: line; }
 .col section:not([hidden]) { view-transition-name: col; }
-.thing:not([hidden]) h2 { view-transition-name: thing-name; }
 .thing h2 { width: fit-content; }
+.next a { display: inline-block; }
 ::view-transition-group(line) { animation-duration: 520ms; animation-timing-function: var(--glide); }
-::view-transition-old(col) { animation: leave 200ms ease-in both; }
+/* What's leaving fades where it stands; it doesn't slide to where the next thing will be. */
+::view-transition-old(col-out) { animation: leave 200ms ease-in both; }
 ::view-transition-new(col) { animation: settle 480ms var(--ease) 220ms both; }
 /* A thing's name travels from the list to the top of its page, and its picture crosses over with it. */
 ::view-transition-group(thing-name),
@@ -290,7 +291,7 @@ $('#thing-pages').innerHTML = things.map((t, i) => {
     ${t.body.map((p) => `<p>${p}</p>`).join('')}
     <dl>${t.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
     ${t.links.length ? `<p class="out">${t.links.map(([l, h]) => `<a href="${h}">${l}</a>`).join(' ')}</p>` : ''}
-    <p><span class="dim">Next,</span> <a href="#things/${next.slug}">${next.name}</a></p>
+    <p class="next"><span class="dim">Next,</span> <a href="#things/${next.slug}">${next.name}</a></p>
   </section>`;
 }).join('');
 
@@ -327,19 +328,25 @@ function go(hash) {
   const name = (el, n) => { if (el) { el.style.viewTransitionName = n; named.push(el); } };
   const clear = () => named.splice(0).forEach((el) => { el.style.viewTransitionName = ''; });
   // List to thing: the name under the hand, and its picture if it's showing, travel to the page.
+  // The same word makes the trip: a name from the list to its page's title, a title back
+  // to the list, or the name after "Next," up to the top of the next page.
+  const title = (d) => $(`[data-door="${d}"] h2`);
+  const nextLink = slugOf(from) && slugOf(to) && $(`[data-door="${from}"] .next a[href="#${to}"]`);
+  const move = from === 'things' && slugOf(to) ? 'in' : slugOf(from) && to === 'things' ? 'back' : nextLink ? 'in' : '';
+  name($('.col section:not([hidden])'), 'col-out');
   let picture = null;
-  const same = (from === 'things' && slugOf(to)) || (slugOf(from) && to === 'things');
-  if (same) document.documentElement.dataset.sameName = to === 'things' ? 'back' : 'in';
+  if (move) document.documentElement.dataset.sameName = move;
   if (from === 'things' && slugOf(to)) {
     name(listName(slugOf(to)), 'thing-name');
     picture = +($(`[data-door="${to}"] .reel`).dataset.at || 0) === 0 && $(`.peek figure.on[data-peek="${slugOf(to)}"] img`);
     name(picture, 'thing-img');
-  }
+  } else if (move === 'back') name(title(from), 'thing-name');
+  else if (nextLink) name(nextLink, 'thing-name');
   const t = document.startViewTransition(async () => {
     clear();
     update();
-    // Thing to list: the page's name travels back to its place in the list.
-    if (slugOf(from) && to === 'things') name(listName(slugOf(from)), 'thing-name');
+    if (move === 'back') name(listName(slugOf(from)), 'thing-name');
+    else if (move) name(title(to), 'thing-name');
     if (picture) {
       const big = $('.thing:not([hidden]) .frame img.front');
       name(big, 'thing-img');
