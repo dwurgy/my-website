@@ -149,11 +149,11 @@ html[data-same-name="back"]::view-transition-new(col) { animation-delay: 380ms; 
 .thing dt { color: var(--dim); }
 
 /* Pictures: one at a time, with the way to change them written underneath. */
-.frame { width: 100%; position: relative; overflow: hidden; border-radius: 3px; touch-action: pan-y; }
+.frame { width: 100%; position: relative; overflow: hidden; border-radius: 3px; touch-action: pan-y; transition: aspect-ratio 640ms var(--glide); }
 .frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 0; transition: transform 640ms var(--glide); }
 .thing .frame img { object-fit: contain; }
 .frame img:not(.front) { transform: translateX(102%); }
-@media (prefers-reduced-motion: reduce) { .frame img { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .frame, .frame img { transition: none; } }
 figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; color: var(--dim); }
 .ctl { display: flex; gap: 1.2em; }
 .ctl button { color: var(--dim); transition: color 200ms; }
@@ -245,19 +245,27 @@ figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; c
 const things = [
   { slug: 'firn', name: 'Firn', img: 'firn', w: 1600, h: 900,
     line: 'A calm browser for Mac and iPhone, built on Safari’s engine. Open source.',
-    more: [['firn-mac', 'Firn on a Mac: a sidebar of tabs and spaces beside a website.']],
+    more: [
+      ['firn-mac', 'Firn on a Mac: a sidebar with four pinned sites, a “Weekend cooking” group of tabs, and the Snow Peak site open beside it.', 1600, 1043],
+      ['firn-mac-sisters', 'Firn on a Mac in a space called Trip: a “Sisters” group of tabs in the sidebar, and the Sisters Coffee site open beside it.', 1600, 1043],
+      ['firn-iphone-pair', 'Two images of Firn on iPhone. “Every space is its own browser.”: a grid of open tabs in a space called Work. “Read without the clutter.”: a Wikipedia article about firn in reader view, with a Summarize button.', 1400, 1458],
+    ],
     alt: 'Firn for iPhone: a grid of open tabs, a Kinfolk article, and a Wikipedia page about firn with an on-device summary, beside the Firn icon and the line “A calm, native browser.”',
     body: ['Firn is snow that has made it through a whole season: older than fresh snow, not yet glacier ice. The word is from the Swiss German for “last year’s.”',
       'It has vertical tabs, spaces, and split view. It’s a native app, written in Swift on WebKit, the engine behind Safari. I wrote its brief and directed Claude Code through every phase.'],
     facts: [['Released', 'October 2026'], ['Runs on', 'Mac and iPhone'], ['Source', 'Open, on GitHub']],
     links: [['firnbrowser.com', 'https://firnbrowser.com'], ['Source', 'https://github.com/dwurgy/firn']] },
-  { slug: 'utu', name: 'Utu Weather', img: 'utu', w: 1600, h: 936,
+  { slug: 'utu', name: 'Utu Weather', img: 'utu-hero', w: 1600, h: 900,
     line: 'A calm iPhone weather app that tells you the forecast in a plain-English sentence, then shows the numbers.',
-    more: [['utu-phones', 'A design mockup of four iPhones showing Utu: golden hour, a drizzly afternoon, and a clear night, each with a large temperature and a one-sentence forecast, and the detail sheet for Saturday.']],
-    alt: 'A design mockup of Utu Weather’s widgets in its sky and paper styles, for Salem at 52°, with lines like “Drizzle until 3, then calm” and “Umbrella? Until 3, yes.”',
+    more: [
+      ['utu', 'A design mockup of Utu Weather’s widgets in its sky and paper styles, for Salem at 52°, with lines like “Drizzle until 3, then calm” and “Umbrella? Until 3, yes.”', 1600, 936],
+      ['utu-phones', 'A design mockup of four iPhones showing Utu: golden hour, a drizzly afternoon, and a clear night, each with a large temperature and a one-sentence forecast, and the detail sheet for Saturday.', 1600, 1000],
+      ['utu-lockup', 'The Utu app icon, a sun setting behind soft hills, beside the handwritten “utu” wordmark.', 1600, 800],
+    ],
+    alt: 'A design mockup for Utu Weather: its icon and wordmark, the line “Weather, without the noise.”, an iPhone showing 52° in Salem and “Soft drizzle until about 3, then the clouds open up for a calm evening.”, and two widgets, one reading “Umbrella? Until 3, yes.”',
     body: ['The name, said OO-too, is Finnish for haze or mist. Utu writes the forecast as a sentence, like “Grey and mild. Showers drift in around 4 and stay through the evening.” The numbers come second.',
       'It has soft, hazy skies, gentle motion, and widgets that answer questions directly: “Umbrella? Yes, after 4.” Weather, without the noise.'],
-    facts: [['Status', 'In development, not out yet'], ['Built with', 'SwiftUI, WeatherKit, and WidgetKit'], ['Image', 'A design mockup']],
+    facts: [['Status', 'In development, not out yet'], ['Built with', 'SwiftUI, WeatherKit, and WidgetKit'], ['Images', 'Design mockups']],
     links: [['utuweather.com', 'https://utuweather.com']] },
   { slug: 'deepcall', name: 'Deepcall', img: 'deepcall', w: 1600, h: 900,
     line: 'A co-op action game about pilots in flying exosuits, set in a drowned world of Nordic fjords and glaciers.',
@@ -399,9 +407,9 @@ document.querySelectorAll('.things a').forEach((a) => {
 
 // A reel of pictures. Back and Next are written under it; the arrow keys, a swipe,
 // and a click on either half of the picture do the same.
-function reel(fig, items, ratio) {
+function reel(fig, items) {
   const many = items.length > 1;
-  fig.innerHTML = `<div class="frame" style="aspect-ratio: ${ratio}"><img class="front" src="${items[0][0]}" alt="${esc(items[0][1])}" loading="lazy" decoding="async"><img alt="" decoding="async"></div>`
+  fig.innerHTML = `<div class="frame" style="aspect-ratio: ${items[0][2]}"><img class="front" src="${items[0][0]}" alt="${esc(items[0][1])}" loading="lazy" decoding="async"><img alt="" decoding="async"></div>`
     + (many ? `<figcaption><span aria-live="polite">1 / ${items.length}</span><span class="ctl"><button type="button" data-dir="-1">Back</button><button type="button" data-dir="1">Next</button></span></figcaption>` : '');
   if (!many) return;
   const frame = $('.frame', fig);
@@ -412,6 +420,7 @@ function reel(fig, items, ratio) {
     fig.dataset.at = at;
     // The next one pushes the last one out, the way you'd slide prints across a table.
     back.src = items[at][0]; back.alt = items[at][1]; front.alt = '';
+    frame.style.aspectRatio = items[at][2];
     back.style.transition = 'none';
     back.style.transform = `translateX(${dir * 102}%)`;
     back.offsetWidth;
@@ -438,10 +447,10 @@ function reel(fig, items, ratio) {
     if (e.key === 'ArrowLeft') show(-1);
   });
 }
-reel($('#photos'), photos.map(([f, alt]) => [`img/${f}.webp`, alt]), '4 / 3');
+reel($('#photos'), photos.map(([f, alt]) => [`img/${f}.webp`, alt, '4 / 3']));
 document.querySelectorAll('.reel[data-thing]').forEach((fig) => {
   const t = things[fig.dataset.thing];
-  reel(fig, [[t.img, t.alt], ...(t.more || [])].map(([f, alt]) => [`img/${f}-1600.webp`, alt]), `${t.w} / ${t.h}`);
+  reel(fig, [[t.img, t.alt, t.w, t.h], ...(t.more || [])].map(([f, alt, w, h]) => [`img/${f}-1600.webp`, alt, `${w} / ${h}`]));
 });
 
 $('#copy').addEventListener('click', async (e) => {
