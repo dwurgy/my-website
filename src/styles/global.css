@@ -199,6 +199,7 @@ html {
 }
 
 body {
+  position: relative;
   margin: 0;
   background: var(--bg);
   color: var(--fg);
@@ -251,22 +252,23 @@ a {
 
 /* Materials */
 
-/* Grain: one fixed, tiled noise layer for the whole page. It sits behind the
-   content, so it shows on paper and never on photos (their grain is in the
-   scans). The tile is screened onto a warm grey first, so multiplying it adds
-   warm fibres without dimming the paper itself.
+/* Grain: one tiled noise layer under the whole page, scrolling with it like
+   the fibres in a sheet of paper. It sits behind the content, so it shows on
+   paper and never on photos (their grain is in the scans). The tile is
+   screened onto a warm grey first, so multiplying it adds warm fibres without
+   dimming the paper itself.
 
    The layer paints its own copy of the ground and blends the grain into that,
-   inside itself. Behind the content there is only the flat ground anyway, so
-   it looks the same, but the browser draws it once instead of re-blending it
-   against the page on every scrolled frame. */
+   inside itself, so the blend is drawn once into the page rather than redone
+   against the content on every scrolled frame.
+
+   It isn't fixed to the screen: Safari on iPhone takes any fixed, screen-sized
+   layer for a header and footer and paints solid bands over the page under
+   the clock and the address bar (2026-11-23). */
 .grain {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  /* Below zero so Safari 26 on iPhone doesn't take this screen-sized layer
-     for a fixed header and footer and paint solid bands over the page under
-     the status bar and the address bar. */
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   background: var(--bg);
   isolation: isolate;
