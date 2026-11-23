@@ -1,5 +1,7 @@
 # Build plan
 
+> **2026-11-23:** the site was rebuilt from a blank slate (see `CLAUDE.md` and the last entry in `docs/HISTORY.md`). Everything below is the plan for the previous site, kept for the record. What's open now is under "Waiting on David" in `CLAUDE.md`.
+
 Work through these phases in order, on the `redesign` branch. Tick the boxes as they are done. At the end of each phase, stop, show David, and wait for his go-ahead.
 
 ## Phase 0: Before any code (David)

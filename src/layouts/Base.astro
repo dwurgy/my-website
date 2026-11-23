@@ -1,17 +1,18 @@
 ---
-import '../styles/global.css';
-import archivo from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import '../styles/site.css';
+import averia from '@fontsource/averia-serif-libre/files/averia-serif-libre-latin-300-normal.woff2?url';
 
 interface Props {
   title: string;
   description: string;
+  /** The page's own address, without the domain. */
+  path: string;
   /** Keep the page out of search results (the 404 page). */
   noindex?: boolean;
 }
 
-const { title, description, noindex = false } = Astro.props;
-const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
-// Made by scripts/share-image.mjs.
+const { title, description, path, noindex = false } = Astro.props;
+const pageUrl = new URL(path, Astro.site).href;
 const shareImage = new URL('/share.jpg', Astro.site).href;
 ---
 
@@ -32,26 +33,21 @@ const shareImage = new URL('/share.jpg', Astro.site).href;
     <meta property="og:image" content={shareImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="The Oregon coast at dusk, with the words: I make pretty things." />
+    <meta property="og:image:alt" content="An empty page with one small sentence: I make pretty things." />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#ece6dc" />
-    <script is:inline>
-      // Set the theme before first paint, from the visitor's system setting.
-      (function () {
-        var dark = matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-        document.querySelector('meta[name="theme-color"]').content = dark ? '#171512' : '#ece6dc';
-      })();
-    </script>
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#eff0ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0f10" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap.xml" />
-    <link rel="preload" href={archivo} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={averia} as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      // Lets the styles know scripts are running, before first paint.
+      document.documentElement.classList.add('js');
+    </script>
   </head>
-  <body>
-    <div class="grain" aria-hidden="true"></div>
-    <slot />
-  </body>
+  <slot />
 </html>

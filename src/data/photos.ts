@@ -7,7 +7,7 @@ import flowers from '../../assets/photos/flowers-table.jpg';
 import wheelbarrow from '../../assets/photos/wheelbarrow-driveway.jpg';
 import iceCream from '../../assets/photos/ice-cream.jpg';
 
-// David's photographs for the camera viewer, in order. Metadata is already
+// David's photographs, in the order they're shown behind "pretty". Metadata is already
 // stripped from the originals, and the image pipeline writes none back.
 export interface Photo {
   src: ImageMetadata;

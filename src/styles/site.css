@@ -1,0 +1,205 @@
+/* davidwurgler.com. One sentence, one typeface, one size. Each word is a door.
+   The brief for all of this is CLAUDE.md. */
+/* Averia Serif Libre Light (Dan Sayers, SIL Open Font License): the average of hundreds of typefaces,
+   so every edge is a little soft. */
+@font-face {
+  font-family: 'Averia Serif Libre';
+  src: url('../../node_modules/@fontsource/averia-serif-libre/files/averia-serif-libre-latin-300-normal.woff2') format('woff2');
+  font-weight: 300;
+  font-display: block;
+}
+:root {
+  --bg: #eff0ee;
+  --ink: #0e0f10;
+  --dim: #696b6a;
+  --dot: #e5482d;
+  --x: 9vw;      /* where the sentence starts */
+  --y: 44vh;     /* how far down it sits */
+  --size: 21px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --glide: cubic-bezier(0.6, 0, 0.2, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0e0f10; --ink: #e9eae7; --dim: #8e908e; --dot: #f0573b; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); scrollbar-gutter: stable; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 300 var(--size)/1.5 'Averia Serif Libre', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100svh;
+}
+::selection { background: var(--ink); color: var(--bg); }
+h1, h2 { font: inherit; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; letter-spacing: inherit; }
+:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
+img { display: block; max-width: 100%; height: auto; }
+
+/* The sentence. It never leaves the screen. */
+.line { position: fixed; left: var(--x); top: var(--y); z-index: 2; white-space: nowrap; }
+/* Each word can be hit from well outside its letters, with no dead gaps between words. */
+.line a { transition: color 200ms; padding: 0.9em 0.13em; margin: -0.9em -0.13em; }
+.line a:first-child { padding-left: 0.9em; margin-left: -0.9em; }
+/* The full stop is a drawn dot, a little bigger than the typeface's own, and it swells under the hand. */
+.line .dot { padding: 0.9em 1em 0.9em 0.1em; margin: -0.9em 0 -0.9em 0; }
+.line .dot span {
+  display: inline-block; width: 0.25em; height: 0.25em;
+  transform-origin: 0 100%; transition: transform 320ms var(--ease);
+}
+/* The dot is never quite still: its edge slowly wobbles, like a drop of ink that hasn't set. */
+.line .dot span::before {
+  content: ''; display: block; width: 100%; height: 100%; background: var(--dot); border-radius: 50%;
+  animation: warble 5.2s ease-in-out infinite, turn 19s linear infinite;
+}
+.line .dot:hover span::before { animation-duration: 2.4s, 9s; }
+@keyframes warble {
+  0%, 100% { border-radius: 50%; scale: 1 1; }
+  20% { border-radius: 62% 38% 56% 44% / 44% 58% 42% 56%; scale: 1.12 0.9; }
+  45% { border-radius: 40% 60% 38% 62% / 60% 42% 58% 40%; scale: 0.92 1.1; }
+  70% { border-radius: 57% 43% 64% 36% / 38% 60% 40% 62%; scale: 1.08 0.94; }
+}
+@keyframes turn { to { rotate: 360deg; } }
+.line .dot:hover span, .line .dot:focus-visible span, .line .dot[aria-current] span { transform: scale(1.9); }
+@media (prefers-reduced-motion: reduce) { .line .dot span { transition: none; } .line .dot span::before { animation: none; } }
+.line h1:has(a:hover) a:not(:hover):not(.dot),
+body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(--dim); }
+@media (prefers-reduced-motion: no-preference) {
+  body.arrive .line a:not(.dot) { animation: arrive 700ms var(--ease) both; }
+  body.arrive .line a:nth-child(2) { animation-delay: 110ms; }
+  body.arrive .line a:nth-child(3) { animation-delay: 220ms; }
+  body.arrive .line a:nth-child(4) { animation-delay: 330ms; }
+  body.arrive .line .dot { animation: fade 500ms 700ms both; }
+}
+/* The five names arrive one after another, the way the sentence did. */
+@media (prefers-reduced-motion: no-preference) {
+  .cascade .things b:not(.still), .cascade .things span {
+    animation: arrive 620ms var(--ease) both;
+    animation-delay: calc(var(--wait, 220ms) + var(--i) * 75ms);
+  }
+}
+html[data-same-name="back"] .cascade { --wait: 400ms; }
+@keyframes arrive { from { color: var(--bg); } 45% { color: var(--dim); } }
+@keyframes fade { from { opacity: 0; } }
+
+/* What's behind a door. It starts on the sentence's own line. */
+.col {
+  margin-left: 50vw;
+  width: calc(50vw - var(--x));
+  padding: var(--y) 0 34vh;
+}
+.col section { max-width: 27em; }
+.col section[hidden] { display: none; }
+
+/* Moving between doors. The sentence holds (or, on a phone, glides to the top);
+   what was open lifts away as the next thing settles in under it. */
+.line { view-transition-name: line; }
+.col section:not([hidden]) { view-transition-name: col; }
+.thing h2 { width: fit-content; }
+.next a { display: inline-block; }
+::view-transition-group(line) { animation-duration: 520ms; animation-timing-function: var(--glide); }
+/* The dot travels as its own piece, so leaving Say hi it shrinks back down; it doesn't cross-fade. */
+.line .dot span { view-transition-name: dot; }
+::view-transition-group(dot) { animation-duration: 520ms; animation-timing-function: var(--glide); }
+/* What's leaving fades where it stands; it doesn't slide to where the next thing will be. */
+::view-transition-old(col-out) { animation: leave 200ms ease-in both; }
+::view-transition-new(col) { animation: settle 480ms var(--ease) 220ms both; }
+/* A thing's name travels from the list to the top of its page, and its picture crosses over with it. */
+::view-transition-group(thing-name),
+::view-transition-group(thing-img) { animation-duration: 500ms; animation-timing-function: var(--glide); }
+::view-transition-old(thing-img), ::view-transition-new(thing-img) { height: 100%; }
+/* Between the list and a page the name is the same word, so one copy makes the trip, not two cross-fading. */
+html[data-same-name]::view-transition-old(thing-name) { display: none; }
+html[data-same-name]::view-transition-new(thing-name) { animation: none; }
+/* Coming back, the name gets home before the rest of the list appears, so it never crosses another name. */
+html[data-same-name="back"]::view-transition-new(col) { animation-delay: 380ms; }
+@keyframes leave { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes settle { from { opacity: 0; transform: translateY(14px); } }
+.col p, .col ul, .col dl, .col figure { margin-bottom: 1.5em; }
+.col p { text-wrap: pretty; hanging-punctuation: first; }
+.col ul { list-style: none; }
+.dim { color: var(--dim); }
+.col p a, .col dd a, .out a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: var(--dim);
+  transition: text-decoration-color 200ms;
+}
+.col p a:hover, .col dd a:hover, .out a:hover { text-decoration-color: var(--ink); }
+.out { display: flex; flex-wrap: wrap; gap: 0 1.4em; }
+
+/* The list of things. */
+.things li { margin-bottom: 1.5em; }
+.things a { display: block; }
+.things a span { display: block; color: var(--dim); }
+.things b { display: block; width: fit-content; font-weight: inherit; transition: color 200ms; }
+.things:has(a:hover) a:not(:hover) b { color: var(--dim); }
+
+/* A line about the thing under your hand, just under the list. Its pictures wait on its page. */
+.peek { position: relative; max-width: 24em; height: 4.5em; pointer-events: none; }
+.peek figure { position: absolute; left: 0; top: 0; width: 100%; opacity: 0; transition: opacity 200ms; }
+.peek figure.on { opacity: 1; }
+.peek img { width: 100%; border-radius: 3px; }
+.peek figcaption { display: block; color: var(--dim); margin: 0; text-wrap: pretty; }
+/* With a mouse the list is only the names; the rest shows beside the picture. */
+@media (hover: hover) and (min-width: 820px) {
+  .things li { margin-bottom: 0; }
+  .things a span { display: none; }
+  .things { margin-bottom: 1.5em; }
+}
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (hover: none), (max-width: 819px) { .peek { display: none; } }
+
+/* One thing. */
+.thing dl { display: grid; grid-template-columns: max-content 1fr; gap: 0 1.6em; }
+.thing dt { color: var(--dim); }
+
+/* Pictures: one at a time, with the way to change them written underneath. */
+.frame { width: 100%; position: relative; overflow: hidden; border-radius: 3px; touch-action: pan-y; transition: aspect-ratio 640ms var(--glide); }
+.frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 0; transition: transform 640ms var(--glide); }
+.thing .frame img { object-fit: contain; }
+.frame img:not(.front) { transform: translateX(102%); }
+@media (prefers-reduced-motion: reduce) { .frame, .frame img { transition: none; } }
+/* On a wide screen the pictures are bigger than the text: they reach back into the empty half,
+   stopping short of the sentence, while the words keep their narrow column. */
+@media (min-width: 820px) {
+  .reel {
+    --reach: calc(50vw - max(30vw, var(--x) + 14em));
+    width: calc(50vw - var(--x) + var(--reach)); margin-left: calc(-1 * var(--reach));
+  }
+  .frame { max-height: 84vh; }
+}
+figcaption { margin-bottom: 0.5em; display: flex; justify-content: space-between; color: var(--dim); }
+.ctl { display: flex; gap: 1.2em; }
+/* Without scripts a reel shows its first picture, so its count and controls would only mislead. */
+html:not(.js) .reel figcaption { display: none; }
+.ctl button { color: var(--dim); transition: color 200ms; }
+.ctl button:hover { color: var(--ink); }
+
+/* The mark: the only sign-off, at the very end. */
+.mark { margin-top: 6em; width: 2.6em; }
+.mark svg { display: block; width: 100%; height: auto; }
+.mark-ridge { fill: var(--dim); }
+.mark-w { fill: var(--ink); }
+
+.copy { margin-left: 1em; color: var(--dim); transition: color 200ms; }
+.copy:hover { color: var(--ink); }
+
+/* Phones: the sentence waits lower down, then rises to the top when a door opens. */
+@media (max-width: 819px) {
+  :root { --x: 24px; --size: 19px; }
+  .line {
+    position: sticky; left: auto; top: 0; padding: 22px var(--x) 18px;
+    background: var(--bg);
+    transform: translateY(38svh);
+  }
+  body[data-open] .line { transform: none; }
+  .cascade { --wait: 340ms; }
+  /* Let the sentence reach the top before what's under it arrives. */
+  ::view-transition-new(col) { animation-delay: 340ms; }
+  .col { margin: 0; width: auto; padding: 1.5em var(--x) 30svh; }
+}

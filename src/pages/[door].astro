@@ -1,0 +1,12 @@
+---
+// The four words and the dot: /i/, /make/, /pretty/, /things/, and /hi/.
+import Site from '../components/Site.astro';
+
+export function getStaticPaths() {
+  return ['i', 'make', 'pretty', 'things', 'hi'].map((door) => ({ params: { door } }));
+}
+
+const { door } = Astro.params;
+---
+
+<Site open={door} />

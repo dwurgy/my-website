@@ -1,7 +1,7 @@
 <p>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="public/brand/wurgler-lockup-bone.svg">
-    <img src="public/brand/wurgler-lockup-ink.svg" alt="Wurgler" height="44">
+    <source media="(prefers-color-scheme: dark)" srcset="public/brand/wurgler-mark-bone.svg">
+    <img src="public/brand/wurgler-mark-ink.svg" alt="The Wurgler mark" height="44">
   </picture>
 </p>
 
@@ -9,7 +9,13 @@ The personal site of David Wurgler, a designer who builds software.
 
 **[davidwurgler.com](https://davidwurgler.com)**
 
-![The top of the homepage: "I make pretty things." over a photo of the Oregon coast at dusk.](docs/images/home-desktop.jpg)
+![The homepage: an empty page with one small sentence, "I make pretty things", ending in a red dot.](docs/images/home-desktop.jpg)
+
+## The idea
+
+One sentence on an empty page. Each word is a door, and the full stop is how you say hi.
+
+![Firn's page: the sentence on the left with "things" in black, and Firn's name, one line about it, and a large picture on the right.](docs/images/thing-desktop.jpg)
 
 ## How it was made
 
@@ -20,36 +26,30 @@ Every project starts with a document: who it's for, the rules the agent can't br
 This site was built that way, and the documents are all here:
 
 - [`CLAUDE.md`](CLAUDE.md): the brief. What the site is for, the design rules, the facts it may use, and how to work with me.
-- [`docs/PLAN.md`](docs/PLAN.md): the plan, one phase and one checkbox at a time.
-- [`docs/HISTORY.md`](docs/HISTORY.md): what changed and why.
-- [`design/mockup-v5.html`](design/mockup-v5.html): the approved homepage design.
+- [`docs/HISTORY.md`](docs/HISTORY.md): what changed and why, including the site this one replaced.
+- [`design/brand-kit/`](design/brand-kit/): the brand guide, tokens, and reference screenshots.
 
 ## The design
 
-Warm paper with ink type, and my own photographs as windows in it. Calm, tactile, and quick.
-
-![The work index: Firn, Utu Weather, Deepcall, NW Remarketing, and Copywriter Lab set large in ink on paper.](docs/images/home-desktop-work.jpg)
+- **One typeface, one size, one weight:** Averia Serif Libre Light, for everything. What matters is black; what doesn't is grey.
+- **Two tones and one dot.** The only colour on the site is the red dot.
+- **Emptiness is the material.** More empty space than feels correct.
+- **Words before pictures.** Pictures appear only after you ask to see a thing, and then they're big.
 
 | | Light | Dark |
 |---|---|---|
-| Ground | `#ece6dc` paper | `#171512` night |
-| Text | `#1b1815` ink | `#f0eae1` bone |
-| Muted | `#5b534a` | `#a39a8e` |
+| Ground | `#eff0ee` | `#0e0f10` |
+| Text | `#0e0f10` | `#e9eae7` |
+| Grey | `#696b6a` | `#8e908e` |
+| The dot | `#e5482d` | `#f0573b` |
 
-There's no accent colour. Colour comes from the photos.
-
-- **Type:** Archivo for almost everything, Cormorant Garamond Italic for one emphasised word per screen, and JetBrains Mono for small labels.
-- **Materials:** a fine paper grain, and glass only on the control bar and buttons over photos.
-- **Motion follows your hand.** Scroll and the cursor drive almost every movement. Nothing makes you wait.
-- **Real over decorative.** Texture comes from real photographs and real screenshots, never from effects that imitate film.
-
-The mark is an uneven Cascade ridge over a waterline, with a longer reflection below that forms a W. The brand files are in [`public/brand/`](public/brand/). The full design rules are in [`CLAUDE.md`](CLAUDE.md).
+The mark is an uneven Cascade ridge over a waterline, with a longer reflection below that forms a W. The full design rules are in [`CLAUDE.md`](CLAUDE.md).
 
 ## Built with
 
-- [Astro](https://astro.build), as a static site
-- Self-hosted fonts from [Fontsource](https://fontsource.org)
-- Cloudflare for hosting, and Cloudflare Web Analytics, which is cookieless
+- [Astro](https://astro.build), as a static site. Every page works without scripts.
+- A self-hosted font from [Fontsource](https://fontsource.org): Averia Serif Libre, by Dan Sayers, under the SIL Open Font License.
+- Cloudflare for hosting, and Cloudflare Web Analytics, which is cookieless.
 
 No cookies, no trackers, and no third-party scripts.
 
@@ -65,6 +65,6 @@ npm run dev
 
 ## Rights
 
-All rights reserved. You're welcome to read the code and learn from it. The photographs, music, writing, and brand (the Wurgler mark, wordmark, and lockups) are mine and may not be reused.
+All rights reserved. You're welcome to read the code and learn from it. The photographs, music, writing, and brand (the Wurgler mark) are mine and may not be reused. The font is its author's, under its own licence.
 
 © 2026 David Wurgler

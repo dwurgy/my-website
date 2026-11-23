@@ -1,0 +1,13 @@
+---
+// One page per thing: /things/firn/ and so on.
+import Site from '../../components/Site.astro';
+import { things } from '../../data/things';
+
+export function getStaticPaths() {
+  return things.map((t) => ({ params: { slug: t.slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<Site open={`things/${slug}`} />

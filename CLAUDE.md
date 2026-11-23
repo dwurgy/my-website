@@ -1,149 +1,109 @@
 # davidwurgler.com
 
-The personal site of David Wurgler: a designer who builds software with AI. His apps lead, tools he built for his team back them up, and his photographs and music show his taste. This file is the brief. Read it fully before every phase, then work through `docs/PLAN.md` in order.
+The personal site of David Wurgler: a designer who builds software with AI. This file is the brief. Read it fully before changing anything.
 
 ## What the site is for
 
-One job: someone landing here should understand in about 30 seconds that David designs and builds software with AI, that it's well made and people actually use it, and that he has taste. Then they should be able to see the work and get in touch. The hope is that the work leads to paid work (Firn alone has already led to a job offer).
+One job: someone landing here should understand in about 30 seconds that David designs and builds software with AI, that it's well made, and that he has taste. Then they should be able to see the work and get in touch. The hope is that the work leads to paid work (Firn alone has already led to a job offer).
 
-### Direction (David, 2026-11-10)
+### Direction (David, 2026-11-23)
 
+David asked for a blank slate: "something unique and like nothing else," with "levels of simplicity and empty space that people would think is wrong." Quiet confidence, not a loud site. Everything before this date was thrown out except the mark and the facts.
+
+- **The idea:** an empty page with one small sentence, "I make pretty things." Each word is a door, and the full stop is how you say hi. The site's confidence comes from what it leaves out.
 - **Position:** a designer and builder of software, with AI as the method. Design and UI/UX are the strength; Claude Code is how one person ships at that level. Never call it "vibe coding" on the site.
-- **Hero line:** "I make pretty things." with "pretty" as the italic word, matching David's GitHub and Threads bio (2026-11-10). The label under it reads "Designer who builds software."
-- **Work:** the apps lead, in this order: Firn, Utu Weather, Deepcall, the NW Remarketing identity, then Copywriter Lab last. Alfred is gone: no row and no page (David, 2026-11-19). The back-office (ERP) rebuild is one line under the index, with no page (David, 2026-11-10).
-- **How I build:** becomes the centrepiece. The stats row (3 days → 1 report, 10 weeks, 500+) is cut.
-- **Off the clock and music:** unchanged.
-- **Footer:** "Built with Claude Code" should link to this repo's source, not just sit there as a label.
+- **The doors:** "I" is who David is. "make" is how he builds. "pretty" is his photographs and music. "things" is the work: Firn, Utu Weather, Deepcall, NW Remarketing, then Copywriter Lab. The dot is Say hi.
+- **Gone, on purpose:** the hero photo, the control bar, the 3D camera and music player, the portrait, the back-office (ERP) line ("it can still be in my resume"), and any music playback. Don't bring these back unless David asks. If the 3D models ever return, it's as a thing in the list, not as decoration.
 - Do not mention the job offer, or who made it, on the site unless David says so.
 
-The site itself is part of the proof. It should feel crafted, calm, and quick, and it should be obvious it was made with care. The footer says it was built with Claude Code, so the code has to hold up if someone opens the repo.
+The site itself is part of the proof. It links to its own source, so the code has to hold up if someone opens the repo.
 
 ## Principles
 
-1. **Real over decorative.** Texture and mood come from David's own photographs and real screenshots of real work, never from effects that imitate film.
-2. **Calm.** Lots of space, few elements on screen at once, slow and smooth motion. Nothing bounces, flashes, or competes.
-3. **Tactile.** Grain, glass, paper. It should feel like a physical object, not a template.
-4. **Quick.** A fast, light, static site. No cookies and no third-party requests, with two exceptions: Cloudflare Web Analytics, and Apple Music (MusicKit JS) for the music player, which loads only when the player comes near (David, 2026-11-16).
+1. **One typeface, one size, one weight.** No headlines, no bold, no italics, no capitals for emphasis. What matters is ink; what doesn't is grey.
+2. **Two tones and one dot.** The only colour on the site is the red dot.
+3. **Emptiness is the material.** More empty space than feels correct. Never fill a gap because it's there.
+4. **Words before pictures.** Pictures appear only after someone asks to see a thing, and then they're big.
+5. **Quick.** A fast, light, static site. No cookies and no third-party requests. The one exception is Cloudflare Web Analytics, which is cookieless.
 
 ## The design
 
-`design/mockup-v5.html` is the approved homepage. Look at it in a browser before building. `design/mockup-v3.html` stays for history only. Match v5: section order, type sizes, spacing, colours, and motion. It's laid out for a 1440px desktop and works down to 390px. It is one self-contained file that loads the real photos from `assets/`, so serve the repo root to view it. Use it for layout, sizes, colours, copy, and the motion math in its `tick()` function. Rebuild it properly in Astro; don't copy its markup. Its project page is a stand-in for real `/work/<slug>` routes. The full reasoning behind v5 is in `docs/v5-handoff.md`.
-
-What makes v5 work:
-
-- **Paper is the home.** The page is warm paper from top to bottom, with ink type. It never switches to a dark ground between sections.
-- **Photos are windows.** David's photos appear as prints on the paper. They go full-bleed only at the start and the end of the page.
-- **Big, confident type.** One grotesque does almost everything, set large and tight. There is at most one italic serif word per screen.
-- **Motion follows your hand.** Scroll and the cursor drive almost every movement. Nothing makes you wait.
+There is no mockup file. The site is the design; `design/brand-kit/` has the brand guide, tokens, and reference screenshots.
 
 ### Type
 
-- **Archivo** (variable, with width and weight axes): everything. Headlines are weight about 640 with tracking around -0.035em and line-height about 0.92. The wordmark "WURGLER" is set at full width (125%), weight 800, with wide letter-spacing.
-- **Cormorant Garamond Italic:** the single emphasised word ("actually", "brief.", "hi."), set about 1.12 times the size of the surrounding text. Never more than one per screen, and never for whole lines.
-- **JetBrains Mono:** small uppercase labels at 11px with 0.14em letter-spacing. Use it for metadata and edge labels only.
-- Self-host all fonts (for example with Fontsource) and subset them. Do not load anything from Google Fonts in production.
+- **Averia Serif Libre Light (300)**, by Dan Sayers, SIL Open Font License. It is the average of hundreds of typefaces, so every edge is a little soft. David chose it over Newsreader, which "feels too easy" (2026-11-23).
+- One size for everything: 21px on screens 820px and wider, 19px on phones. Line height 1.5. No letter-spacing. Text columns no wider than 27em.
+- Self-hosted through Fontsource (`@fontsource/averia-serif-libre`). Never load a font from another site.
 
 ### Colour
 
-Colour comes mostly from the photos. The page's own colours are:
+Every colour is one of four tokens in `src/styles/site.css`.
 
-| Token | Value | Use |
-|---|---|---|
-| `paper` | `#ece6dc` | The ground for the whole page and the project pages |
-| `ink` | `#1b1815` | Text, rules, and outline buttons on paper |
-| `ink-muted` | `#5b534a` | Labels and secondary text |
-| `night` | `#151311` | Only behind screenshots and placeholders. No longer a section background |
-| `bone` | `#f3eee7` | Only for text that sits on a photo |
-| `bone-bright` | `#fbf7f1` | Only for headlines that sit on a photo |
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `bg` | `#eff0ee` | `#0e0f10` | The ground. Always flat: no grain, texture, or gradient. |
+| `ink` | `#0e0f10` | `#e9eae7` | Text, and whatever is chosen |
+| `dim` | `#696b6a` | `#8e908e` | Secondary text, and whatever isn't chosen |
+| `dot` | `#e5482d` | `#f0573b` | The dot, and nothing else |
 
-There is no accent colour. Text over photos still needs 4.5:1, using a scrim inside the photo.
+- Contrast on the ground: ink 16.8:1 light and 15.9:1 dark; dim 4.7:1 light and 6.0:1 dark; dot 3.5:1 light and 5.6:1 dark. The dot passes as a graphic object, not as text, so never set text in it.
+- The site follows the visitor's system setting through a CSS media query. There is no theme button and no script for it.
 
-### Dark mode
+### Layout
 
-The site has a light theme (paper and ink) and a dark theme (warm night and bone). Photos, scrims, and text on photos are the same in both. Only the ground, text, rules, buttons, the control bar, and the grain change.
+- **The sentence** sits 9% from the left and 44% down, and never leaves the screen. It is the only navigation. The open word is ink and the rest are grey. Clicking the open word closes its door.
+- **Content** starts at the middle of the screen, on the sentence's own baseline.
+- **The list of things** is five names and nothing else. Resting on a name shows its one line, in grey, under the list. There is no hover picture (David removed it: "it just feels out of place").
+- **Pictures** are wider than the text: on wide screens they reach back toward the sentence and stop short of it. Corners are 3px. No shadows, borders, or cards. Each picture keeps its own shape.
+- **Controls are words** ("Back", "Next", "Copy"), in grey, turning ink under the hand. A reel's count and its Back and Next sit above the picture, so they hold still while the picture changes shape.
+- **Links in text** have a 1px grey underline that turns ink under the hand.
+- **The mark** appears once, small, under the contact links. It never leads.
+- **Phones:** the sentence waits 38% down the screen, then rises to the top when a door opens and stays there. Each thing's line sits under its name, since there's no hovering.
 
-| Token | Light | Dark |
-|---|---|---|
-| `bg` | `#ece6dc` | `#171512` |
-| `fg` | `#1b1815` | `#f0eae1` |
-| `fg-muted` | `#5b534a` | `#a39a8e` |
-| `body` (paragraphs) | `#2b2622` | `#d6cec2` |
-| `rule` | ink at 0.2 | bone at 0.16 |
-| `rule-strong` | ink at 0.35 | bone at 0.3 |
-| `bar-bg` | paper at 0.62 | night at 0.55 |
-| Grain | multiply at 0.32 | screen at 0.07 |
+### The dot
 
-- Write every colour on the page as one of these tokens, so a theme is just a change of token values.
-- The site follows the visitor's system setting only, and it changes live if that setting changes. There is no theme button on the page (David, 2026-11-17).
-- Set the theme in a tiny inline script in `<head>`, before first paint, so the page never flashes the wrong theme.
-- When the system setting changes while the page is open, the switch uses a short view transition (about 240ms).
-- Both themes must pass the brief's contrast rules on their own.
-
-### Materials
-
-- **Grain:** one tiled noise layer behind the content that scrolls with the page, like fibres in paper (not fixed to the screen: Safari on iPhone paints solid bands under the clock and address bar for any fixed, screen-sized layer; 2026-11-23), blended with multiply at about 0.32, so it shows only on paper (screen at about 0.07 in dark mode). There is no grain overlay on photos. Their grain comes from the scans. Use the one small tiled noise image (`public/grain.png`), not an SVG filter, which is slow.
-- **Glass:** only on the control bar, and on buttons that sit on top of a photo (the contact links). There are no glass cards. Never put `backdrop-filter` on a full-width or full-height element.
-- **Control bar:** one glass bar, fixed and centred at the top. At most 86% of the screen's width, so Safari on iPhone doesn't take it for a header (2026-11-23). It holds the WURGLER wordmark, Work, How I build, Off the clock, and an ink "Say hi" pill. The current section's link is at full opacity and the others are at 0.68 (0.6 was just under 4.5:1). On phones the middle two links hide.
-- **Corners:** pills are fully round. Prints, screenshots, and the cursor preview are about 6px.
-- **Buttons on paper:** a 1px ink outline that fills with ink on hover.
+- A drawn circle, 0.25em across, standing in for the full stop. It links to Say hi.
+- Its edge slowly wobbles and turns (5.2s wobble, 19s turn). It is the only thing on the site that moves without being touched.
+- Under the hand it swells to 1.9 times its size and wobbles faster. It stays swollen while Say hi is open, and shrinks back when another word is chosen.
+- The click areas of the words and the dot are much bigger than they look, with no dead gaps between words. Keep them that way.
 
 ### Motion
 
-The rule: **motion follows your hand.** Anything that scroll or the cursor can drive, they drive. The only timed motion is:
+Smooth and short. Nothing makes the reader wait. Timings are tuned by feel, by trying them for real; the numbers in `src/styles/site.css` are where each one stands now, not limits.
 
-- the headline fading up once on load,
-- hovers,
-- page changes (using the View Transitions API),
-- the theme switch (see Dark mode).
+- **On load,** the sentence arrives once, word by word, through grey to ink.
+- **The five names** arrive the same way, one after another. Nothing else does: paragraphs settle in as one piece (David, 2026-11-23).
+- **Opening a door:** what was open fades where it stands, and the new content settles in from just below.
+- **One word travels.** A thing's name glides from the list to its page's title, back to its place in the list, and from "Next," up to the next page's title. Exactly one copy of the word makes the trip; the two-copy cross-fade looked sloppy and was removed.
+- **Pictures** slide sideways, like prints across a table, and the frame eases to each picture's shape.
+- Door changes use the View Transitions API. Where it's missing, doors simply switch.
+- **Reduced motion:** everything changes at once, and the dot is a still circle.
 
-Nothing else runs on a timer.
+### How it's built
 
-**Timings are tuned by feel, not set by rule (David, 2026-11-19).** There's no fixed speed limit; each animation gets whatever duration and easing is best for it, and numbers are judged by trying them for real. The figures in this brief are where each one stands now, not limits. Current: headline about 700ms, hovers about 200ms, page changes about 300ms, the theme switch about 240ms, "Next project" 500ms, and back to the work list 450ms.
-
-- **Next project (David, 2026-11-19):** clicking it feels like scrolling on into the next project. The name at the bottom glides up and darkens into the next page's headline while both pages slide together by exactly the distance it travels; the control bar holds still. Back and forward play it in reverse. Each project keeps its own page and address. On phones the Next row's name is set at the headline's size and full width, so both break their lines in the same places.
-
-- **Hero (pinned, about 230vh):** the coast photo starts full-bleed and shrinks, matched to scroll, into a print on the right half of the paper: inset 20% top and bottom, 50% left, 40px right, with corners going from 0 to 6px. The settle is 0.4 straight line and 0.6 ease, so it answers the first scroll and doesn't creep and then sit still before Work (2026-11-20). On phones it ends as a print across the top. The headline exists twice: an ink copy on the paper and a bone copy clipped to the photo's exact shape, so its colour changes right at the photo's edge. The photo also scales from 1.12 to 1.
-- **Work:** a large ink index with no background photo. Hovering a row fades the other rows to about 0.32 opacity, nudges the name 12px right, and shows a 360 × 236 preview of the project that follows the cursor with a slight lag. Keyboard focus shows the same preview beside the row. On touch screens there's no preview; each project's image shows under its name instead. Clicking a row opens its project page, and the preview morphs into the page's main image in about 300ms. Coming back ("All work", the bar's Work link, or Back) opens the homepage with that project's row in view in about 450ms: the headline glides into the row's name while both pages slide together, the "Next project" glide run backwards (only where the two break their lines the same way; otherwise a plain fade). With a mouse, the main image goes with the page, and the preview appears only when the mouse moves onto a row; on touch screens, the main image settles into the image under the project's name (David, 2026-11-19). The wordmark still goes to the top.
-- **How I build:** still, on paper.
-- **Off the clock (not pinned):** the music text, then a 3D music player (see "The music player" below) that turns to face you as it scrolls in, like the camera, then "I also take pictures." and a 3D camera (three.js) whose rear screen shows seven of David's photos. As it scrolls in, the camera turns from an angled pose (screen tilted out) to straight-on, and back on the way up. The dial's sides, the "01 / 04" count's arrows beneath it, arrow keys, and a sideways swipe flip the photos (250ms crossfade). Hovering a side of the dial lights its arrow. With a mouse, dragging the camera turns it like the music player: up to 35° either way and a little up and down, following the hand with a slight lag and a short coast, and it stays where you leave it (David, 2026-11-19). On touch screens a sideways swipe still flips the photos, so it doesn't turn there.
-- **Say hi (pinned, about 210vh):** the lake starts as a centred print and grows to full-bleed by the bottom of the page. It starts growing half a screen before the pin, so it never stops dead when the pin catches it (2026-11-19). The contact text appears on the photo, using the same two-copy clip as the hero. Only the copy on the photo is interactive.
-- **Pinned lengths** are starting points. If a pinned section starts to feel like a chore, shorten it.
-- **Reduced motion:** the hero shows as a finished print and the lake as full-bleed. The camera stays straight-on and photos change without a crossfade. The music player sits settled, a drag turns it with no lag or coast, and the wheel still steps through songs; music still plays. Nothing is hidden.
-- **Smoothness:** animate only transform, opacity, and clip-path. Read scroll position in one `requestAnimationFrame` loop. Keep 60fps on an ordinary laptop. Ask before adding a smooth-scroll library.
-
-### The music player (David, 2026-11-16)
-
-A music player in Off the clock, under the music text, that plays a few My Brothers And I songs. David asked for it to look like a classic click-wheel music player (his reference: a silver "iPod video"), the camera's companion. It uses the camera's 3D setup. It replaced, the same day, a round CD player and then a compact player with a knob.
-
-- **The object:** a satin silver front, a glossy black screen area with a Now Playing screen, a smaller graphite wheel (like the camera's black) with our own fine bone marks (a dot at the top, back, forward, and play/pause; no "MENU") around a silver centre button, and a polished steel back. The back never shows (see below), so it carries no mark; if it ever does, etch David's mark there from `public/brand/` (David, 2026-11-16).
-- **Layout:** on screens 1100px and wider, Off the clock zigzags: the player on the left with the music text close beside it on the right, then the photographs' text on the left with the camera on the right, so the two objects face each other (David, 2026-11-16). Narrower, it stacks as before.
-- **Never:** an Apple logo, an "iPod" wordmark, or any other name or logo on it.
-- **Files:** `src/components/MusicPlayer.astro` (markup and the buttons under it), `src/scripts/player.ts` (MusicKit, controls, drag, scroll pause), `src/scripts/player-3d.ts` (the model). `src/scripts/studio-3d.ts` holds what it shares with the camera: renderer, light, materials, shadow, and the theme.
-- **Songs:** Apple Music catalog song IDs in `src/data/tracks.ts`, in play order. David picked five on 2026-11-17: When You're Ready, Anger & Grace (Acoustic), Didn't See It Coming, Hark (Mitsunami, feat. My Brothers And I), and Always Be Loving You. David picks them; titles, artwork, lengths, and links come from Apple Music at load. Never write song or placement facts that aren't in this file.
-- **How it works:** it turns into place as it scrolls in, like the camera but the opposite way. Dragging it turns it up to 35° either way, following the hand with a slight lag and a short coast, so the back never shows. Running a finger round the wheel steps through the songs, one click every 24°; a quick scroll through several clicks loads only the song it stops on. A press on the wheel's sides skips; the centre button and the play/pause mark play or pause; the top dot does nothing but press. The wheel rocks in toward a pressed side, and the centre button goes in, with a little give. The wheel has its own touch zone, so circling it on a phone doesn't scroll the page. The screen is the site's own, not a copy of any music app: warm paper with ink type, a mono label row ("01 / 03" and "Playing" or "Paused"), the song's Apple Music artwork beside its title and artist, and a fine ink progress line with elapsed and remaining time in mono (David, 2026-11-16). Back, more than 3 seconds into a song, restarts it. The same controls are real buttons under the player (previous, play/pause, next), plus Space and the arrow keys on the player. Nothing autoplays, and music pauses when the player leaves the screen.
-- **Audio:** all from Apple Music through MusicKit JS v3. Visitors hear Apple's 30-second previews only; there is no sign-in for full songs (David, 2026-11-17). The Spotify and Apple Music buttons above the player lead to the full songs. A plain "Listen on Apple Music" link under the player, required by Apple, points to the current song (or the band before one loads).
-- **Token:** the Worker (`worker/index.ts`, only for `/api/*`) signs a MusicKit developer token (ES256 JWT, 12 hours, limited to the asking site address) at `/api/musickit-token`, from three Worker secrets: `MUSICKIT_PRIVATE_KEY` (the .p8 file's contents), `MUSICKIT_KEY_ID`, and `APPLE_TEAM_ID`. In Cloudflare they go under Settings, **Runtime** variables and secrets, as type Secret: not the Builds section (only seen while building), and not type Text (replaced on every deploy). Worker Previews keep their own secrets and don't copy production's. It reuses each token until 30 minutes before it ends. Apple checks the token's site address against the request's Origin header, so any server-side request to Apple must send `Origin` itself (browsers do). The key and tokens never go in the repo or the page. Without the secrets, the endpoint answers 503 and the player says it can't reach Apple Music.
-- **Phones:** the same 3D player as on a laptop (the camera's pattern), with sideways drags only, so the page still scrolls. Without WebGL, the song's artwork shows as a plain print with the buttons under it.
+- Every door is a real page with its own address (`/`, `/i/`, `/make/`, `/pretty/`, `/things/`, `/things/firn/`, and so on, and `/hi/`). Each one renders the same component, `src/components/Site.astro`, with a different door open, so every page works and can be read without scripts.
+- `src/scripts/site.ts` then moves between doors in place. It must never hold content the plain pages don't have.
+- `src/data/things.ts` is the work; `src/data/photos.ts` is the photographs; `src/data/doors.ts` is every address with its title and description.
+- `src/components/Reel.astro` is the picture reel. Images go through Astro's image pipeline.
+- Old `/work/<slug>` addresses redirect to `/things/<slug>/` (`astro.config.mjs`).
+- Astro strips the spaces between tags, so the spaces between the sentence's words are written out as `{' '}`.
 
 ### Brand
 
-- **The mark:** an uneven Cascade ridge over a waterline gap, with a longer reflection below that forms a W. The ridge is `fg-muted` and the W is `fg`, so it follows the theme. Never redraw or recolour it. On the page it's `src/components/Mark.astro`, which inlines the two paths from `public/brand/wurgler-mark-themeable.svg` unchanged.
-- **Compact lockup** (the control bar): mark height = 2.2 × the wordmark's cap height, gap = 0.8 × cap height, and the mark's waterline (43.3% of the way down) on the vertical centre of the capitals. Archivo's cap height is 0.688em. The wordmark stays live text.
-- **Files:** the favicons, phone and manifest icons, `site.webmanifest`, and everything in `public/brand/` come from the David Wurgler design system. Replace them as files; never regenerate, resize, or recolour them. `public/brand/email-monogram-80.png` is used by David's email signature, so keep its address.
-- The W monogram is retired.
+- **The mark:** an uneven Cascade ridge over a waterline gap, with a longer reflection below that forms a W. The ridge is `dim` and the W is `ink`, so it follows the theme. Never redraw or reshape it. On the page it's `src/components/Mark.astro`, which inlines the two paths from `public/brand/wurgler-mark-themeable.svg` unchanged.
+- **No wordmark yet.** The old WURGLER wordmark and lockups are retired. David is settling a new one, plus new icons, in Claude Design, using `design/brand-kit/CLAUDE-DESIGN-PROMPT.md`.
+- **Files:** the favicons, phone and manifest icons, `site.webmanifest`, and everything in `public/brand/` come from the David Wurgler design system, and still carry the previous look until the new set arrives. Replace them as files; never regenerate, resize, or recolour them. `public/brand/email-monogram-80.png` is used by David's email signature, so keep its address.
+- `public/share.jpg` is the card shown when a link is pasted: the home screen at 1200 × 630.
 
 ### Never
 
-These were tried and rejected:
-
-- Fake film effects: frame numbers, sprocket holes, polaroid borders, light leaks, date stamps, colour filters, and handwritten notes.
-- Emoji, decorative gradients, neon, and drop-shadowed "cards everywhere."
-- Copying Firn's design system. Firn is one project on this site, not its look.
-- More than one italic serif word on a screen.
-- Timed animations that make the reader wait (long crossfades, slow reveals).
-- Switching the background between dark photo, blur, and paper from section to section.
-- Glass cards or panels. Glass is only for controls.
-- A full-page fixed photo layer behind the content.
+- A second typeface, size, or weight. A second colour. Text in the dot's red.
+- Grain, texture, gradients, glass, shadows, cards, icons, or emoji.
+- A menu, a header bar, a footer, or a hero image.
+- Timed animation that makes the reader wait, or anything besides the dot that moves without being touched.
+- Sharpening or "cleaning up" Averia's soft edges.
+- Another site's or app's logo, or copying Firn's or Utu's design system. They are things on this site, not its look.
 
 ## Content
 
@@ -167,81 +127,57 @@ These are the only claims and numbers allowed. Never invent or round up a number
 
 ### Links
 
-- Email: hello@davidwurgler.com (forwards to David), shown as selectable text with a copy button.
+On the site:
+
+- Email: hello@davidwurgler.com (forwards to David), shown as selectable text with a Copy button.
 - LinkedIn: https://www.linkedin.com/in/david-joel-wurgler
 - GitHub: https://github.com/dwurgy
+- Threads: https://www.threads.com/@dwurgy (David, 2026-11-23: "no insta link. just threads.")
 - Spotify: https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb
 - Apple Music: https://music.apple.com/us/artist/my-brothers-and-i/892386824
 - Band site: https://www.mybrothersandiband.com/
-- Instagram: https://www.instagram.com/dwurgy/ (personal) and https://www.instagram.com/mybrothersandi/ (band)
+
+Not on the site: Instagram (https://www.instagram.com/dwurgy/ and https://www.instagram.com/mybrothersandi/).
 
 ### Voice
 
-Write plainly and directly, like a person talking. Use short sentences, no hype, and no buzzwords. Always use the serial comma. The copy in the mockup is the approved draft; keep it unless David changes it. David has changed the hero headline to "I make pretty things." (2026-11-10).
+Write plainly and directly, like a person talking. Use short sentences, no hype, and no buzzwords. Always use the serial comma. Say what a thing is and stop. The copy on the site is approved; keep it unless David changes it. Lines David wrote or chose:
+
+- "I make pretty things." (the sentence, matching his GitHub and Threads bio)
+- "I take pictures." and "I make music." (he likes the matching phrasing)
+- "Good software should be pretty to look at and easy to use. Then it should get out of your way." (he cut "and fun": "fun just seems lame")
 
 ### Assets
 
-- `assets/photos/`: David's photographs, with all metadata already stripped. Use these through Astro's image pipeline (AVIF or WebP, responsive sizes) and never serve the originals directly.
-  - `coast-dusk.jpg`: the hero.
-  - The Off the clock camera's photos, in this order (`src/data/photos.ts`): `lodge-dusk.jpg`, `flowers-table.jpg`, `pavilion-peak.jpg`, `wheelbarrow-driveway.jpg`, `firs-house.jpg`, `ice-cream.jpg`, and `lake-dusk-moon.jpg`. Places alternate with moments at home, ending on the moon. The three home photos were added 2026-11-12 (David); they arrived with no EXIF or GPS.
-  - `lake-dusk-reeds.jpg`: the Say hi photo, sharp. It's no longer used blurred.
-  - `david-portrait.jpg`: David's headshot (from the old site, about a year old, 900 × 900, no metadata), in "Who's making this."
-- `assets/work/`
-  - `copywriter-lab.webp`: the rebranded app with a listing, cropped from David's screenshot (2026-11-19). The work index preview and the page's main image.
-  - `firn.webp`: Firn for iPhone, three phones, from Firn's kit (new wide version 2026-11-20). Also `utu.webp` (Utu's widget set, sky and paper styles, from its brand kit; a design mockup), `deepcall.jpg` (mood reference), and `nwr-identity.webp`.
+- `assets/photos/`: David's photographs, with all metadata already stripped. Use them through Astro's image pipeline and never serve the originals directly. The seven behind "pretty", in order (`src/data/photos.ts`): `lodge-dusk.jpg`, `flowers-table.jpg`, `pavilion-peak.jpg`, `wheelbarrow-driveway.jpg`, `firs-house.jpg`, `ice-cream.jpg`, and `lake-dusk-moon.jpg`. `coast-dusk.jpg`, `lake-dusk-reeds.jpg`, and `david-portrait.jpg` are from the previous site and aren't used now.
+- `assets/work/`: each thing's pictures, in `src/data/things.ts`.
+  - **Firn (four):** `firn.webp` (three iPhones), `firn/mac-snow-peak.webp`, `firn/mac-sisters.webp`, and `firn/iphone-pair.webp` (David's two tall iPhone images, `iphone-spaces.webp` and `iphone-reader.webp`, joined side by side).
+  - **Utu (four, all design mockups):** `utu/hero.webp` leads, then `utu.webp` (the widget set), `utu/phones.webp` (four phones), and `utu/lockup-sky.webp`. Also sent by David and not used: `utu/phone-drizzle.webp`, `utu/lockup-paper.webp`, and the two bare wordmarks.
+  - **One each:** `deepcall.jpg` (a mood reference, labelled as one), `nwr-identity.webp`, and `copywriter-lab.webp`.
+- Copywriter Lab's image is only 1210 pixels wide, so it's soft at the size pictures are now shown. It needs a bigger original from David, at least 2400 wide.
 
 Any new photo must have its metadata (including GPS) stripped before it is committed. This repo is public.
 
 ## Rules for working in this repo
 
-- Work only on the `redesign` branch (the music player is on `feature/music-player`, at David's request). Never push to or merge into `main` unless David says to in so many words.
-- Follow `docs/PLAN.md` one phase at a time, and one checkbox at a time inside a phase. After each step, tell David what to look at and wait for his OK. At the end of each phase, show David screenshots at 1440px and 390px wide, state the done test result honestly, and wait for his go-ahead.
+- Work on the session's own branch. Never push to or merge into `main` unless David says to in so many words. `main` is the live site.
+- One small step at a time. After each step, tell David what to look at and wait for his OK.
 - Make small commits with plain messages.
-- Ask before adding any dependency beyond Astro, its official integrations, Fontsource, and three.js (approved by David for the camera viewer, 2026-11-12).
+- Ask before adding any dependency beyond Astro, its official integrations, and Fontsource.
 - Keep the repo public-safe. No customer names, prices, emails, order data, home addresses, or photo metadata, in code or in screenshots. Blur sensitive parts of any screenshot of company software before adding it.
-- No trackers, cookies, embeds, or third-party scripts. The exceptions are Cloudflare Web Analytics, which is cookieless and already enabled for the domain in Cloudflare, and Apple's MusicKit JS for the music player (David, 2026-11-16). Keep them working, and add nothing else. Secrets live only in Cloudflare's Worker settings.
-- Accessibility is part of done: real links and buttons, a visible focus state, alt text on every meaningful image, readable contrast over photos, and a full keyboard path.
+- No trackers, cookies, embeds, or third-party scripts. The one exception is Cloudflare Web Analytics, which is cookieless and already enabled for the domain in Cloudflare.
+- Accessibility is part of done: real links and buttons, a visible focus state, alt text on every meaningful image, readable contrast, and a full keyboard path.
 - If something in this brief conflicts with what David asks in the moment, do what David asks and update this file.
 
 ## Where we are
 
-- **Phase 1: done** (2026-10-20). Astro, self-hosted fonts, tokens, grain, and Cloudflare pointed at `dist`. David set the Cloudflare build command to `npm run build`.
-- **Phase 2: done** (2026-10-20). The homepage, still, matching the mockup. Lighthouse mobile: 99 performance, 100 accessibility, 100 best practices.
-- **Phase 3: done** (2026-10-20). Motion: hero settle, pinned work list, photo parallax, and reduced motion. Done test passed at 60fps with no layout shifts.
-- **2026-11-04:** David approved the v5 direction ("paper with windows"). The homepage built in Phases 2 and 3 matches v3 and needs rework. See Phase 3b in `docs/PLAN.md`.
-- **Phase 3b: done** (2026-11-09). The v5 direction. Done test passed except a few slow desktop frames in Say hi (see HISTORY); David gave the go-ahead.
-- **Phase 4: done** (2026-11-10). Box 1 done 2026-11-09: a Markdown page per project in `src/content/work/`, served at `/work/<slug>`, with a plain first-pass layout. The build fails if a page and `src/data/projects.ts` disagree. Box 2 done 2026-11-10: each page has its lede, facts, one paragraph, links, and marked placeholders, all from the approved mockup copy. Box 3 done 2026-11-10: the Copywriter Lab demo video is its main image, muted, with controls, loading only when played. Box 4 done 2026-11-10: the full v5 project layout, with the control bar, "01 of 04", a "Next project" row, and screenshots shown uncropped at their own shape. Box 5 done 2026-11-10: opening a project from the index grows its preview into the page's main image (300ms); back returns to the index. Done test passed: every homepage link reaches a real page, all four pages read well at 390px in both themes, and every claim is from CLAUDE.md or the approved mockup. Next: Phase 5.
-- **Phase 5, box 1 done** (2026-11-10): `public/share.jpg`, the hero's opening frame at 1200 × 630, made by `scripts/share-image.mjs`; share tags on every page. Box 2 done 2026-11-10: a "W" favicon (retired 2026-11-11; see Brand), a sitemap and robots.txt, and a 404 page that Cloudflare serves for unknown addresses. Box 3 done 2026-11-10: accessibility pass; one fix (keyboard focus in the Off the clock strip). Done test 2026-11-10: Lighthouse 95+ on every page, mobile and desktop, after one fix (dimmed control-bar links 0.6 → 0.68 for contrast). Share card tags and image check out; the real paste test waits for launch, since the card's image lives at davidwurgler.com. David approved Phase 5 on 2026-11-10. Next: Phase 6 (launch), only when David says so.
-- **Phase 6, box 1 done** (2026-11-10): David said to merge; `redesign` fast-forwarded into `main` and pushed. Next: confirm the live site and the share card.
-- **2026-11-10, phone jitter fix: done.** The browser runs the pinned motion itself with CSS scroll-driven animations (see HISTORY). Merged to `main`; David confirmed it is smooth on his phone. Next: Phase 6 box 2 (confirm the live site on phone and laptop, and the share card paste test).
-- **Preview links:** working (2026-11-12). Every push to `redesign` builds https://redesign-my-website.dwurgy.workers.dev (a branch named `x` would be `x-my-website.dwurgy.workers.dev`). `wrangler.jsonc` runs the build itself, because preview builds ignore the dashboard's build command. The cloud session can't open workers.dev; check the build result on the commit instead.
-- **2026-11-10, Firn facts updated:** native Mac app (Swift, WebKit), iPhone coming soon; Windows and Linux dropped. Merged to `main` the same day.
-- **2026-11-10, real Firn screenshot:** `assets/work/firn.jpg` replaces the placeholder (metadata stripped). Merged to `main` the same day.
-- **2026-11-10, new direction:** designer who builds software with AI; apps lead. See "Direction" at the top and Phase 7 in `docs/PLAN.md`. Done so far: brief, hero line and label, stats row cut, tab titles ("Page · David Wurgler"), footer credit linking to the source. Next: intro and How I build copy.
-- **2026-11-10, Utu Weather added:** second in the work index ("Coming soon"), with its own page using David's copy and the three-phone design mockup. Work order is now Firn, Utu, Copywriter Lab, Alfred. Name meanings and Utu's tech (SwiftUI, WeatherKit, and WidgetKit, from David's Utu notes) added.
-- **2026-11-10, back office is one line:** David chose a single line under the work index; its page and row are gone (`serial-lookup.png` is no longer used).
-- **2026-11-10, merged to `main`:** Utu, the name meanings, and the back-office line. David said to merge.
-- **2026-11-10, How I build copy:** warehouse line dropped; now ends on feel ("pretty to look at, easy to use, and fun"). Merged to `main`.
-- **2026-11-11, new mark:** the Wurgler mark replaces the W monogram: new favicons, icons, `public/brand/`, and the mark beside WURGLER in the control bar. See Brand. Merged to `main` (David said to).
-- **2026-11-15:** the mark's four waterline tips now end in a small true circular round; every mark file in public/ and Mark.astro updated from the design system. Pushed to main (David said to).
-- **2026-11-11, README added:** the repo's front page (the footer links here): lockup, screenshots, how it was made, the design in brief, and "All rights reserved." Merged to `main` (David said to).
-- **2026-11-11, Say hi two-copy clip:** the ink "Say hi." now sits exactly where the one on the photo does, so it changes colour at the photo's edge like the hero. Merged to `main` (David said to).
-- **2026-11-11, Off the clock on iPhone:** the strip sat blank in Safari; it now reads the same scroll-driven `--p` as the hero and Say hi. Merged to `main` (David said to); waiting for David to check on his phone.
-- **2026-11-11, Who's making this:** David's headshot as a print beside "I'm David." and a short adaptation of the approved "Who's making it" copy, just before Say hi (David chose this over having the lake cover the headshot). Merged to `main` (David said to).
-- **2026-11-11, Utu image in Erode:** `assets/work/utu.webp` swapped for David's new render with Utu's new font (Erode replaces Newsreader); then replaced the same day with David's four-phone image (three skies and the Saturday detail sheet). Merged to `main` (David said to).
-- **2026-11-12, camera viewer:** a 3D camera (three.js) whose screen shows the photos replaces the sideways strip in Off the clock, with the new photographs copy, a "01 / 07" count, and a lit dial arrow on hover. `/camera-test/` is gone. Seven photos (three home photos added the same day). Merged to `main` (David said to). See `docs/PLAN.md` under "Camera photo viewer".
-- **2026-11-13, work index on iPhone:** Safari drew the row rule through wrapped names ("Utu Weather"); rows now bottom-align on phones. David confirmed it on his phone; merged to `main` (David said to).
-- **2026-11-16, music player:** a classic click-wheel look (replacing the CD player and the knob player). Merged to `main` on 2026-11-17 because David said to push it to production. Secrets set on production 2026-11-17; the token works and Apple accepts it. Five songs picked the same day and the temporary `/api/music/songs` page removed. Next: David checks playback on his laptop and iPhone.
-- **2026-11-17, Off the clock spacing and previews only:** the camera no longer overlaps the photographs text below 1100px, the gap above the player is smaller on phones, and the "Sign in for full songs" link is gone (previews only). Merged to `main` (David said to).
-- **2026-11-17, theme and wheel fixes:** the theme button is gone (the site follows the system setting only); the wheel no longer half-disappears when pressed; Apple's "The operation was aborted." box no longer pops up when skipping quickly. Merged to `main` (David said to). Next: David checks on his phone.
-- **2026-11-19, work list:** Firn (iPhone shot, "Mac and iPhone"), Utu (widget set from its brand kit), Deepcall (new), NW Remarketing identity (new), Copywriter Lab last (new screenshot in the NWR look; demo video removed). Alfred removed. Merged to `main` (David said to).
-- **2026-11-19, motion pass, step 1:** "Next project" glides into the next project instead of cross-fading (500ms); timings are now tuned by feel (see Motion). Step 2 done the same day: coming back to the work list lands on the project's row; the headline glides into the row's name and the image goes with the page (David didn't want it shrinking off to the side). The camera now turns with a mouse drag, like the player. Step 3 (frame-by-frame scroll check): hero, work list, How I build, Who's making this, and Say hi all run well under budget; the only stalls were the 3D camera and player preparing their graphics on first draw, now compiled in the background (see HISTORY). Waiting on David to feel it on real hardware. Step 4 (handoffs between sections): the only hitch was the lake print stopping dead as it pinned; it now starts growing half a screen early. Steps 1–4 merged to `main` (David said to).
-- **2026-11-20, new Firn image:** the wide "Firn for iPhone" image from David replaces `assets/work/firn.webp`, with new alt text. Merged to `main` (David said to).
-- **2026-11-20, motion pass step 5 (hero to Work pause):** the hero's settle keeps a little speed to the end, so there's no near-still stretch before the page lets go. Merged to `main` (David said to), with sharper work-list previews (2026-11-20).
-- **2026-11-20, work images at quality 90:** less detail lost to re-compression. Merged to `main` (David said to). Still soft on Retina because the source files are too small (Copywriter Lab 1210 wide); waiting on bigger originals from David, at least 2720 wide.
-- **2026-11-23, iPhone edge bands:** Safari 26 painted solid bands under the status bar and address bar because it took the full-screen grain layer for a fixed header and footer; the grain now sits at z-index -1, so the page scrolls under both. Looks identical. Merged to `main` (David said to); waiting on David to check his phone. The crease in Firn on iPhone is Firn not setting its viewport insets (fix handed to Firn), plus the pinned hero photo tinting the edges. Then the hero and Say hi pinned boxes went below zero too. David's next recording still had the bands (the shipping Safari doesn't skip layers below zero), so the grain now scrolls with the page instead of being fixed. Merged to `main` (David said to); bands still there. Third guess: the control bar was 94% of a phone's width, and Safari counts a fixed element 90% or wider as a header; it's now at most 86% wide. Merged to `main` (David said to); waiting on David to check Safari.
-- **2026-11-23, blank-slate test page:** a new direction David asked for, built as one self-contained page at `/one/` (`public/one/index.html`), separate from the homepage: the sentence "I make pretty things." on an empty page, each word a door, in Averia Serif Libre Light at one size, with a wobbling red dot for Say hi. Its brand kit and a Claude Design prompt are in `design/brand-kit/` (no wordmark yet; David is settling that in Claude Design). Merged to `main` (David said to); the homepage is still v5. Not yet rebuilt in Astro, and this brief's design sections still describe v5.
-- **Waiting on David:** see the end of `docs/PLAN.md`.
+- **2026-11-23: the site was rebuilt from a blank slate** in one session, first as a test page and then as the real site, and merged to `main` (David: "nuke the old site. long live the new site."). The previous site (paper, photographs, a 3D camera, and a music player) is gone from the code; its story is in `docs/HISTORY.md`.
+- **Checked here:** every address at 1440 × 900 and 390 × 844, light and dark; the click-through flow, reels, Back and Forward, Escape, old addresses redirecting, and the pages without scripts.
+- **Waiting on David:**
+  - How it feels on his real laptop and iPhone, especially in Safari.
+  - The wordmark and new icons from Claude Design. When they arrive, replace the files in `public/` and `public/brand/`, and remake `public/share.jpg` if the look changes.
+  - A bigger Copywriter Lab image.
+  - Three Cloudflare secrets from the old music player are no longer used and can be deleted in the dashboard: `MUSICKIT_PRIVATE_KEY`, `MUSICKIT_KEY_ID`, and `APPLE_TEAM_ID`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
 
@@ -256,7 +192,7 @@ David is not a programmer. He directs the work and judges how it looks and feels
 - **Checkpoints.** When a step works and is committed, update "Where we are" in a line, put any reasoning worth keeping in `docs/HISTORY.md`, and recommend `/clear`. Recommend `/compact` instead only if something important lives only in the conversation.
 - **Stuck rule.** After two failed tries at the same fix, stop and say what's known and what's been ruled out.
 - **Where the work happens.** Building now happens in Claude Code in the cloud, not on David's Mac.
-- **Pushing.** Commit each finished step to `redesign` and push it yourself. Never push to or merge into `main`.
-- **How David checks the site.** Every push to `redesign` gets a Cloudflare preview link. After each push, give him the link and say exactly what to look at, on desktop and on his phone. If a preview link isn't available, say so.
-- **How you check the site.** Run `npm run build && npm run preview` and look at it with a headless browser (Playwright and Chromium) at 1440 × 900 and 390 × 844, in both themes. Do the same with `design/mockup-v5.html` (serve the repo root with a small static server so its `../assets/` paths work) and compare. If a headless browser can't be installed here, say so and rely on David's preview links.
+- **Pushing.** Commit each finished step to the session's branch and push it yourself. Never push to or merge into `main` unless David says to in so many words.
+- **How David checks the site.** Every push to a branch gets a Cloudflare preview link: a branch named `claude/some-name` is at `https://claude-some-name-my-website.dwurgy.workers.dev`. It takes about a minute to build. After each push, give him the link on its own line (no full stop after it) and say exactly what to look at, on desktop and on his phone. The cloud session can't open workers.dev; check the build with `curl -s https://api.github.com/repos/dwurgy/my-website/commits/<sha>/check-runs`. Tell him to reload with Cmd + Shift + R.
+- **How you check the site.** Run `npm run build`, then `npx astro preview --port 4321`, and look at it with a headless browser (Playwright and Chromium) at 1440 × 900 and 390 × 844, in both themes. For motion, capture frames in the middle of a move and look at them; David also sends screen recordings, which `ffmpeg` can lay out as a sheet of frames. If a headless browser can't be installed here, say so and rely on David's preview links.
 - **Lighthouse** uses the same headless Chromium.
