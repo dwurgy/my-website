@@ -231,3 +231,7 @@ David said the work-list images looked low-res. Two causes, both in the laptop h
 ## 2026-11-20: Project images look soft when opened
 
 On a Retina laptop the project page's main image is drawn 1360px wide, which is 2720 real pixels, but the source files are smaller: Copywriter Lab 1210 wide (stretched about 2.25 times), Firn 2000, Utu 2120, Deepcall and NWR 2400. The sources are also already WebP, and Astro re-compressed them at its default quality, so detail was lost twice. Work images now encode at quality 90 (the 2000px Firn file went from 85 KB to 111 KB). The real fix is bigger originals from David, ideally PNG at least 2720 wide; Copywriter Lab most of all.
+
+## 2026-11-23: Safari 26 edge bands on iPhone
+
+David's screen recording showed solid bands under the status bar and above the address bar, so the page never scrolled under them. Safari 26 tints those areas from any fixed or sticky element touching the screen edges (WebKit `LocalFrameView::fixedContainerEdges`). The `.grain` layer is fixed, screen-sized, and has a solid `background: var(--bg)`, so Safari treated it as a "viewport-sized" fixed container and filled both bands with that colour. WebKit skips candidates with a negative z-index, so the grain now uses `z-index: -1` (body's background propagates to the canvas, so nothing paints over it). Screenshots before and after are pixel-identical in both themes at 1440 and 390. The hero and Say hi pins are sticky and full-screen, so Safari may still tint the bands while one is pinned; that's expected.

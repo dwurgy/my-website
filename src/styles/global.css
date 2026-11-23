@@ -263,7 +263,10 @@ a {
 .grain {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  /* Below zero so Safari 26 on iPhone doesn't take this screen-sized layer
+     for a fixed header and footer and paint solid bands over the page under
+     the status bar and the address bar. */
+  z-index: -1;
   pointer-events: none;
   background: var(--bg);
   isolation: isolate;

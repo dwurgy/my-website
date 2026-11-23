@@ -239,6 +239,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-20, new Firn image:** the wide "Firn for iPhone" image from David replaces `assets/work/firn.webp`, with new alt text. Merged to `main` (David said to).
 - **2026-11-20, motion pass step 5 (hero to Work pause):** the hero's settle keeps a little speed to the end, so there's no near-still stretch before the page lets go. Merged to `main` (David said to), with sharper work-list previews (2026-11-20).
 - **2026-11-20, work images at quality 90:** less detail lost to re-compression. Merged to `main` (David said to). Still soft on Retina because the source files are too small (Copywriter Lab 1210 wide); waiting on bigger originals from David, at least 2720 wide.
+- **2026-11-23, iPhone edge bands:** Safari 26 painted solid bands under the status bar and address bar because it took the full-screen grain layer for a fixed header and footer; the grain now sits at z-index -1, so the page scrolls under both. Looks identical. Pushed to a branch; waiting on David to check his phone.
 - **Waiting on David:** see the end of `docs/PLAN.md`.
 
 Details and reasoning live in `docs/HISTORY.md`, not here.
