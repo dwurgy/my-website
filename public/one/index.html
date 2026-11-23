@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<title>David Wurgler</title>
+<link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* A test page. One sentence, one typeface, one size. Each word is a door. */
+@font-face {
+  font-family: Newsreader;
+  src: url(fonts/newsreader.woff2) format('woff2');
+  font-weight: 200 800;
+  font-display: block;
+}
+:root {
+  --bg: #eff0ee;
+  --ink: #0e0f10;
+  --dim: #696b6a;
+  --dot: #e5482d;
+  --x: 9vw;      /* where the sentence starts */
+  --y: 44vh;     /* how far down it sits */
+  --size: 21px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0e0f10; --ink: #e9eae7; --dim: #8e908e; --dot: #f0573b; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 var(--size)/1.5 Newsreader, Georgia, serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.003em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100svh;
+}
+::selection { background: var(--ink); color: var(--bg); }
+h1, h2 { font: inherit; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; letter-spacing: inherit; }
+:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
+img { display: block; max-width: 100%; height: auto; }
+
+/* The sentence. It never leaves the screen. */
+.line { position: fixed; left: var(--x); top: var(--y); z-index: 2; white-space: nowrap; }
+.line a { transition: color 200ms; }
+.line .dot { color: var(--dot); padding: 0.4em 0.7em 0.4em 0; margin: -0.4em 0; }
+.line h1:has(a:hover) a:not(:hover):not(.dot),
+body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(--dim); }
+@media (prefers-reduced-motion: no-preference) {
+  body.arrive .line a:not(.dot) { animation: arrive 700ms var(--ease) both; }
+  body.arrive .line a:nth-child(2) { animation-delay: 110ms; }
+  body.arrive .line a:nth-child(3) { animation-delay: 220ms; }
+  body.arrive .line a:nth-child(4) { animation-delay: 330ms; }
+  body.arrive .line .dot { animation: fade 500ms 700ms both; }
+}
+@keyframes arrive { from { color: var(--bg); } 45% { color: var(--dim); } }
+@keyframes fade { from { opacity: 0; } }
+
+/* What's behind a door. It starts on the sentence's own line. */
+.col {
+  margin-left: 50vw;
+  width: calc(50vw - var(--x));
+  padding: var(--y) 0 34vh;
+}
+.col section { max-width: 27em; }
+.col section[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .col section { animation: open 320ms var(--ease) both; }
+}
+@keyframes open { from { opacity: 0; transform: translateY(8px); } }
+.col p, .col ul, .col dl, .col figure { margin-bottom: 1.5em; }
+.col p { text-wrap: pretty; hanging-punctuation: first; }
+.col ul { list-style: none; }
+.dim { color: var(--dim); }
+.col p a, .col dd a, .out a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: var(--dim);
+  transition: text-decoration-color 200ms;
+}
+.col p a:hover, .col dd a:hover, .out a:hover { text-decoration-color: var(--ink); }
+.out { display: flex; flex-wrap: wrap; gap: 0 1.4em; }
+
+/* The list of things. */
+.things li { margin-bottom: 1.5em; }
+.things a { display: block; }
+.things a span { display: block; color: var(--dim); }
+.things b { font-weight: inherit; transition: color 200ms; }
+.things:has(a:hover) a:not(:hover) b { color: var(--dim); }
+
+/* A picture of the thing under your hand, in the empty half. */
+.peek {
+  position: fixed; left: var(--x); top: calc(var(--y) + 4.5em);
+  width: min(30vw, 440px); pointer-events: none;
+}
+.peek figure { position: absolute; left: 0; top: 0; width: 100%; opacity: 0; transition: opacity 200ms; }
+.peek figure.on { opacity: 1; }
+.peek img { width: 100%; border-radius: 3px; }
+.peek figcaption { display: block; color: var(--dim); margin-top: 1em; text-wrap: pretty; }
+/* With a mouse the list is only the names; the rest shows beside the picture. */
+@media (hover: hover) and (min-width: 820px) {
+  .things li { margin-bottom: 0; }
+  .things a span { display: none; }
+  .things { margin-bottom: 1.5em; }
+}
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (hover: none), (max-width: 819px) { .peek { display: none; } }
+
+/* One thing. */
+.thing img, .frame img { border-radius: 3px; background: color-mix(in srgb, var(--ink) 8%, var(--bg)); }
+.thing dl { display: grid; grid-template-columns: max-content 1fr; gap: 0 1.6em; }
+.thing dt { color: var(--dim); }
+
+/* Photographs: one at a time. */
+.frame { display: block; width: 100%; aspect-ratio: 4 / 3; position: relative; cursor: e-resize; }
+.frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 250ms; }
+.frame img.out-of-view { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .frame img { transition: none; } }
+figcaption { margin-top: 0.5em; display: flex; justify-content: space-between; }
+
+.copy { margin-left: 1em; color: var(--dim); transition: color 200ms; }
+.copy:hover { color: var(--ink); }
+
+/* Phones: the sentence waits lower down, then rises to the top when a door opens. */
+@media (max-width: 819px) {
+  :root { --x: 24px; --size: 19px; }
+  .line {
+    position: sticky; left: auto; top: 0; padding: 22px var(--x) 18px;
+    background: var(--bg);
+    transform: translateY(38svh);
+    transition: transform 480ms var(--ease);
+  }
+  body[data-open] .line { transform: none; }
+  .col { margin: 0; width: auto; padding: 1.5em var(--x) 30svh; }
+  @media (prefers-reduced-motion: reduce) { .line { transition: none; } }
+}
+</style>
+</head>
+<body class="arrive">
+
+<header class="line">
+  <h1><a href="#i">I</a> <a href="#make">make</a> <a href="#pretty">pretty</a> <a href="#things">things</a><a href="#hi" class="dot" aria-label="Say hi">.</a></h1>
+</header>
+
+<main class="col">
+
+  <section data-door="i" hidden>
+    <h2 class="sr">I</h2>
+    <p>I’m David Wurgler. I design and build software, and I live in Salem, Oregon, with my wife and our two boys.</p>
+    <p>I make my apps with Claude, an AI from Anthropic, as my coding partner. I decide what each one is and how it should feel: the design, the details, the way it behaves. Claude and I write the code together and catch each other’s mistakes.</p>
+    <p>I build the things I wish already existed: quiet, well-made tools that respect your time and your privacy.</p>
+  </section>
+
+  <section data-door="make" hidden>
+    <h2 class="sr">make</h2>
+    <p>I don’t write most of the code. I write the brief.</p>
+    <p>Every project starts with a document: who it’s for, the rules the agent can’t break, and a done test for each step. Then I direct Claude Code through it in pieces small enough to check.</p>
+    <ul class="dim" aria-label="Rules from Firn’s brief">
+      <li>Work in small, testable steps.</li>
+      <li>No new dependencies without asking.</li>
+      <li>Never weaken a security default.</li>
+      <li>Each phase ends with a done test.</li>
+    </ul>
+    <p>I care about how it feels, not just how it looks. Good software should be pretty to look at, easy to use, and fun.</p>
+    <p>This site was made the same way. <a href="https://github.com/dwurgy/my-website">Read the source</a></p>
+  </section>
+
+  <section data-door="pretty" hidden>
+    <h2 class="sr">pretty</h2>
+    <p>I take pictures.</p>
+    <figure>
+      <button class="frame" type="button" aria-label="Next photograph"><img id="photo-a" alt=""><img id="photo-b" class="out-of-view" alt=""></button>
+      <figcaption class="dim"><span id="photo-count" aria-live="polite">1 / 7</span></figcaption>
+    </figure>
+    <p>I sing, write, and produce in a band called My Brothers And I. Our songs have been on Virgin River, Pretty Little Liars, Queen Sugar, and others.</p>
+    <p class="out"><a href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a> <a href="https://music.apple.com/us/artist/my-brothers-and-i/892386824">Apple Music</a> <a href="https://www.mybrothersandiband.com/">The band</a></p>
+  </section>
+
+  <section data-door="things" hidden>
+    <h2 class="sr">things</h2>
+    <ul class="things" id="thing-list"></ul>
+    <p class="dim">Also, a company’s back office, moved off QuickBooks Desktop and onto Odoo 19 in ten weeks, with zero downtime.</p>
+  </section>
+
+  <div id="thing-pages"></div>
+
+  <section data-door="hi" hidden>
+    <h2 class="sr">Say hi</h2>
+    <p><span id="email">hello@davidwurgler.com</span><button class="copy" type="button" id="copy">Copy</button></p>
+    <p class="out"><a href="https://www.linkedin.com/in/david-joel-wurgler">LinkedIn</a> <a href="https://github.com/dwurgy">GitHub</a> <a href="https://www.instagram.com/dwurgy/">Instagram</a></p>
+  </section>
+
+</main>
+
+<div class="peek" id="peek" aria-hidden="true"></div>
+
+<script>
+// The facts, from the brief. Nothing here is invented.
+const things = [
+  { slug: 'firn', name: 'Firn', img: 'firn', w: 1600, h: 900,
+    line: 'A calm browser for Mac and iPhone, built on Safari’s engine. Open source.',
+    alt: 'Firn for iPhone: a grid of open tabs, a Kinfolk article, and a Wikipedia page about firn with an on-device summary, beside the Firn icon and the line “A calm, native browser.”',
+    body: ['Firn is snow that has made it through a whole season: older than fresh snow, not yet glacier ice. The word is from the Swiss German for “last year’s.”',
+      'It has vertical tabs, spaces, and split view. It’s a native app, written in Swift on WebKit, the engine behind Safari. I wrote its brief and directed Claude Code through every phase.'],
+    facts: [['Released', 'October 2026'], ['Runs on', 'Mac and iPhone'], ['Source', 'Open, on GitHub']],
+    links: [['firnbrowser.com', 'https://firnbrowser.com'], ['Source', 'https://github.com/dwurgy/firn']] },
+  { slug: 'utu', name: 'Utu Weather', img: 'utu', w: 1600, h: 936,
+    line: 'A calm iPhone weather app that tells you the forecast in a plain-English sentence, then shows the numbers.',
+    alt: 'A design mockup of Utu Weather’s widgets in its sky and paper styles, for Salem at 52°, with lines like “Drizzle until 3, then calm” and “Umbrella? Until 3, yes.”',
+    body: ['The name, said OO-too, is Finnish for haze or mist. Utu writes the forecast as a sentence, like “Grey and mild. Showers drift in around 4 and stay through the evening.” The numbers come second.',
+      'It has soft, hazy skies, gentle motion, and widgets that answer questions directly: “Umbrella? Yes, after 4.” Weather, without the noise.'],
+    facts: [['Status', 'In development, not out yet'], ['Built with', 'SwiftUI, WeatherKit, and WidgetKit'], ['Image', 'A design mockup']],
+    links: [['utuweather.com', 'https://utuweather.com']] },
+  { slug: 'deepcall', name: 'Deepcall', img: 'deepcall', w: 1600, h: 900,
+    line: 'A co-op action game about pilots in flying exosuits, set in a drowned world of Nordic fjords and glaciers.',
+    alt: 'Mood reference for Deepcall: dark mountains above a black shoreline, with a road winding along the water, and the Deepcall wordmark across the sky.',
+    body: ['You fly freely across one open world, liberate outposts, and hunt the giants that survived the flood. You can play it solo or with a friend.',
+      'I’m building it on my own with Claude Code. The current milestone is the flight prototype: hover, flight, heat, and two-player networking. The name is from Psalm 42:7, “Deep calls to deep.”'],
+    facts: [['Status', 'Early development'], ['Built with', 'Unreal Engine 5.8 and C++'], ['Image', 'Mood reference, photo by Andre Filipe on Unsplash']],
+    links: [] },
+  { slug: 'nw-remarketing', name: 'NW Remarketing', img: 'nwr-identity', w: 1600, h: 1000,
+    line: 'A new identity for the company: nwr typed at a terminal, with a Cascade peak hidden in the w.',
+    alt: 'The NW Remarketing logo on near-black: “nwr” with a snowcapped peak in the w and the r on an amber cursor block, beside the tagline “Infrastructure, in hand.”',
+    body: ['The mark is the word nwr typed at a terminal, with the cursor resting on the r and a snowcapped Cascade peak hidden in the w. The amber comes from old amber-phosphor terminal screens.'],
+    facts: [['Work', 'Brand identity'], ['Tagline', 'Infrastructure, in hand.'], ['Used on', 'Invoices, the eBay store, email, and the website']],
+    links: [] },
+  { slug: 'copywriter-lab', name: 'Copywriter Lab', img: 'copywriter-lab', w: 1210, h: 848,
+    line: 'A part number in. An eBay title that doubles as a quote line, a product description, and weight and dimensions out.',
+    alt: 'NW Copywriter Lab: a part number entered, the listing title above a short quote description and the start of a product description, each with a Copy button.',
+    body: ['An internal tool that turns a part number into an eBay title that doubles as a quote line, a product description, and weight and dimensions, and it saves the spec data for store filters.',
+      'I prototyped it in Google AI Studio, rebuilt it with Claude, and deployed it on Cloudflare. It went from idea to production in three days.'],
+    facts: [['Idea to production', '3 days'], ['Runs on', 'Cloudflare']],
+    links: [] },
+];
+const photos = [
+  ['lodge-dusk', 'A glass-fronted lodge under tall pines at dusk.'],
+  ['flowers-table', 'Orange lilies in a red vase, lit by low sun beside a dark wooden chair.'],
+  ['pavilion-peak', 'A timber pavilion framing a mountain peak beyond a pool.'],
+  ['wheelbarrow-driveway', 'A small boy in a trucker cap shovelling dirt into a red wheelbarrow in a driveway.'],
+  ['firs-house', 'Two old firs in front of a house and a dark car.'],
+  ['ice-cream', 'A smiling boy holding an ice cream cone at a red table by the window.'],
+  ['lake-dusk-moon', 'Mountains at dusk over still water, a sliver of moon above.'],
+];
+
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+
+// Build the list, each thing's page, and the pictures that follow the hand.
+$('#thing-list').innerHTML = things.map((t) =>
+  `<li><a href="#things/${t.slug}" data-peek="${t.slug}"><b>${t.name}</b><span>${t.line}</span></a></li>`).join('');
+$('#peek').innerHTML = things.map((t) =>
+  `<figure data-peek="${t.slug}"><img src="img/${t.img}-800.webp" alt="" decoding="async"><figcaption>${t.line}</figcaption></figure>`).join('');
+$('#thing-pages').innerHTML = things.map((t, i) => {
+  const next = things[(i + 1) % things.length];
+  return `<section class="thing" data-door="things/${t.slug}" hidden>
+    <h2>${t.name}</h2>
+    <p class="dim">${t.line}</p>
+    <figure><img src="img/${t.img}-1600.webp" width="${t.w}" height="${t.h}" alt="${esc(t.alt)}" loading="lazy" decoding="async"></figure>
+    ${t.body.map((p) => `<p>${p}</p>`).join('')}
+    <dl>${t.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>
+    ${t.links.length ? `<p class="out">${t.links.map(([l, h]) => `<a href="${h}">${l}</a>`).join(' ')}</p>` : ''}
+    <p><span class="dim">Next,</span> <a href="#things/${next.slug}">${next.name}</a></p>
+  </section>`;
+}).join('');
+
+// Doors. The address remembers which one is open, so Back works.
+const sections = [...document.querySelectorAll('[data-door]')];
+const words = [...document.querySelectorAll('.line a')];
+function render() {
+  const door = decodeURIComponent(location.hash.slice(1));
+  const known = sections.some((s) => s.dataset.door === door);
+  sections.forEach((s) => { s.hidden = s.dataset.door !== door; });
+  const word = known ? door.split('/')[0] : '';
+  words.forEach((a) => {
+    if (a.hash === '#' + word) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
+  if (known) document.body.dataset.open = word; else delete document.body.dataset.open;
+  scrollTo(0, 0);
+  peek('');
+}
+function go(hash) {
+  history.pushState(null, '', hash || location.pathname);
+  render();
+}
+// The open word closes its own door; inside a thing, it goes back to the list.
+words.forEach((a) => a.addEventListener('click', (e) => {
+  if (location.hash === a.hash) { e.preventDefault(); go(''); }
+}));
+addEventListener('hashchange', render);
+addEventListener('popstate', render);
+addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape' || !location.hash) return;
+  const parts = location.hash.split('/');
+  go(parts.length > 1 ? parts[0] : '');
+});
+setTimeout(() => document.body.classList.remove('arrive'), 1400);
+
+// The picture of the thing under your hand.
+function peek(slug) {
+  document.querySelectorAll('.peek figure').forEach((f) => f.classList.toggle('on', f.dataset.peek === slug));
+}
+document.querySelectorAll('.things a').forEach((a) => {
+  a.addEventListener('pointerenter', () => peek(a.dataset.peek));
+  a.addEventListener('pointerleave', () => peek(''));
+  a.addEventListener('focus', () => peek(a.dataset.peek));
+  a.addEventListener('blur', () => peek(''));
+});
+
+// Photographs: click, or the arrow keys, for the next one.
+let at = 0, front = $('#photo-a'), back = $('#photo-b');
+function show(n, first) {
+  at = (n + photos.length) % photos.length;
+  const [file, alt] = photos[at];
+  if (first) { front.src = `img/${file}.webp`; front.alt = alt; }
+  else {
+    back.src = `img/${file}.webp`; back.alt = alt;
+    back.classList.remove('out-of-view'); front.classList.add('out-of-view');
+    [front, back] = [back, front];
+  }
+  $('#photo-count').textContent = `${at + 1} / ${photos.length}`;
+  new Image().src = `img/${photos[(at + 1) % photos.length][0]}.webp`;
+}
+show(0, true);
+$('.frame').addEventListener('click', () => show(at + 1));
+$('.frame').addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') show(at + 1);
+  if (e.key === 'ArrowLeft') show(at - 1);
+});
+
+$('#copy').addEventListener('click', async (e) => {
+  try { await navigator.clipboard.writeText($('#email').textContent); e.target.textContent = 'Copied'; }
+  catch { e.target.textContent = 'Select it instead'; }
+  setTimeout(() => { e.target.textContent = 'Copy'; }, 1600);
+});
+
+render();
+</script>
+</body>
+</html>
