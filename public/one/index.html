@@ -56,13 +56,26 @@ img { display: block; max-width: 100%; height: auto; }
 .line a { transition: color 200ms; padding: 0.9em 0.13em; margin: -0.9em -0.13em; }
 .line a:first-child { padding-left: 0.9em; margin-left: -0.9em; }
 /* The full stop is a drawn dot, a little bigger than the typeface's own, and it swells under the hand. */
-.line .dot { padding: 0.9em 1em 0.9em 0.07em; margin: -0.9em 0 -0.9em 0; }
+.line .dot { padding: 0.9em 1em 0.9em 0.1em; margin: -0.9em 0 -0.9em 0; }
 .line .dot span {
-  display: inline-block; width: 0.21em; height: 0.21em; border-radius: 50%; background: var(--dot);
-  transform-origin: 20% 100%; transition: transform 320ms var(--ease);
+  display: inline-block; width: 0.25em; height: 0.25em;
+  transform-origin: 0 100%; transition: transform 320ms var(--ease);
 }
+/* The dot is never quite still: its edge slowly wobbles, like a drop of ink that hasn't set. */
+.line .dot span::before {
+  content: ''; display: block; width: 100%; height: 100%; background: var(--dot); border-radius: 50%;
+  animation: warble 5.2s ease-in-out infinite, turn 19s linear infinite;
+}
+.line .dot:hover span::before { animation-duration: 2.4s, 9s; }
+@keyframes warble {
+  0%, 100% { border-radius: 50%; scale: 1 1; }
+  20% { border-radius: 62% 38% 56% 44% / 44% 58% 42% 56%; scale: 1.12 0.9; }
+  45% { border-radius: 40% 60% 38% 62% / 60% 42% 58% 40%; scale: 0.92 1.1; }
+  70% { border-radius: 57% 43% 64% 36% / 38% 60% 40% 62%; scale: 1.08 0.94; }
+}
+@keyframes turn { to { rotate: 360deg; } }
 .line .dot:hover span, .line .dot:focus-visible span, .line .dot[aria-current] span { transform: scale(1.9); }
-@media (prefers-reduced-motion: reduce) { .line .dot span { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .line .dot span { transition: none; } .line .dot span::before { animation: none; } }
 .line h1:has(a:hover) a:not(:hover):not(.dot),
 body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(--dim); }
 @media (prefers-reduced-motion: no-preference) {
