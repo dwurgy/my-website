@@ -2,6 +2,19 @@
 
 > **2026-11-23:** the site was rebuilt from a blank slate (see `CLAUDE.md` and the last entry in `docs/HISTORY.md`). Everything below is the plan for the previous site, kept for the record. What's open now is under "Waiting on David" in `CLAUDE.md`.
 
+## Brand kit v3 (David, 2026-11-24)
+
+A file and head-tag update, with no visual redesign. The rules are in CLAUDE.md under "Brand".
+
+- [x] Icons from the kit's `icons/` folder in `public/`, unchanged: `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, and `site.webmanifest`. "DW." is for small squares; the mark is the sign-off only.
+- [x] Share image: `public/share-1200x630.png` from the kit, with the alt text "I make pretty things." The old share image is gone.
+- [x] The dot holds its still shape under reduced motion and in print. The wobble, the hover swell, and the timings are untouched.
+- [x] The sign-off mark checked: ridge in stone and W in ink, in both themes.
+- [ ] David checks the tab icon in Safari and Chrome, and a pasted link's preview. Then he says when to merge.
+- [ ] David decides whether to bring in the kit's new marks and email monogram, clear the old WURGLER lockups out of `public/brand/`, and replace `design/brand-kit/` with kit v3.
+
+## The previous site's plan
+
 Work through these phases in order, on the `redesign` branch. Tick the boxes as they are done. At the end of each phase, stop, show David, and wait for his go-ahead.
 
 ## Phase 0: Before any code (David)
@@ -70,8 +83,7 @@ How the site deploys today (checked October 20, 2026): it's a Cloudflare Worker 
 
 ## Phase 5: Finish
 
-- [x] Social share image (1200 × 630): the coast photo with the headline. (2026-11-10)
-- [x] Favicon, page titles, meta descriptions, a sitemap, and a calm 404 page. (2026-11-10)
+- [x] Page titles, meta descriptions, a sitemap, and a calm 404 page. (2026-11-10)
 - [x] An accessibility pass: keyboard only, a screen reader skim, and contrast checks over every photo. (2026-11-10)
 
 **Done test:** Lighthouse is 95 or higher in all four categories, on mobile and desktop. The share card looks right when the link is pasted into a message.

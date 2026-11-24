@@ -28,7 +28,7 @@ The site itself is part of the proof. It links to its own source, so the code ha
 
 ## The design
 
-There is no mockup file. The site is the design; `design/brand-kit/` has the brand guide, tokens, and reference screenshots.
+There is no mockup file. The site is the design. `design/brand-kit/` has an earlier brand guide (v2), tokens, and reference screenshots; where it disagrees with this file, this file is right.
 
 ### Type
 
@@ -64,7 +64,7 @@ Every colour is one of four tokens in `src/styles/site.css`.
 ### The dot
 
 - A drawn circle, 0.25em across, standing in for the full stop. It links to Say hi.
-- Its edge slowly wobbles and turns (5.2s wobble, 19s turn). It is the only thing on the site that moves without being touched.
+- Its edge slowly wobbles and turns (5.2s wobble, 19s turn). It is the only thing on the site that moves without being touched. Where it doesn't move, it holds its still shape (see Brand).
 - Under the hand it swells to 1.9 times its size and wobbles faster. It stays swollen while Say hi is open, and shrinks back when another word is chosen.
 - The click areas of the words and the dot are much bigger than they look, with no dead gaps between words. Keep them that way.
 
@@ -78,7 +78,7 @@ Smooth and short. Nothing makes the reader wait. Timings are tuned by feel, by t
 - **One word travels.** A thing's name glides from the list to its page's title, back to its place in the list, and from "Next," up to the next page's title. Exactly one copy of the word makes the trip; the two-copy cross-fade looked sloppy and was removed.
 - **Pictures** slide sideways, like prints across a table, and the frame eases to each picture's shape.
 - Door changes use the View Transitions API. Where it's missing, doors simply switch.
-- **Reduced motion:** everything changes at once, and the dot is a still circle.
+- **Reduced motion:** everything changes at once, and the dot holds its still shape: slightly uneven, not a perfect circle.
 
 ### How it's built
 
@@ -91,10 +91,22 @@ Smooth and short. Nothing makes the reader wait. Timings are tuned by feel, by t
 
 ### Brand
 
-- **The mark:** an uneven Cascade ridge over a waterline gap, with a longer reflection below that forms a W. The ridge is `dim` and the W is `ink`, so it follows the theme. Never redraw or reshape it. On the page it's `src/components/Mark.astro`, which inlines the two paths from `public/brand/wurgler-mark-themeable.svg` unchanged.
-- **No wordmark yet.** The old WURGLER wordmark and lockups are retired. David is settling a new one, plus new icons, in Claude Design, using `design/brand-kit/CLAUDE-DESIGN-PROMPT.md`.
-- **Files:** the favicons, phone and manifest icons, `site.webmanifest`, and everything in `public/brand/` come from the David Wurgler design system, and still carry the previous look until the new set arrives. Replace them as files; never regenerate, resize, or recolour them. `public/brand/email-monogram-80.png` is used by David's email signature, so keep its address.
-- `public/share.jpg` is the card shown when a link is pasted: the home screen at 1200 × 630.
+Four pieces, one job each (brand kit v3, David, 2026-11-24):
+
+| Piece | Job |
+|---|---|
+| "I make pretty things." | The site. On the site, the sentence is the wordmark. |
+| "David Wurgler." | The wordmark, for anywhere else the name needs reading. Never on the site's pages. |
+| "DW." | The short form, for small squares only: the tab icon, the app icons, and profile pictures. Never on the site's pages. |
+| The mark | The maker's stamp. It signs off, small, at the end. |
+
+- **One dot per surface.** On the site that's the sentence's. The dot never appears by itself; it is always a full stop after letters.
+- **The mark:** an uneven Cascade ridge over a waterline gap, with a longer reflection below that forms a W. The ridge is `dim` and the W is `ink`, so it follows the theme. Never redraw or reshape it. On the page it's `src/components/Mark.astro`, which inlines the two paths unchanged. It is the sign-off only: never a favicon, an app icon, or a profile picture, and never beside the name.
+- **Icons, in `public/`, straight from the kit's `icons/` folder:** `favicon.svg` ("DW." on a flat tile; it follows the system's light or dark setting), `favicon.ico` (32px and 16px), `apple-touch-icon.png` (180px), `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, and `site.webmanifest`, which points at the last three. The favicon is the one place Averia Regular is used, because Light goes grey that small, and its dot is a plain circle, because the uneven shape can't survive below about 64px.
+- **Share image:** `public/share-1200x630.png`, from the kit's `share/` folder: the sentence on the snow ground, at 32px so it survives a small preview. Its alt text is "I make pretty things." Nothing in the repo generates it.
+- **The still dot.** Wherever the dot doesn't move (reduced motion, print, and still images) it holds one fixed, slightly uneven shape, a single frozen frame of the wobble: `border-radius: 56% 44% 53% 47% / 47% 54% 46% 53%; transform: rotate(-12deg) scale(1.06, 0.95);`. It is the same shape every time. Never redraw it.
+- **Kit files are used as they come.** Replace them as files; never re-export, recompress, recolour, resize, or regenerate them.
+- **Still from the previous look:** `public/brand/` holds the old WURGLER lockups and wordmarks and the old single-colour marks. The site doesn't serve any of them on its pages; the README shows two of the marks. `public/brand/email-monogram-80.png` is used by David's email signature, so keep its address. The kit has replacements for the marks and the monogram that haven't been brought in yet (waiting on David). `design/brand-kit/` is the earlier kit (v2), from before the wordmark was settled.
 
 ### Never
 
@@ -172,10 +184,12 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 ## Where we are
 
 - **2026-11-23: the site was rebuilt from a blank slate** in one session, first as a test page and then as the real site, and merged to `main` (David: "nuke the old site. long live the new site."). The previous site (paper, photographs, a 3D camera, and a music player) is gone from the code; its story is in `docs/HISTORY.md`.
+- **2026-11-24: brand kit v3 files are in.** The tab icon and app icons are now "DW.", the share image is the kit's, and the dot holds its still shape under reduced motion and in print. On the session branch, not merged; David will say when.
 - **Checked here:** every address at 1440 × 900 and 390 × 844, light and dark; the click-through flow, reels, Back and Forward, Escape, old addresses redirecting, and the pages without scripts.
 - **Waiting on David:**
   - How it feels on his real laptop and iPhone, especially in Safari.
-  - The wordmark and new icons from Claude Design. When they arrive, replace the files in `public/` and `public/brand/`, and remake `public/share.jpg` if the look changes.
+  - The tab icon in Safari and Chrome, and a pasted link's preview, checked by hand.
+  - Whether to bring the kit's new marks and email monogram into `public/brand/`, clear out the old WURGLER lockups there, and replace `design/brand-kit/` with kit v3.
   - A bigger Copywriter Lab image.
   - Three Cloudflare secrets from the old music player are no longer used and can be deleted in the dashboard: `MUSICKIT_PRIVATE_KEY`, `MUSICKIT_KEY_ID`, and `APPLE_TEAM_ID`.
 
