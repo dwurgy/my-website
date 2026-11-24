@@ -16,6 +16,8 @@ import copywriter from '../../assets/work/copywriter-lab.webp';
 export interface Shot {
   src: ImageMetadata;
   alt: string;
+  /** Give it a hairline edge: for a picture whose own background is close to the page's, so it doesn't melt into it. */
+  edge?: boolean;
 }
 
 export interface Thing {
@@ -97,7 +99,7 @@ export const things: Thing[] = [
     name: 'Copywriter Lab',
     line: 'A part number in. An eBay title that doubles as a quote line, a product description, and weight and dimensions out.',
     shots: [
-      { src: copywriter, alt: 'NW Copywriter Lab: a part number entered, the listing title above a short quote description and the start of a product description, each with a Copy button.' },
+      { src: copywriter, alt: 'NW Copywriter Lab: a part number entered, the listing title above a short quote description and the start of a product description, each with a Copy button.', edge: true },
     ],
     body: [
       'An internal tool that turns a part number into an eBay title that doubles as a quote line, a product description, and weight and dimensions, and it saves the spec data for store filters.',

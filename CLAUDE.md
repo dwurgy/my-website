@@ -55,7 +55,7 @@ Every colour is one of four tokens in `src/styles/site.css`.
 - **The sentence** sits 9% from the left and 44% down, and never leaves the screen. It is the only navigation. The open word is ink and the rest are grey. Clicking the open word closes its door.
 - **Content** starts at the middle of the screen, on the sentence's own baseline.
 - **The list of things** is five names and nothing else. Resting on a name shows its one line, in grey, under the list. There is no hover picture (David removed it: "it just feels out of place").
-- **Pictures** are wider than the text: on wide screens they reach back toward the sentence and stop short of it. Corners are 3px. No shadows, borders, or cards. Each picture keeps its own shape.
+- **Pictures** are wider than the text: on wide screens they reach back toward the sentence and stop short of it. Corners are 3px. No shadows, borders, or cards. Each picture keeps its own shape. One exception (David, 2026-11-24): a picture whose own background is close to the page's, like Copywriter Lab's, gets a hairline edge and 12px corners so it doesn't melt into the page (`edge: true` in `src/data/things.ts`).
 - **Controls are words** ("Back", "Next", "Copy"), in grey, turning ink under the hand. A reel's count and its Back and Next sit above the picture, so they hold still while the picture changes shape.
 - **Links in text** have a 1px grey underline that turns ink under the hand.
 - **The mark** appears once, small, under the contact links. It never leads.
