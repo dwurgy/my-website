@@ -108,8 +108,8 @@ function found() {
   delete line.dataset.hint;
 }
 function play() {
-  clearTimeout(hintTimer);
   if (hinted) return;
+  clearTimeout(hintTimer);
   if (calm.matches || line.querySelector('a:hover, a:focus')) return found();
   hinted = true;
   try { sessionStorage.setItem('hint', '1'); } catch { /* Private windows may refuse; it still plays once per load. */ }
