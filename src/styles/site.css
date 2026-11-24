@@ -113,13 +113,14 @@ html[data-same-name="back"] .cascade { --wait: 400ms; }
 /* Moving between doors. The sentence holds (or, on a phone, glides to the top);
    what was open lifts away as the next thing settles in under it. */
 .line { view-transition-name: line; }
+/* The sentence travels as one piece and is never a still picture of itself: its words and its dot
+   change by their own timings above, so nothing cross-fades and the dot swells or settles once. */
+::view-transition-old(line) { display: none; }
+::view-transition-new(line) { animation: none; }
 .col section:not([hidden]) { view-transition-name: col; }
 .thing h2 { width: fit-content; }
 .next a { display: inline-block; }
 ::view-transition-group(line) { animation-duration: 520ms; animation-timing-function: var(--glide); }
-/* The dot travels as its own piece, so leaving Say hi it shrinks back down; it doesn't cross-fade. */
-.line .dot span { view-transition-name: dot; }
-::view-transition-group(dot) { animation-duration: 520ms; animation-timing-function: var(--glide); }
 /* What's leaving fades where it stands; it doesn't slide to where the next thing will be. */
 ::view-transition-old(col-out) { animation: leave 200ms ease-in both; }
 ::view-transition-new(col) { animation: settle 480ms var(--ease) 220ms both; }

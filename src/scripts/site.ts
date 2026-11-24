@@ -107,26 +107,39 @@ function found() {
   clearTimeout(hintTimer);
   delete line.dataset.hint;
 }
+function play() {
+  clearTimeout(hintTimer);
+  if (hinted) return;
+  if (calm.matches || line.querySelector('a:hover, a:focus')) return found();
+  hinted = true;
+  try { sessionStorage.setItem('hint', '1'); } catch { /* Private windows may refuse; it still plays once per load. */ }
+  const steps: [string, number][] = [['1', 500], ['2', 500], ['3', 500], ['4', 500], ['dot', 600]];
+  const step = (i: number) => {
+    if (i === steps.length) { delete line.dataset.hint; return; }
+    line.dataset.hint = steps[i][0];
+    hintTimer = window.setTimeout(() => step(i + 1), steps[i][1]);
+  };
+  step(0);
+}
 function hint() {
   if (hinted) return;
   // Only count the wait while the page can be seen.
   if (document.hidden) { document.addEventListener('visibilitychange', hint, { once: true }); return; }
-  hintTimer = window.setTimeout(() => {
-    if (hinted || document.hidden) return hint();
-    if (calm.matches || line.querySelector('a:hover, a:focus')) return found();
-    hinted = true;
-    try { sessionStorage.setItem('hint', '1'); } catch { /* Private windows may refuse; it still plays once per load. */ }
-    const steps: [string, number][] = [['1', 500], ['2', 500], ['3', 500], ['4', 500], ['dot', 600]];
-    const step = (i: number) => {
-      if (i === steps.length) { delete line.dataset.hint; return; }
-      line.dataset.hint = steps[i][0];
-      hintTimer = window.setTimeout(() => step(i + 1), steps[i][1]);
-    };
-    step(0);
-  }, 4000);
+  hintTimer = window.setTimeout(() => (document.hidden ? hint() : play()), 4000);
 }
 words.forEach((a) => ['pointerenter', 'pointerdown', 'click', 'focus'].forEach((type) => a.addEventListener(type, found)));
-setTimeout(() => { document.body.classList.remove('arrive'); hint(); }, 1400);
+// The home page has nothing to scroll to, so a scroll or a swipe is answered with the hint
+// straight away. One made while the sentence is still arriving is answered as soon as it has.
+let arrived = false;
+let asked = false;
+const ask = () => { asked = true; if (arrived) play(); };
+addEventListener('wheel', ask, { passive: true });
+addEventListener('touchmove', ask, { passive: true });
+setTimeout(() => {
+  document.body.classList.remove('arrive');
+  arrived = true;
+  if (asked) play(); else hint();
+}, 1400);
 
 // A line about the thing under your hand, under the list.
 function peek(slug: string) {

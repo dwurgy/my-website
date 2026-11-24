@@ -65,7 +65,7 @@ Every colour is one of four tokens in `src/styles/site.css`.
 
 - A drawn circle, 0.25em across, standing in for the full stop. It links to Say hi.
 - Its edge slowly wobbles and turns (5.2s wobble, 19s turn). It is the only thing on the site that moves without being touched. Where it doesn't move, it holds its still shape (see Brand).
-- **The hint** is the one agreed exception to the dot being the only thing that moves without being touched: once a visit, about 4 seconds after the sentence arrives on the home page, each word is chosen in turn and the dot swells once, then it never plays again (David, 2026-11-24).
+- **The hint** is the one agreed exception to the dot being the only thing that moves without being touched: once a visit, about 4 seconds after the sentence arrives on the home page, each word is chosen in turn and the dot swells once, then it never plays again (David, 2026-11-24). A scroll or a swipe on the home page, which has nothing to scroll to, plays it straight away.
 - Under the hand it swells to 1.9 times its size and wobbles faster. It stays swollen while Say hi is open, and shrinks back when another word is chosen.
 - The click areas of the words and the dot are much bigger than they look, with no dead gaps between words. Keep them that way.
 
@@ -75,7 +75,7 @@ Smooth and short. Nothing makes the reader wait. Timings are tuned by feel, by t
 
 - **On load,** the sentence arrives once, word by word, through grey to ink.
 - **The five names** arrive the same way, one after another. Nothing else does: paragraphs settle in as one piece (David, 2026-11-23).
-- **Opening a door:** what was open fades where it stands, and the new content settles in from just below.
+- **Opening a door:** what was open fades where it stands, and the new content settles in from just below. The sentence is never cross-faded: its words and the dot change by their own timings, so there is only ever one dot on screen.
 - **One word travels.** A thing's name glides from the list to its page's title, back to its place in the list, and from "Next," up to the next page's title. Exactly one copy of the word makes the trip; the two-copy cross-fade looked sloppy and was removed.
 - **Pictures** slide sideways, like prints across a table, and the frame eases to each picture's shape.
 - Door changes use the View Transitions API. Where it's missing, doors simply switch.
