@@ -51,7 +51,7 @@ const titleOf = (door: string) => doors.find((d) => d.door === door)!.title;
 
       <section data-door="make" data-title={titleOf('make')} hidden={open !== 'make'}>
         <h2 class="sr">make</h2>
-        <p>I don’t write most of the code. I write the brief.</p>
+        <p>I don’t write most of the code.<br />I write the brief.</p>
         <p>
           Every project starts with a document. It says who the thing is for and what it should do, and it sets the
           rules Claude Code has to follow.
@@ -66,7 +66,7 @@ const titleOf = (door: string) => doors.find((d) => d.door === door)!.title;
           I care how it feels, not just how it looks. Good software is pretty to look at and easy to use. Then it gets
           out of your way.
         </p>
-        <p>This site was made the same way. <a href="https://github.com/dwurgy/my-website">Read the source</a></p>
+        <p>This site was made the same way.<br /><a href="https://github.com/dwurgy/my-website">Read the source</a></p>
       </section>
 
       <section data-door="pretty" data-title={titleOf('pretty')} hidden={open !== 'pretty'}>
