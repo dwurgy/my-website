@@ -2,6 +2,8 @@
 
 > **2026-11-23:** the site was rebuilt from a blank slate (see `CLAUDE.md` and the last entry in `docs/HISTORY.md`). Everything below is the plan for the previous site, kept for the record. What's open now is under "Waiting on David" in `CLAUDE.md`.
 
+- **2026-11-24, the hint:** the one agreed exception to the dot being the only thing that moves without being touched. Once a visit, on the home page, each word of the sentence is chosen in turn and the dot swells once.
+
 ## Brand kit v3 (David, 2026-11-24)
 
 A file and head-tag update, with no visual redesign. The rules are in CLAUDE.md under "Brand".

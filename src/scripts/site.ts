@@ -29,6 +29,7 @@ function render(door: string) {
     else a.removeAttribute('aria-current');
   });
   if (door) document.body.dataset.open = word; else delete document.body.dataset.open;
+  if (door) found();
   document.title = sections.find((s) => s.dataset.door === door)?.dataset.title ?? document.body.dataset.homeTitle ?? document.title;
   scrollTo(0, 0);
   peek('');
@@ -92,7 +93,40 @@ addEventListener('keydown', (e) => {
   if (e.key !== 'Escape' || !shown || shown === 'lost') return;
   go(shown.includes('/') ? shown.split('/')[0] : '');
 });
-setTimeout(() => document.body.classList.remove('arrive'), 1400);
+
+// The hint. Once a visit, a few seconds after the sentence arrives, it shows by itself what
+// a hand would find: each word chosen in turn, then the dot swelling. It only sets data-hint
+// on the sentence (the styles mirror the hover rules), and it stops for good the moment the
+// visitor finds a word or the dot themselves.
+const line = $('.line h1')!;
+const seen = () => { try { return sessionStorage.getItem('hint') !== null; } catch { return false; } };
+let hinted = shown !== '' || calm.matches || seen();
+let hintTimer = 0;
+function found() {
+  hinted = true;
+  clearTimeout(hintTimer);
+  delete line.dataset.hint;
+}
+function hint() {
+  if (hinted) return;
+  // Only count the wait while the page can be seen.
+  if (document.hidden) { document.addEventListener('visibilitychange', hint, { once: true }); return; }
+  hintTimer = window.setTimeout(() => {
+    if (hinted || document.hidden) return hint();
+    if (calm.matches || line.querySelector('a:hover, a:focus')) return found();
+    hinted = true;
+    try { sessionStorage.setItem('hint', '1'); } catch { /* Private windows may refuse; it still plays once per load. */ }
+    const steps: [string, number][] = [['1', 500], ['2', 500], ['3', 500], ['4', 500], ['dot', 600]];
+    const step = (i: number) => {
+      if (i === steps.length) { delete line.dataset.hint; return; }
+      line.dataset.hint = steps[i][0];
+      hintTimer = window.setTimeout(() => step(i + 1), steps[i][1]);
+    };
+    step(0);
+  }, 4000);
+}
+words.forEach((a) => ['pointerenter', 'pointerdown', 'click', 'focus'].forEach((type) => a.addEventListener(type, found)));
+setTimeout(() => { document.body.classList.remove('arrive'); hint(); }, 1400);
 
 // A line about the thing under your hand, under the list.
 function peek(slug: string) {

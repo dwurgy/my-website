@@ -75,6 +75,14 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .line h1:has(a:hover) a:not(:hover):not(.dot),
 body[data-open] .line a:not([aria-current]):not(.dot):not(:hover) { color: var(--dim); }
+/* The hint: once a visit, the sentence shows by itself what a hand would find. These mirror the
+   hover rules above; src/scripts/site.ts sets data-hint to each word's place in turn, then to "dot". */
+.line h1[data-hint="1"] a:not(:nth-child(1)):not(.dot),
+.line h1[data-hint="2"] a:not(:nth-child(2)):not(.dot),
+.line h1[data-hint="3"] a:not(:nth-child(3)):not(.dot),
+.line h1[data-hint="4"] a:not(:nth-child(4)):not(.dot) { color: var(--dim); }
+.line h1[data-hint="dot"] .dot span { transform: scale(1.9); }
+.line h1[data-hint="dot"] .dot span::before { animation-duration: 2.4s, 9s; }
 @media (prefers-reduced-motion: no-preference) {
   body.arrive .line a:not(.dot) { animation: arrive 700ms var(--ease) both; }
   body.arrive .line a:nth-child(2) { animation-delay: 110ms; }

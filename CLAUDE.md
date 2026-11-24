@@ -65,6 +65,7 @@ Every colour is one of four tokens in `src/styles/site.css`.
 
 - A drawn circle, 0.25em across, standing in for the full stop. It links to Say hi.
 - Its edge slowly wobbles and turns (5.2s wobble, 19s turn). It is the only thing on the site that moves without being touched. Where it doesn't move, it holds its still shape (see Brand).
+- **The hint** is the one agreed exception to the dot being the only thing that moves without being touched: once a visit, about 4 seconds after the sentence arrives on the home page, each word is chosen in turn and the dot swells once, then it never plays again (David, 2026-11-24).
 - Under the hand it swells to 1.9 times its size and wobbles faster. It stays swollen while Say hi is open, and shrinks back when another word is chosen.
 - The click areas of the words and the dot are much bigger than they look, with no dead gaps between words. Keep them that way.
 
