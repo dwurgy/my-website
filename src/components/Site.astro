@@ -76,7 +76,7 @@ const titleOf = (door: string) => doors.find((d) => d.door === door)!.title;
       <section data-door="pretty" data-title={titleOf('pretty')} hidden={open !== 'pretty'}>
         <h2 class="sr">pretty</h2>
         <p>I take pictures.</p>
-        <Reel shots={photos} />
+        <Reel shots={photos} lead={open === 'pretty'} />
         <p>I make music.</p>
         <p>
           I sing, write, and produce in a band called <span class="together">My Brothers And I.</span> Our songs have
@@ -122,7 +122,7 @@ const titleOf = (door: string) => doors.find((d) => d.door === door)!.title;
             <section class="thing" data-door={door} data-title={titleOf(door)} hidden={open !== door}>
               <h2>{t.name}</h2>
               <p class="dim">{t.line}</p>
-              <Reel shots={t.shots} />
+              <Reel shots={t.shots} lead={open === door} />
               {t.body.map((p) => (
                 <p>{p}</p>
               ))}

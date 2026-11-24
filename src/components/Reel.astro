@@ -7,9 +7,11 @@ import { Image } from 'astro:assets';
 
 interface Props {
   shots: { src: ImageMetadata; alt: string; edge?: boolean }[];
+  /** This reel is on the page being opened, so fetch its first picture straight away. */
+  lead?: boolean;
 }
 
-const { shots } = Astro.props;
+const { shots, lead = false } = Astro.props;
 const many = shots.length > 1;
 const ratio = (src: ImageMetadata) => `${src.width} / ${src.height}`;
 ---
@@ -38,7 +40,8 @@ const ratio = (src: ImageMetadata) => `${src.width} / ${src.height}`;
           class:list={[{ front: i === 0, edged: shot.edge }]}
           data-ratio={ratio(shot.src)}
           aria-hidden={i === 0 ? undefined : 'true'}
-          loading="lazy"
+          loading={lead && i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={lead && i === 0 ? 'high' : undefined}
           decoding="async"
         />
       ))
