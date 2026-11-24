@@ -122,6 +122,8 @@ html[data-same-name="back"]::view-transition-new(col) { animation-delay: 380ms; 
 .col p { text-wrap: pretty; hanging-punctuation: first; }
 .col ul { list-style: none; }
 .dim { color: var(--dim); }
+/* A name that mustn't be split across lines (the band's would leave its "I" alone on a row). */
+.together { white-space: nowrap; }
 .col p a, .col dd a, .out a {
   text-decoration: underline;
   text-decoration-thickness: 1px;
