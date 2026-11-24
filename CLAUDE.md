@@ -160,7 +160,9 @@ Write plainly and directly, like a person talking. Use short sentences, no hype,
 
 - "I make pretty things." (the sentence, matching his GitHub and Threads bio)
 - "I take pictures." and "I make music." (he likes the matching phrasing)
-- "Good software should be pretty to look at and easy to use. Then it should get out of your way." (he cut "and fun": "fun just seems lame")
+- "Good software is pretty to look at and easy to use. Then it gets out of your way." (he cut "and fun": "fun just seems lame")
+
+On project pages, each part has one job. The grey line says what it is, the body says how it works and how I made it, the name's meaning comes last, and the table holds only facts that appear nowhere else.
 
 ### Assets
 

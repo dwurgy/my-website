@@ -44,11 +44,7 @@ const titleOf = (door: string) => doors.find((d) => d.door === door)!.title;
       <section data-door="i" data-title={titleOf('i')} hidden={open !== 'i'}>
         <h2 class="sr">I</h2>
         <p>I’m David Wurgler. I design and build software, and I live in Salem, Oregon, with my wife and our two boys.</p>
-        <p>
-          I make my apps with Claude, an AI from Anthropic, as my coding partner. I decide what each one is and how it
-          should feel: the design, the details, the way it behaves. Claude and I write the code together and catch each
-          other’s mistakes.
-        </p>
+        <p>I work with Claude, an AI from Anthropic. I make the calls, and we catch each other’s mistakes.</p>
         <p>I build the things I wish already existed: quiet, well-made tools that respect your time and your privacy.</p>
         <p><a href="/hi/">Say hi</a></p>
       </section>
@@ -57,8 +53,8 @@ const titleOf = (door: string) => doors.find((d) => d.door === door)!.title;
         <h2 class="sr">make</h2>
         <p>I don’t write most of the code. I write the brief.</p>
         <p>
-          Every project starts with a document: who it’s for, the rules the agent can’t break, and a done test for each
-          step. Then I direct Claude Code through it in pieces small enough to check.
+          Every project starts with a document. It says who the thing is for and what it should do, and it sets the
+          rules Claude Code has to follow.
         </p>
         <ul class="dim" aria-label="Rules from Firn’s brief">
           <li>Work in small, testable steps.</li>
@@ -67,8 +63,8 @@ const titleOf = (door: string) => doors.find((d) => d.door === door)!.title;
           <li>Each phase ends with a done test.</li>
         </ul>
         <p>
-          I care about how it feels, not just how it looks. Good software should be pretty to look at and easy to use.
-          Then it should get out of your way.
+          I care how it feels, not just how it looks. Good software is pretty to look at and easy to use. Then it gets
+          out of your way.
         </p>
         <p>This site was made the same way. <a href="https://github.com/dwurgy/my-website">Read the source</a></p>
       </section>
@@ -80,7 +76,7 @@ const titleOf = (door: string) => doors.find((d) => d.door === door)!.title;
         <p>I make music.</p>
         <p>
           I sing, write, and produce in a band called <span class="together">My Brothers And I.</span> Our songs have
-          been on Virgin River, Pretty Little Liars, Love Island, and others.
+          been on Virgin River, Pretty Little Liars, Love Island, and other shows.
         </p>
         <p class="out">
           <a href="https://open.spotify.com/artist/01pbsrLZgBLuMIoU10Ypyb">Spotify</a>

@@ -36,7 +36,7 @@ export const things: Thing[] = [
   {
     slug: 'firn',
     name: 'Firn',
-    line: 'A calm browser for Mac and iPhone, built on Safari’s engine. Open source.',
+    line: 'A calm browser for Mac and iPhone.',
     shots: [
       { src: firnPhones, alt: 'Firn for iPhone: a grid of open tabs, a Kinfolk article, and a Wikipedia page about firn with an on-device summary, beside the Firn icon and the line “A calm, native browser.”' },
       { src: firnMac, alt: 'Firn on a Mac: a sidebar with four pinned sites, a “Weekend cooking” group of tabs, and the Snow Peak site open beside it.' },
@@ -44,16 +44,17 @@ export const things: Thing[] = [
       { src: firnPair, alt: 'Two images of Firn on iPhone. “Every space is its own browser.”: a grid of open tabs in a space called Work. “Read without the clutter.”: a Wikipedia article about firn in reader view, with a Summarize button.' },
     ],
     body: [
-      'Firn is snow that has made it through a whole season: older than fresh snow, not yet glacier ice. The word is from the Swiss German for “last year’s.”',
-      'It has vertical tabs, spaces, and split view. It’s a native app, written in Swift on WebKit, the engine behind Safari. I wrote its brief and directed Claude Code through every phase.',
+      'Firn has vertical tabs, spaces, and split view, without the learning curve. It’s a native app, written in Swift on WebKit, the engine behind Safari.',
+      'I designed the app, its brand, and its website, and built it with Claude Code.',
+      'The name is the word for snow that has made it through a whole season: older than fresh snow, not yet glacier ice. It comes from the Swiss German for “last year’s.”',
     ],
-    facts: [['Released', 'October 2026'], ['Runs on', 'Mac and iPhone'], ['Source', 'Open, on GitHub']],
-    links: [['firnbrowser.com', 'https://firnbrowser.com'], ['Source', 'https://github.com/dwurgy/firn']],
+    facts: [['Mac', 'Released October 2026'], ['iPhone', 'In development'], ['Source', 'Open, on GitHub']],
+    links: [['firnbrowser.com', 'https://firnbrowser.com'], ['GitHub', 'https://github.com/dwurgy/firn']],
   },
   {
     slug: 'utu',
     name: 'Utu Weather',
-    line: 'A calm iPhone weather app that tells you the forecast in a plain-English sentence, then shows the numbers.',
+    line: 'A weather app for iPhone. It tells you the forecast the way a person would, then shows the numbers.',
     shots: [
       { src: utuHero, alt: 'A design mockup for Utu Weather: its icon and wordmark, the line “Weather, without the noise.”, an iPhone showing 52° in Salem and “Soft drizzle until about 3, then the clouds open up for a calm evening.”, and two widgets, one reading “Umbrella? Until 3, yes.”' },
       { src: utuWidgets, alt: 'A design mockup of Utu Weather’s widgets in its sky and paper styles, for Salem at 52°, with lines like “Drizzle until 3, then calm” and “Umbrella? Until 3, yes.”' },
@@ -61,22 +62,24 @@ export const things: Thing[] = [
       { src: utuLockup, alt: 'The Utu app icon, a sun setting behind soft hills, beside the handwritten “utu” wordmark.' },
     ],
     body: [
-      'The name, said OO-too, is Finnish for haze or mist. Utu writes the forecast as a sentence, like “Grey and mild. Showers drift in around 4 and stay through the evening.” The numbers come second.',
-      'It has soft, hazy skies, gentle motion, and widgets that answer questions directly: “Umbrella? Yes, after 4.” Weather, without the noise.',
+      'A forecast reads like this: “Grey and mild. Showers drift in around 4 and stay through the evening.”',
+      'The skies are soft and hazy, and everything moves gently. The widgets answer simple questions, like “Umbrella? Yes, after 4.”',
+      'The name is Finnish for haze or mist. You say it OO-too.',
     ],
-    facts: [['Status', 'In development, not out yet'], ['Built with', 'SwiftUI, WeatherKit, and WidgetKit'], ['Images', 'Design mockups']],
+    facts: [['Status', 'In development'], ['Built with', 'SwiftUI, WeatherKit, and WidgetKit'], ['Images', 'Design mockups']],
     links: [['utuweather.com', 'https://utuweather.com']],
   },
   {
     slug: 'deepcall',
     name: 'Deepcall',
-    line: 'A co-op action game about pilots in flying exosuits, set in a drowned world of Nordic fjords and glaciers.',
+    line: 'A co-op action game. You’re a pilot in a flying exosuit, in a drowned world of Nordic fjords and glaciers.',
     shots: [
       { src: deepcall, alt: 'Mood reference for Deepcall: dark mountains above a black shoreline, with a road winding along the water, and the Deepcall wordmark across the sky.' },
     ],
     body: [
-      'You fly freely across one open world, liberate outposts, and hunt the giants that survived the flood. You can play it solo or with a friend.',
-      'I’m building it on my own with Claude Code. The current milestone is the flight prototype: hover, flight, heat, and two-player networking. The name is from Psalm 42:7, “Deep calls to deep.”',
+      'You fly anywhere across one open world, liberate outposts, and hunt the giants that survived the flood. You can play alone or with friends.',
+      'I’m building it on my own with Claude Code. Right now it’s a flight prototype: hovering, flying, heat, and two-player networking.',
+      'The name is from Psalm 42:7: “Deep calls to deep.”',
     ],
     facts: [['Status', 'Early development'], ['Built with', 'Unreal Engine 5.8 and C++'], ['Image', 'Mood reference, photo by Andre Filipe on Unsplash']],
     links: [],
@@ -84,26 +87,26 @@ export const things: Thing[] = [
   {
     slug: 'nw-remarketing',
     name: 'NW Remarketing',
-    line: 'A new identity for the company: nwr typed at a terminal, with a Cascade peak hidden in the w.',
+    line: 'A new logo and brand identity.',
     shots: [
       { src: nwr, alt: 'The NW Remarketing logo on near-black: “nwr” with a snowcapped peak in the w and the r on an amber cursor block, beside the tagline “Infrastructure, in hand.”' },
     ],
     body: [
-      'The mark is the word nwr typed at a terminal, with the cursor resting on the r and a snowcapped Cascade peak hidden in the w. The amber comes from old amber-phosphor terminal screens.',
+      'The logo is the letters nwr, typed at a terminal. The cursor rests on the r, and a snowcapped Cascade peak hides in the w. The amber is borrowed from old phosphor terminal screens.',
     ],
-    facts: [['Work', 'Brand identity'], ['Tagline', 'Infrastructure, in hand.'], ['Used on', 'Invoices, the eBay store, email, and the website']],
+    facts: [['Tagline', 'Infrastructure, in hand.'], ['Used on', 'Invoices, the eBay store, email, and the website']],
     links: [],
   },
   {
     slug: 'copywriter-lab',
     name: 'Copywriter Lab',
-    line: 'A part number in. An eBay title that doubles as a quote line, a product description, and weight and dimensions out.',
+    line: 'An internal tool that turns a part number into a finished product listing.',
     shots: [
       { src: copywriter, alt: 'NW Copywriter Lab: a part number entered, the listing title above a short quote description and the start of a product description, each with a Copy button.', edge: true },
     ],
     body: [
-      'An internal tool that turns a part number into an eBay title that doubles as a quote line, a product description, and weight and dimensions, and it saves the spec data for store filters.',
-      'I prototyped it in Google AI Studio, rebuilt it with Claude, and deployed it on Cloudflare. It went from idea to production in three days.',
+      'Paste a part number and it writes the eBay title, the product description, and the weight and dimensions. Every listing follows the same rules, so they all read like one person wrote them. The title doubles as the quote line, and the specs are saved for store filters.',
+      'I prototyped it in Google AI Studio, then rebuilt it with Claude.',
     ],
     facts: [['Idea to production', '3 days'], ['Runs on', 'Cloudflare']],
     links: [],
