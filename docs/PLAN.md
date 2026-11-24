@@ -10,7 +10,8 @@ A file and head-tag update, with no visual redesign. The rules are in CLAUDE.md 
 - [x] Share image: `public/share-1200x630.png` from the kit, with the alt text "I make pretty things." The old share image is gone.
 - [x] The dot holds its still shape under reduced motion and in print. The wobble, the hover swell, and the timings are untouched.
 - [x] The sign-off mark checked: ridge in stone and W in ink, in both themes.
-- [ ] David checks the tab icon in Safari and Chrome, and a pasted link's preview. Then he says when to merge.
+- [x] Merged to `main` (David said to, 2026-11-24).
+- [ ] David checks the tab icon in Safari and Chrome, and a pasted link's preview, on the live site.
 - [ ] David decides whether to bring in the kit's new marks and email monogram, clear the old WURGLER lockups out of `public/brand/`, and replace `design/brand-kit/` with kit v3.
 
 ## The previous site's plan
