@@ -188,6 +188,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 
 - **2026-11-23: the site was rebuilt from a blank slate** in one session, first as a test page and then as the real site, and merged to `main` (David: "nuke the old site. long live the new site."). The previous site (paper, photographs, a 3D camera, and a music player) is gone from the code; its story is in `docs/HISTORY.md`.
 - **2026-11-24: brand kit v3 files are in.** The tab icon and app icons are now "DW.", the share image is the kit's, and the dot holds its still shape under reduced motion and in print. Merged to `main` (David said to). Later the same day: app icons with larger letters, the kit's marks in `public/brand/`, and `design/brand-kit/` replaced with v3.
+- **2026-11-24: the hint is live.** Once a visit, about 4 seconds after the sentence arrives on the home page, each word is chosen in turn and the dot swells once. Merged to `main` (David said to). Checked here in a headless browser; not yet checked in real Safari on David's laptop and iPhone.
 - **Checked here:** every address at 1440 × 900 and 390 × 844, light and dark; the click-through flow, reels, Back and Forward, Escape, old addresses redirecting, and the pages without scripts.
 - **Waiting on David:**
   - How it feels on his real laptop and iPhone, especially in Safari.
