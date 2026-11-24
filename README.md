@@ -1,6 +1,6 @@
 <p>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="public/brand/wurgler-mark-bone.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="public/brand/wurgler-mark-light.svg">
     <img src="public/brand/wurgler-mark-ink.svg" alt="The Wurgler mark" height="44">
   </picture>
 </p>
@@ -27,7 +27,7 @@ This site was built that way, and the documents are all here:
 
 - [`CLAUDE.md`](CLAUDE.md): the brief. What the site is for, the design rules, the facts it may use, and how to work with me.
 - [`docs/HISTORY.md`](docs/HISTORY.md): what changed and why, including the site this one replaced.
-- [`design/brand-kit/`](design/brand-kit/): the brand guide, tokens, and reference screenshots.
+- [`design/brand-kit/`](design/brand-kit/): the brand kit. The guide, the wordmark, the icons, the mark, and the tokens.
 
 ## The design
 

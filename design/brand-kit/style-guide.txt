@@ -1,0 +1,69 @@
+David Wurgler: style guide
+Plain text. Paste anywhere.
+
+The idea
+One sentence on an empty page: "I make pretty things." Each word is a door, and the full stop is how you say hi. The brand is what's left out.
+
+Names
+- David Wurgler: me. The website, Threads, Ko-fi, and GitHub.
+- David Wurgler Apps: the Discord server, and the umbrella over Firn, Utu, and Nynna.
+- The apps keep their own identities. This brand frames them; it never restyles them.
+
+The five rules
+1. One typeface, one size, one weight.
+2. Two tones and one dot.
+3. Emptiness is the material. Never fill a gap because it's there.
+4. Words before pictures.
+5. The mark signs off.
+
+Voice
+- Plain and direct, like a person talking. Short sentences.
+- No hype, no buzzwords, no emoji.
+- Curly quotes and the serial comma.
+- Say what a thing is and stop.
+- Use only real facts. If a line needs a fact you don't have, ask.
+
+Colour
+            Light      Dark
+  ground    #eff0ee    #0e0f10   (snow / night; always flat)
+  ink       #0e0f10    #e9eae7   (text, and whatever is chosen)
+  stone     #696b6a    #8e908e   (secondary text, and whatever isn't chosen)
+  ember     #e5482d    #f0573b   (the dot; nothing else, ever)
+Never set text in ember. Follow the system's light or dark setting; there is no theme button.
+
+Type
+- Averia Serif Libre Light, 21px (19px on phones), line height 1.5.
+- No bold, no italic, no display sizes, no capitals for emphasis, no second typeface.
+- Hierarchy comes from ink against stone, and from space.
+- The favicon alone uses Regular.
+
+The name
+- "I make pretty things." is the wordmark on the site.
+- "David Wurgler." is the wordmark everywhere else.
+- "DW." is the short form, for profile pictures and small squares only.
+- Each ends in the dot. One dot per surface, so the sentence and the wordmark never share one.
+- In plain text, where the dot can't be drawn, write the name with no full stop.
+
+The dot
+- A drawn shape, a quarter of the letter height, on the baseline, just after the last letter.
+- On screen it wobbles slowly. In stills it is one fixed, slightly uneven shape. Never a perfect circle, except in the favicon.
+- It never appears by itself, and never as a bullet, a row, or a pattern.
+
+The mark
+- A ridge over still water. Its longer reflection is the W.
+- It is the maker's stamp: once, small, at the end. Ridge in stone, W in ink, or one colour.
+- Never a profile picture or a favicon, and never beside the name.
+- Never redraw it.
+
+Layout
+- A great deal of empty space. More than feels correct.
+- Pictures have 3px corners and nothing else: no shadows, borders, frames, or cards.
+- Controls are plain words in stone that turn ink under the hand. No icons, no buttons.
+
+Motion
+- Smooth and short. Nothing makes you wait.
+- With reduced motion on, everything simply changes.
+
+Contact
+davidwurgler.com
+hello@davidwurgler.com

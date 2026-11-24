@@ -12,7 +12,8 @@ A file and head-tag update, with no visual redesign. The rules are in CLAUDE.md 
 - [x] The sign-off mark checked: ridge in stone and W in ink, in both themes.
 - [x] Merged to `main` (David said to, 2026-11-24).
 - [ ] David checks the tab icon in Safari and Chrome, and a pasted link's preview, on the live site.
-- [ ] David decides whether to bring in the kit's new marks and email monogram, clear the old WURGLER lockups out of `public/brand/`, and replace `design/brand-kit/` with kit v3.
+- [x] The kit's marks are in `public/brand/` ("light" replaces "bone"), and `design/brand-kit/` is kit v3 as sent. The app icons were replaced with the versions with larger letters.
+- [ ] David decides whether to swap in the kit's new email monogram, and whether to delete the old WURGLER lockups and wordmarks from `public/brand/`.
 
 ## The previous site's plan
 

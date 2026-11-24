@@ -13,4 +13,9 @@
   70% { border-radius: 57% 43% 64% 36% / 38% 60% 40% 62%; scale: 1.08 0.94; }
 }
 @keyframes turn { to { rotate: 360deg; } }
-@media (prefers-reduced-motion: reduce) { .dot span::before { animation: none; } }
+/* The still dot: one fixed, slightly uneven shape. Used wherever the dot does not move:
+   reduced motion, print, images, and the wordmark files. Never redraw it. */
+.dot-still, .dot.still span::before { border-radius: 56% 44% 53% 47% / 47% 54% 46% 53%; transform: rotate(-12deg) scale(1.06, 0.95); }
+.dot.still span::before { animation: none; }
+@media (prefers-reduced-motion: reduce) { .dot span::before { animation: none; border-radius: 56% 44% 53% 47% / 47% 54% 46% 53%; transform: rotate(-12deg) scale(1.06, 0.95); } }
+@media print { .dot span::before { animation: none; border-radius: 56% 44% 53% 47% / 47% 54% 46% 53%; transform: rotate(-12deg) scale(1.06, 0.95); } }

@@ -28,7 +28,7 @@ The site itself is part of the proof. It links to its own source, so the code ha
 
 ## The design
 
-There is no mockup file. The site is the design. `design/brand-kit/` has an earlier brand guide (v2), tokens, and reference screenshots; where it disagrees with this file, this file is right.
+There is no mockup file. The site is the design. `design/brand-kit/` is the brand kit (v3) exactly as David sent it: its `README.md` is the brand guide, and it holds the wordmark, icons, mark, share image, and tokens.
 
 ### Type
 
@@ -106,7 +106,9 @@ Four pieces, one job each (brand kit v3, David, 2026-11-24):
 - **Share image:** `public/share-1200x630.png`, from the kit's `share/` folder: the sentence on the snow ground, at 32px so it survives a small preview. Its alt text is "I make pretty things." Nothing in the repo generates it.
 - **The still dot.** Wherever the dot doesn't move (reduced motion, print, and still images) it holds one fixed, slightly uneven shape, a single frozen frame of the wobble: `border-radius: 56% 44% 53% 47% / 47% 54% 46% 53%; transform: rotate(-12deg) scale(1.06, 0.95);`. It is the same shape every time. Never redraw it.
 - **Kit files are used as they come.** Replace them as files; never re-export, recompress, recolour, resize, or regenerate them.
-- **Still from the previous look:** `public/brand/` holds the old WURGLER lockups and wordmarks and the old single-colour marks. The site doesn't serve any of them on its pages; the README shows two of the marks. `public/brand/email-monogram-80.png` is used by David's email signature, so keep its address. The kit has replacements for the marks and the monogram that haven't been brought in yet (waiting on David). `design/brand-kit/` is the earlier kit (v2), from before the wordmark was settled.
+- **The mark's files** are in `public/brand/`, from the kit's `mark/` folder: `wurgler-mark-themeable.svg` (follows the system setting), `wurgler-mark-ink` and `wurgler-mark-light` (one colour; "light" replaces the old "bone" file), and `wurgler-mark-two-tone-on-snow` and `-on-night` (for where a file can't follow the theme), each as SVG and PNG. The shape is unchanged; only the colours are new.
+- **The kit itself** is `design/brand-kit/`, kept exactly as sent. When David sends a newer kit, replace the whole folder, then copy what the site serves into `public/`.
+- **Still from the previous look,** in `public/brand/`: the old WURGLER lockups and wordmarks, and the two email images. Nothing on the site uses them. `email-monogram-80.png` is used by David's email signature, so keep its address; the kit has a newer one in `email/` that hasn't been swapped in (waiting on David).
 
 ### Never
 
@@ -184,12 +186,12 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 ## Where we are
 
 - **2026-11-23: the site was rebuilt from a blank slate** in one session, first as a test page and then as the real site, and merged to `main` (David: "nuke the old site. long live the new site."). The previous site (paper, photographs, a 3D camera, and a music player) is gone from the code; its story is in `docs/HISTORY.md`.
-- **2026-11-24: brand kit v3 files are in.** The tab icon and app icons are now "DW.", the share image is the kit's, and the dot holds its still shape under reduced motion and in print. Merged to `main` (David said to).
+- **2026-11-24: brand kit v3 files are in.** The tab icon and app icons are now "DW.", the share image is the kit's, and the dot holds its still shape under reduced motion and in print. Merged to `main` (David said to). Later the same day: app icons with larger letters, the kit's marks in `public/brand/`, and `design/brand-kit/` replaced with v3.
 - **Checked here:** every address at 1440 × 900 and 390 × 844, light and dark; the click-through flow, reels, Back and Forward, Escape, old addresses redirecting, and the pages without scripts.
 - **Waiting on David:**
   - How it feels on his real laptop and iPhone, especially in Safari.
   - The tab icon in Safari and Chrome, and a pasted link's preview, checked by hand.
-  - Whether to bring the kit's new marks and email monogram into `public/brand/`, clear out the old WURGLER lockups there, and replace `design/brand-kit/` with kit v3.
+  - Whether to swap in the kit's new email monogram, and whether to delete the old WURGLER lockups and wordmarks from `public/brand/`.
   - A bigger Copywriter Lab image.
   - Three Cloudflare secrets from the old music player are no longer used and can be deleted in the dashboard: `MUSICKIT_PRIVATE_KEY`, `MUSICKIT_KEY_ID`, and `APPLE_TEAM_ID`.
 
