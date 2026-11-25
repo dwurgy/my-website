@@ -1,7 +1,7 @@
 import type { ImageMetadata } from 'astro';
 import firnMac from '../../assets/work/firn/mac.jpg';
 import firnSplit from '../../assets/work/firn/mac-split-view.jpg';
-import firnPhone from '../../assets/work/firn/iphone.jpg';
+import firnSync from '../../assets/work/firn/sync.jpg';
 import firnTabs from '../../assets/work/firn/iphone-tabs.jpg';
 import utuHero from '../../assets/work/utu/hero.webp';
 import utuWidgets from '../../assets/work/utu.webp';
@@ -40,7 +40,7 @@ export const things: Thing[] = [
     shots: [
       { src: firnMac, alt: 'Firn on a Mac, under its snowflake mark and the name “firn”: a sidebar with a “Nordic Style” group of tabs, and a Kinfolk article, “Blunk House,” open beside it. “A calm browser for Mac, iPhone, and iPad.”' },
       { src: firnSplit, alt: 'Firn on a Mac in split view: the Kinfolk article and the Snow Peak site share one window. “Two pages, side by side.”' },
-      { src: firnPhone, alt: 'Firn on an iPhone, under its snowflake mark and the name “firn”: the Kinfolk article “Blunk House.” “A calm browser for Mac, iPhone, and iPad.”' },
+      { src: firnSync, alt: 'Firn on a Mac showing the Kinfolk article “Blunk House,” and on an iPhone showing the Audo site. “Your spaces, synced with iCloud.”' },
       { src: firnTabs, alt: 'Two iPhones running Firn: the Audo site, and a grid of open tabs with a “Nordic Style” group in a space called Personal. “Tabs, kept together.”' },
     ],
     body: [

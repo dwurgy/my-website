@@ -168,7 +168,7 @@ On project pages, each part has one job. The grey line says what it is, the body
 
 - `assets/photos/`: David's photographs, with all metadata already stripped. Use them through Astro's image pipeline and never serve the originals directly. The seven behind "pretty", in order (`src/data/photos.ts`): `lodge-dusk.jpg`, `flowers-table.jpg`, `pavilion-peak.jpg`, `wheelbarrow-driveway.jpg`, `firs-house.jpg`, `ice-cream.jpg`, and `lake-dusk-moon.jpg`. `coast-dusk.jpg`, `lake-dusk-reeds.jpg`, and `david-portrait.jpg` are from the previous site and aren't used now.
 - `assets/work/`: each thing's pictures, in `src/data/things.ts`.
-  - **Firn (four, from the rebrand, David, 2026-11-25):** `firn/mac.jpg`, `firn/mac-split-view.jpg`, `firn/iphone.jpg`, and `firn/iphone-tabs.jpg`, each 2880 × 1800 and in that order. They replaced the earlier four, which are gone from the repo.
+  - **Firn (four, from the rebrand, David, 2026-11-25):** `firn/mac.jpg`, `firn/mac-split-view.jpg`, `firn/sync.jpg` (Mac and iPhone, "Your spaces, synced with iCloud.", David, 2026-11-25; it replaced `iphone.jpg`), and `firn/iphone-tabs.jpg`, each 2880 × 1800 and in that order.
   - **Utu (four, all design mockups):** `utu/hero.webp` leads, then `utu.webp` (the widget set), `utu/phones.webp` (four phones), and `utu/lockup-sky.webp`. Also sent by David and not used: `utu/phone-drizzle.webp`, `utu/lockup-paper.webp`, and the two bare wordmarks.
   - **One each:** `deepcall.jpg` (a mood reference, labelled as one), `nwr-identity.webp`, and `copywriter-lab.webp`.
 - Copywriter Lab's image is only 1210 pixels wide, so it's soft at the size pictures are now shown. It needs a bigger original from David, at least 2400 wide.
