@@ -48,7 +48,7 @@ export const things: Thing[] = [
       'I designed the app, its brand, and its website, and built it with Claude Code.',
       'The name is the word for snow that has made it through a whole season: older than fresh snow, not yet glacier ice. It comes from the Swiss German for “last year’s.”',
     ],
-    facts: [['Mac', 'Released October 2026'], ['iPhone and iPad', 'In development'], ['Source', 'Open, on GitHub']],
+    facts: [['Mac', 'Released October 2026'], ['iPhone and iPad', 'Released November 2026'], ['Source', 'Open, on GitHub']],
     links: [['firnbrowser.com', 'https://firnbrowser.com'], ['GitHub', 'https://github.com/dwurgy/firn']],
   },
   {
