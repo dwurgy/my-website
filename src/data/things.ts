@@ -49,7 +49,7 @@ export const things: Thing[] = [
       'The name is the word for snow that has made it through a whole season: older than fresh snow, not yet glacier ice. It comes from the Swiss German for “last year’s.”',
     ],
     facts: [['Mac', 'Released October 2026'], ['iPhone and iPad', 'Released November 2026'], ['Source', 'Open, on GitHub']],
-    links: [['firnbrowser.com', 'https://firnbrowser.com'], ['GitHub', 'https://github.com/dwurgy/firn']],
+    links: [['firnbrowser.com', 'https://firnbrowser.com'], ['App Store', 'https://apps.apple.com/us/app/firn-browser/id6829053602'], ['GitHub', 'https://github.com/dwurgy/firn']],
   },
   {
     slug: 'utu',
