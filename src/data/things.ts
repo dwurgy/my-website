@@ -1,8 +1,8 @@
 import type { ImageMetadata } from 'astro';
-import firnPhones from '../../assets/work/firn.webp';
-import firnMac from '../../assets/work/firn/mac-snow-peak.webp';
-import firnMacSisters from '../../assets/work/firn/mac-sisters.webp';
-import firnPair from '../../assets/work/firn/iphone-pair.webp';
+import firnMac from '../../assets/work/firn/mac.jpg';
+import firnSplit from '../../assets/work/firn/mac-split-view.jpg';
+import firnPhone from '../../assets/work/firn/iphone.jpg';
+import firnTabs from '../../assets/work/firn/iphone-tabs.jpg';
 import utuHero from '../../assets/work/utu/hero.webp';
 import utuWidgets from '../../assets/work/utu.webp';
 import utuPhones from '../../assets/work/utu/phones.webp';
@@ -38,10 +38,10 @@ export const things: Thing[] = [
     name: 'Firn',
     line: 'A calm browser for Mac and iPhone.',
     shots: [
-      { src: firnPhones, alt: 'Firn for iPhone: a grid of open tabs, a Kinfolk article, and a Wikipedia page about firn with an on-device summary, beside the Firn icon and the line “A calm, native browser.”' },
-      { src: firnMac, alt: 'Firn on a Mac: a sidebar with four pinned sites, a “Weekend cooking” group of tabs, and the Snow Peak site open beside it.' },
-      { src: firnMacSisters, alt: 'Firn on a Mac in a space called Trip: a “Sisters” group of tabs in the sidebar, and the Sisters Coffee site open beside it.' },
-      { src: firnPair, alt: 'Two images of Firn on iPhone. “Every space is its own browser.”: a grid of open tabs in a space called Work. “Read without the clutter.”: a Wikipedia article about firn in reader view, with a Summarize button.' },
+      { src: firnMac, alt: 'Firn on a Mac, under its snowflake mark and the name “firn”: a sidebar with a “Nordic Style” group of tabs, and a Kinfolk article, “Blunk House,” open beside it. “A calm browser for Mac, iPhone, and iPad.”' },
+      { src: firnSplit, alt: 'Firn on a Mac in split view: the Kinfolk article and the Snow Peak site share one window. “Two pages, side by side.”' },
+      { src: firnPhone, alt: 'Firn on an iPhone, under its snowflake mark and the name “firn”: the Kinfolk article “Blunk House.” “A calm browser for Mac, iPhone, and iPad.”' },
+      { src: firnTabs, alt: 'Two iPhones running Firn: the Audo site, and a grid of open tabs with a “Nordic Style” group in a space called Personal. “Tabs, kept together.”' },
     ],
     body: [
       'Firn has vertical tabs, spaces, and split view, without the learning curve. It’s a native app, written in Swift on WebKit, the engine behind Safari.',
