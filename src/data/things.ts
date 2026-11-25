@@ -105,7 +105,7 @@ export const things: Thing[] = [
       { src: copywriter, alt: 'NW Copywriter Lab: a part number entered, the listing title above a short quote description and the start of a product description, each with a Copy button.', edge: true },
     ],
     body: [
-      'Paste a part number and it writes the quote description, the eCommerce description, and the weight and dimensions. Every listing follows the same rules, so they all read like one person wrote them. The title doubles as the quote line, and the specs are saved for store filters.',
+      'Paste a part number and it writes the quote description, the eCommerce description, and the weight and dimensions. Every listing follows the same rules, so they all read like one person wrote them. The specs are saved for store filters.',
       'I prototyped it in Google AI Studio, then rebuilt it with Claude.',
     ],
     facts: [['Idea to production', '3 days'], ['Runs on', 'Cloudflare']],
