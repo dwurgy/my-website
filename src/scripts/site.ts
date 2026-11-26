@@ -125,16 +125,18 @@ function hint() {
   if (hinted) return;
   // Only count the wait while the page can be seen.
   if (document.hidden) { document.addEventListener('visibilitychange', hint, { once: true }); return; }
-  hintTimer = window.setTimeout(() => (document.hidden ? hint() : play()), 4000);
+  hintTimer = window.setTimeout(() => (document.hidden ? hint() : play()), 2500);
 }
 words.forEach((a) => ['pointerenter', 'pointerdown', 'click', 'focus'].forEach((type) => a.addEventListener(type, found)));
-// The home page has nothing to scroll to, so a scroll or a swipe is answered with the hint
-// straight away. One made while the sentence is still arriving is answered as soon as it has.
+// The home page has nothing to scroll to, so a scroll, a swipe, or a tap on empty space is
+// answered with the hint straight away. One made while the sentence is still arriving is
+// answered as soon as it has.
 let arrived = false;
 let asked = false;
 const ask = () => { asked = true; if (arrived) play(); };
 addEventListener('wheel', ask, { passive: true });
 addEventListener('touchmove', ask, { passive: true });
+addEventListener('pointerdown', (e) => { if (!(e.target as Element).closest('a, button')) ask(); });
 setTimeout(() => {
   document.body.classList.remove('arrive');
   arrived = true;

@@ -65,7 +65,7 @@ Every colour is one of four tokens in `src/styles/site.css`.
 
 - A drawn circle, 0.25em across, standing in for the full stop. It links to Say hi.
 - Its edge slowly wobbles and turns (5.2s wobble, 19s turn). It is the only thing on the site that moves without being touched. Where it doesn't move, it holds its still shape (see Brand).
-- **The hint** is the one agreed exception to the dot being the only thing that moves without being touched: once a visit, about 4 seconds after the sentence arrives on the home page, each word is chosen in turn and the dot swells once, then it never plays again (David, 2026-11-24). A scroll or a swipe on the home page, which has nothing to scroll to, plays it straight away.
+- **The hint** is the one agreed exception to the dot being the only thing that moves without being touched: once a visit, about 2.5 seconds after the sentence arrives on the home page, each word is chosen in turn and the dot swells once, then it never plays again (David, 2026-11-24; the wait was cut from 4 seconds on 2026-11-26). A scroll, a swipe, or a tap or click on empty space on the home page plays it straight away.
 - Under the hand it swells to 1.9 times its size and wobbles faster. It stays swollen while Say hi is open, and shrinks back when another word is chosen.
 - The click areas of the words and the dot are much bigger than they look, with no dead gaps between words. Keep them that way.
 
@@ -194,6 +194,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-24: David's final copy is in** on every door and all five project pages, and the facts above were brought in line with it. Also the same day: the dot swells more slowly, a scroll on the home page plays the hint, and the dot no longer ghosts when doors change.
 - **2026-11-25: the icons were replaced again** with the kit's versions where "DW." fills more of the square, Copywriter Lab's paragraph was reworded, and `design/brand-kit/` was replaced with the newer v3 zip (its icons and profile pictures changed). The first two are on `main` (David said to). Firn's four pictures were replaced with the rebrand's, and its page now says Mac, iPhone, and iPad.
 - **2026-11-25: Firn for iPhone and iPad is out** on the App Store; its table now says "Released November 2026".
+- **2026-11-26: the hint comes sooner.** It waits about 2.5 seconds instead of 4, and a tap or click on empty space plays it straight away. Not on `main`.
 - **Checked here:** every address at 1440 × 900 and 390 × 844, light and dark; the click-through flow, reels, Back and Forward, Escape, old addresses redirecting, and the pages without scripts.
 - **Waiting on David:**
   - How it feels on his real laptop and iPhone, especially in Safari.
