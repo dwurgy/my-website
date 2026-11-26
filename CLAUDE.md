@@ -194,7 +194,7 @@ Any new photo must have its metadata (including GPS) stripped before it is commi
 - **2026-11-24: David's final copy is in** on every door and all five project pages, and the facts above were brought in line with it. Also the same day: the dot swells more slowly, a scroll on the home page plays the hint, and the dot no longer ghosts when doors change.
 - **2026-11-25: the icons were replaced again** with the kit's versions where "DW." fills more of the square, Copywriter Lab's paragraph was reworded, and `design/brand-kit/` was replaced with the newer v3 zip (its icons and profile pictures changed). The first two are on `main` (David said to). Firn's four pictures were replaced with the rebrand's, and its page now says Mac, iPhone, and iPad.
 - **2026-11-25: Firn for iPhone and iPad is out** on the App Store; its table now says "Released November 2026".
-- **2026-11-26: the hint comes sooner.** It waits about 2.5 seconds instead of 4, and a tap or click on empty space plays it straight away. Not on `main`.
+- **2026-11-26: the hint comes sooner.** It waits about 2.5 seconds instead of 4, and a tap or click on empty space plays it straight away. David: "feels good." Not on `main`.
 - **Checked here:** every address at 1440 × 900 and 390 × 844, light and dark; the click-through flow, reels, Back and Forward, Escape, old addresses redirecting, and the pages without scripts.
 - **Waiting on David:**
   - How it feels on his real laptop and iPhone, especially in Safari.
